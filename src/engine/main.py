@@ -1,9 +1,10 @@
 import pygame
 
+
 def main():
     print("Welcome to the Mammon Engine!")
     pygame.init()
-    mainWindow=pygame.display.set_mode((720,720)) #Main window for pygame display
+    mainWindow=pygame.display.set_mode((720,720))
     isRunning = True
     while(isRunning):
         for event in pygame.event.get():
