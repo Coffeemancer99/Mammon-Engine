@@ -1,7 +1,7 @@
 import pygame
 import time
 
-import scenecreator.sceneCreator as sceneCreator
+import src.engine.scenecreator.sceneCreator as sceneCreator
 
 def main():
     print("Welcome to the Mammon Engine!")
@@ -19,18 +19,18 @@ def main():
 
     mainWindow.blit(testImg, (0, 0))
 
+
+    w, h = pygame.display.get_surface().get_size()
+
     #mainWindow.blit(grndSprite1, (224, 224))
-    mainWindow=sceneCreator.createPlatform(mainWindow, grndSprite1, ground, 512/64, 64)
+    mainWindow=sceneCreator.createPlatform(mainWindow, grndSprite1, ground, 512/64, 64,0,h, True)
+    mainWindow = sceneCreator.createPlatform(mainWindow, grndSprite1, ground, 512 / 64, 64, 0, h, False)
+    mainWindow = sceneCreator.createPlatform(mainWindow, grndSprite1, ground, 512 / 64, 64, 0, 0, False)
+    mainWindow = sceneCreator.createPlatform(mainWindow, grndSprite1, ground, 512 / 64, 64, w, h, True)
 
     pygame.display.update()
     while(isRunning):
-
-
-
         for event in pygame.event.get():
-
-
-
             if event.type == pygame.QUIT:
                 isRunning=False
 
