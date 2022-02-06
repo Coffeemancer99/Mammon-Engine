@@ -2,17 +2,23 @@
 import random
 
 
-def initGoodItems(itemName):
-    goodItems = []
-    goodItems.append("G-pickPlayerToLoseMG")
+def initGoodItems():
+    goodItems = [Item("G-pickPlayerToLoseMG", False, None), Item("G-thirdDice", False, None),
+                 Item("G-speedBoostMG", False, None), (Item("G-gainMoneyRandom", False, None)),
+                 Item("G-teleportClose", False, None), Item("G-sabotageDice", False, None),
+                 Item("G-stealItem", False, None), Item("G-opponentLoseTurn", False, None)]
+    return goodItems
+
     # Make a init good function and a init bad function.
     # Make a new object instead of the str thing i was doing on listOfInventoryItems
     # Don't store the functionality in the object class
-    # Make the Pool of items class call the init functions and set it equal to good and bad lists
-    # Delete list of inventory items
 
-def initBadItems(itemName):
-    pass
+
+def initBadItems():
+    badItems = [Item("B-moveOneSpotLess", True, None), Item("B-invertedControlMG", True, None),
+                Item("B-changeSpots", True, None), Item("B-loseMoneyRandom", True, None),
+                Item("B-loseTurn", False, None), Item("B-oneDice", False, None), Item("B-moveToPrevSpot", False, None)]
+    return badItems
 
 
 class Item:
@@ -21,33 +27,15 @@ class Item:
         self.isbad = isbad
         self.rarity = rarity
 
+    def getName(self):
+        return self.name
 
-
-class PoolOfItems:
-    def __init__(self, isMammonInPlay, forceBadItem):
+class ItemHandler:
+    def __init__(self, isMammonInPlay):
         # B = bad item and G = good item
-        listOfInventoryItems = ["B-invertedControlsMG", "B-moveOneSpotLess", "B-changeSpots",
-                                "B-loseMoneyRandom", "G-pickPlayerToLoseMG",
-                                "B-loseTurn", "B-oneDice", "B-moveToPrevSpot" "G-thirdDice", "G-speedBoostMG",
-                                "G-gainMoneyRandom", "G-teleportClose", "G-sabotageDice", "G-stealItem",
-                                "G-opponentLoseTurn"]
-
         self.isMammonInPlay = isMammonInPlay
-        self.forceBadItem = forceBadItem
-
-        if self.isMammonInPlay:
-            listOfInventoryItems.append("MAMMON")
-
-        self.listOfGoodItems = []
-        for i in range(len(listOfInventoryItems)):
-            if listOfInventoryItems[i][0] == "G":
-                self.listOfGoodItems.append(listOfInventoryItems[i])
-
-        self.listOfBadItems = []
-        for i in range(len(listOfInventoryItems)):
-            if listOfInventoryItems[i][0] == "B":
-                self.listOfBadItems.append(listOfInventoryItems[i])
-
+        self.listOfGoodItems = initGoodItems()
+        self.listOfBadItems = initBadItems()
         # Need to do logic for 33, 66 percent logic and insert it into the player class of its list
 
     def getItemRegTileBlock(self):

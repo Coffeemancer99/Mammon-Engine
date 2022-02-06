@@ -4,6 +4,7 @@
 """
 import pygame
 import math
+import sympy
 
 
 class Physics:

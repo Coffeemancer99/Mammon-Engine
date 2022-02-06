@@ -1,13 +1,13 @@
 import pygame
+import time
 import math
+import src.engine.scenecreator.sceneCreator as sceneCreator
+
 
 """
     About this file:
     This is a file that will be the runner of the application
 """
-import time
-
-import src.engine.scenecreator.sceneCreator as sceneCreator
 
 def main():
     print("Welcome to the Mammon Engine!")
