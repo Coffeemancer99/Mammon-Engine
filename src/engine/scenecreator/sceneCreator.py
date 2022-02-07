@@ -15,11 +15,22 @@ def createPlatform(window, sprite, ground, numBlocks, spriteSize, startX, startY
     while(start<numBlocks):
         if(up):
             window.blit(sprite, (startX, startY - (start * spriteSize)))
+
         else:
             window.blit(sprite, (startX + (start * spriteSize), startY - spriteSize))
         start+=1
+    pygame.display.update()
     return window
+#staticAsserts = list of entities
+#repaint the entities
+def clearBG(window, background, staticAssets=None):
+    window.fill(background)
+    #Repaint assets that belong here
+    #Repaint dynamic/moving assets in the main loop
+    if staticAssets!=None:
+        for asset in staticAssets:
+            pass
 
-
+    pygame.display.update()
 
 # ground can be a list i append objs to
