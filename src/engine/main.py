@@ -51,7 +51,7 @@ def main():
     #pygame.display.update()
     #DANGEROUS TERRITORY
     #MAIN GAME LOOP
-    mainMenu.launch(512, 448, framerate)
+    mainMenu.launch(512, 448, framerate, scale)
 
     # while(isRunning):
 

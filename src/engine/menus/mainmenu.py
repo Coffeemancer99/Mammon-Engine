@@ -2,7 +2,7 @@ import pygame
 import time
 #Launches main menu
 import src.engine.menus.settings as settings
-def launch(width, height, framerate):
+def launch(width, height, framerate, scale):
     clock = pygame.time.Clock()  # Clock used for frame rate
     mainWindow = pygame.display.set_mode((width, height)) #The main window display
 
@@ -30,7 +30,7 @@ def launch(width, height, framerate):
                 #Settings button
                 if (pos[1]>112 and pos[1]<224):
                     print("SETTINGS")
-                    return settings.launch(width, height, framerate, mainWindow)
+                    return settings.launch(width, height, framerate, mainWindow, scale)
 
 
             #
