@@ -10,6 +10,19 @@ import math
 import sympy
 
 
+""" (Force formula)
+    
+    Uses mass and multiplies it by acceleration
+    This function needs to be looped so it can be updated
+    
+    :param mass: - the mass that needs to be computed
+    :param acceleration: - that acceleration that needs to be computed
+    
+    :return: - float type: the force 
+
+"""
+
+
 def force(mass, acceleration):
     return float(mass * acceleration)
 
@@ -20,6 +33,8 @@ def force(mass, acceleration):
     This function needs to be looped so it can update 
     
     :param mass: - the mass that needs to be computed for force
+    
+    :return: - float type: normal force with mass 
     
 """
 
@@ -38,8 +53,11 @@ def computeMovementForce(mass):
     
     Uses the mass provided to calculate normal force then multiples it by the coefficientOfFriction provided
     
-    :param mass: - the mass that needs to be provided
-    :param coefficientOfFriction
+    :param mass: - the mass that needs to be provided :param coefficientOfFriction: - coefficientOfFriction that can 
+    be calculated or remained as a constant that will determined later 
+
+    :return: - float type: friction
+    
 """
 
 

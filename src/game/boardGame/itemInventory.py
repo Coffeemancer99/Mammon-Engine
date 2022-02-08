@@ -17,7 +17,7 @@ def initGoodItems():
 def initBadItems():
     badItems = [Item("B-moveOneSpotLess", True, None), Item("B-invertedControlMG", True, None),
                 Item("B-changeSpots", True, None), Item("B-loseMoneyRandom", True, None),
-                Item("B-loseTurn", False, None), Item("B-oneDice", False, None), Item("B-moveToPrevSpot", False, None)]
+                Item("B-loseTurn", True, None), Item("B-oneDice", True, None), Item("B-moveToPrevSpot", True, None)]
     return badItems
 
 
@@ -29,6 +29,7 @@ class Item:
 
     def getName(self):
         return self.name
+
 
 class ItemHandler:
     def __init__(self, isMammonInPlay):
@@ -57,5 +58,27 @@ class ItemHandler:
 
 
 # This class will handle all the functionality, put this is a separate file
-class ItemFunctionality:
+class ItemFunctionalityBad:
+    def __init__(self, name=""):
+        self.name = name
+
+    def getFunctionality(self, name):
+        if name == "B-moveOneSpotLess":
+            pass
+        elif name == "B-invertedControlMG":
+            pass
+        elif name == "B-changeSpots":
+            pass
+        elif name == "B-loseMoneyRandom":
+            pass
+        elif name == "B-loseTurn":
+            pass
+        elif name == "B-oneDice":
+            pass
+        elif name == "B-moveToPrevSpot":
+            pass
+
+
+
+class ItemFunctionalityGood:
     pass
