@@ -15,7 +15,6 @@ def createPlatform(window, sprite, ground, numBlocks, spriteSize, startX, startY
     while(start<numBlocks):
         if(up):
             window.blit(sprite, (startX, startY - (start * spriteSize)))
-
         else:
             window.blit(sprite, (startX + (start * spriteSize), startY - spriteSize))
         start+=1

@@ -15,7 +15,7 @@ def launch(width, height, framerate, window, scale):
     #Paint them on screen
     window.blit(windowSizeImg, (0,0)) #1
     window.blit(sizesPng, (0,112*scale)) #2
-    window.blit(backPng, (0, 335 * scale))  # 2
+    window.blit(backPng, (0, 335 * scale))  # 4
 
     pygame.display.update()
     isRunning=True
