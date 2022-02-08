@@ -34,3 +34,10 @@ def clearBG(window, background, staticAssets=None):
     pygame.display.update()
 
 # ground can be a list i append objs to
+
+    #This draws the vertical and horizontal bars
+    # mainWindow = sceneCreator.createPlatform(mainWindow, grndSprite1, ground, 512/64, 64,0,h, True)
+    # mainWindow = sceneCreator.createPlatform(mainWindow, grndSprite1, ground, 512 / 64, 64, 0, h, False)
+    # mainWindow = sceneCreator.createPlatform(mainWindow, grndSprite1, ground, 512 / 64, 64, 0, 64, False)
+    # mainWindow = sceneCreator.createPlatform(mainWindow, grndSprite1, ground, 512 / 64, 64, w-64, h, True)
+    # mainWindow.blit(testImg, (0, 0))  # This draws the person
