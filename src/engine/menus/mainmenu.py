@@ -15,11 +15,7 @@ def launch(width, height, framerate, scale):
     newGameImg=pygame.transform.scale(newGameImg, ((newGameImg.get_width()) * scale, (newGameImg.get_height()) * scale))
     settingsImg=pygame.transform.scale(settingsImg, ((settingsImg.get_width()) * scale, (settingsImg.get_height()) * scale))
 
-    #TEST IMAGES
-    groundSprite = pygame.image.load("../../data/assets/sprites/groundSprite1.png")
-    groundSprite = pygame.transform.scale(groundSprite, ((groundSprite.get_width()) * scale, (groundSprite.get_height()) * scale))
 
-    images = [None, groundSprite]
 
     #Paint them on screen
     mainWindow.blit(newGameImg, (0,0)) #1
@@ -39,8 +35,8 @@ def launch(width, height, framerate, scale):
                 #new game button
                 if (pos[1]<112*scale and pos[1]>=0):
                     print("NEW GAME PRESSED")
-                    currMap = testgame.startGame()
-                    drawTileMap.drawScene(mainWindow, currMap, images)
+                    return testgame.startGame(mainWindow, scale, framerate)
+
                     #return
                 #Settings button
                 if (pos[1]>112*scale and pos[1]<224*scale):
