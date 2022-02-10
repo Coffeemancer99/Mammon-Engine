@@ -10,8 +10,8 @@ class BoardPlayer(pygame.sprite.Sprite):
         # Need to add pieces for the players
         self.prevPosition = None
         self.currentPosition = None
-        self.placementInGame = None
-        self.money = None
+        self.placementInGame = 0
+        self.money = 10
         self.lostTurn = False
         self.playerID = playerID
         self.inventory = []

@@ -31,3 +31,6 @@ def startGame(mainWindow, scale, framerate):
             if (pos[1] > 112 * scale and pos[1] < 224 * scale):
                 print("Map 1")
                 #return settings.launch(width, height, framerate, mainWindow, scale)
+
+            # Have a else statement that starts the game
+            # This will return instead boardgame.startgame

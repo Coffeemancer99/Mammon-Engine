@@ -8,9 +8,11 @@ import math
 import time
 import src.engine.menus.mainmenu as mainMenu
 import src.engine.scenecreator.sceneCreator as sceneCreator
+import random
+
 
 def main():
-    print("Welcome to the Mammon Engine!")
+    #print("Welcome to the Mammon Engine!")
     pygame.init()
     clock=pygame.time.Clock() #Clock used for frame rate
     framerate=60
