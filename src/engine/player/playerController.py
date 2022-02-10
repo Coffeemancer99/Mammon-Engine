@@ -1,5 +1,5 @@
 import pygame
-
+import src.engine.collision as collision
 
 # import esper
 from src.engine.physics.physics import movementLeftRight, applyGravityPlayer
@@ -14,9 +14,17 @@ class Player():
         self.rect.y = y
         self.velY = 0
         self.jumped = False
-        self.isGrounded = False
+
+        self.width = self.sprite.get_width()
+        self.height = self.sprite.get_height()
+
+        self.dX = 0
+        self.dY = 0
+
 
     def update(self):
+        self.dX = 0
+        self.dY = 0
         jumpHeight = 16
         curX = 0
         curY = 0
@@ -24,23 +32,23 @@ class Player():
         terminalV = 6
 
         key = pygame.key.get_pressed()
-        if key[pygame.K_UP] and self.jumped == False and self.isGrounded:
+        if key[pygame.K_UP] and self.jumped == False:
             self.velY = -jumpHeight # negative moves up
-            self.isGrounded = False
+
             self.jumped = True
         if key[pygame.K_UP] == False:
             self.jumped = False
         if key[pygame.K_LEFT]:
-            curX = movementLeftRight(curX, -4)
+            self.dX = movementLeftRight(self.dX, -4)
         if key[pygame.K_RIGHT]:
-            curX = movementLeftRight(curX, 4)
-
+            self.dX = movementLeftRight(self.dX, 4)
         # add some form of gravity
-        self.velY = applyGravityPlayer(self.isGrounded, self.velY, fallSpeed, terminalV)
-
+        self.velY = applyGravityPlayer(self.velY, fallSpeed, terminalV)
         # make sure to set curY
-        curY += self.velY
+        self.dY += self.velY
 
-        # update coords
-        self.rect.x += curX
-        self.rect.y += curY
+
+#ONLY UPDATE RECTANGLE IN ONE PLACE!!!
+    def updateRect(self):
+        self.rect.x += self.dX
+        self.rect.y += self.dY

@@ -16,16 +16,11 @@ import sympy
 """
 
 
-def applyGravityPlayer(isGrounded, velY, fallSpeed, terminalV):
-    if isGrounded:
-        velY = 0
-    else:
-        # Falling here
-        velY += fallSpeed
-        # Terminal Velocity
-        if velY > terminalV:
-            velY = terminalV
-    return float(velY)
+def applyGravityPlayer(velY, fallSpeed, terminalV):
+    velY += fallSpeed # Falling here
+    if velY > terminalV:# Terminal Velocity
+        velY = terminalV
+    return velY
 
 
 

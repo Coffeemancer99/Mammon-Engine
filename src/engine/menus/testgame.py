@@ -1,6 +1,8 @@
 import src.engine.scenecreator.drawTileMap as drawTileMap
 import src.engine.scenecreator.tile as tile
 import src.engine.player.playerController as player
+import src.engine.collision as collision
+
 import pygame
 def getGameMap():
     L=[
@@ -8,12 +10,12 @@ def getGameMap():
         [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
         [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
         [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1],
         [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1],
         [1,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1],
         [1,0,0,1,1,1,1,1,1,0,0,0,0,0,0,1],
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -34,7 +36,7 @@ def startGame(mainWindow, scale, framerate):
 
     images = [None, groundSprite]
     currMap = getGameMap()
-    staticTiles=drawTileMap.drawScene(mainWindow, currMap, images)
+    staticTiles= drawTileMap.generateTiles(currMap, images)
     for tile in staticTiles:
         print(tile.rectCol.x, tile.rectCol.y)
     isRunning=True
@@ -42,31 +44,16 @@ def startGame(mainWindow, scale, framerate):
     while(isRunning):
         clock.tick(framerate)
         brian.update()
-        isCollided = False
-        tile = drawTileMap.drawScene(mainWindow, currMap, images)
+
+        #isCollided = False
+        drawTileMap.drawScene(mainWindow, currMap, images) #Redraws the main window
         mainWindow.blit(brian.sprite, (brian.rect.x, brian.rect.y))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning=False
-            # if event.type == pygame.MOUSEBUTTONUP:
-                # pos = pygame.mouse.get_pos()
-                # mainWindow.blit(groundSprite, pos)
-                # rect=groundSprite.get_rect()
-                # rect.x=pos[0]
-                # rect.y=pos[1]
-                # #print(rect.x)
-        for tile in staticTiles:
-            if tile.rectCol.colliderect(brian.rect): #A collision has occurred
-                #Vertical Case
-                if(tile.rectCol.top >= brian.rect.top):
-                    isCollided=True
-                    print("collision")
-                    brian.isGrounded=True
-                    #brian.rect.y=tile.rectCol.top-32
-                    #brian.rect.y=brian.rect.bottom - tile.rectCol.top
-                #Horizontal case
-                if (tile.rectCol.left <= brian.rect.right):
-                    print("right movement blocked")
-        if isCollided == False:
-            brian.isGrounded = False
+        collision.staticHandler(staticTiles, brian)
+        brian.updateRect()
+
+        # if isCollided == False:
+        #     brian.isGrounded = False
         pygame.display.update()
