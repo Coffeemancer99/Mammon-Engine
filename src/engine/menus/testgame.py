@@ -56,12 +56,17 @@ def startGame(mainWindow, scale, framerate):
                 # rect.y=pos[1]
                 # #print(rect.x)
         for tile in staticTiles:
-            if tile.rectCol.colliderect(brian.rect):
-                isCollided=True
-                print("collision")
-                brian.isGrounded=True
-                brian.rect.y=tile.rectCol.top-32
-            if isCollided==False:
-                brian.isGrounded=False
-
+            if tile.rectCol.colliderect(brian.rect): #A collision has occurred
+                #Vertical Case
+                if(tile.rectCol.top >= brian.rect.top):
+                    isCollided=True
+                    print("collision")
+                    brian.isGrounded=True
+                    #brian.rect.y=tile.rectCol.top-32
+                    #brian.rect.y=brian.rect.bottom - tile.rectCol.top
+                #Horizontal case
+                if (tile.rectCol.left <= brian.rect.right):
+                    print("right movement blocked")
+        if isCollided == False:
+            brian.isGrounded = False
         pygame.display.update()
