@@ -29,7 +29,6 @@ def launch(width, height, framerate, window, scale):
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
 
-
                 #Resolution Option
                 if (pos[1]>111*scale and pos[1]<224*scale):
                     #SMALL RES
