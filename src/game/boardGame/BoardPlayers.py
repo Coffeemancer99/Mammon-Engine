@@ -8,11 +8,19 @@ class BoardPlayer(pygame.sprite.Sprite):
     def __init__(self, playerID):
         pygame.sprite.Sprite.__init__(self)
         # Need to add pieces for the players
+        self.prevPosition = None
+        self.currentPosition = None
+        self.placementInGame = None
+        self.money = None
+        self.lostTurn = False
         self.playerID = playerID
         self.inventory = []
 
     def setInventory(self, inventory):
         self.inventory.append(inventory)
+
+    def setLostTurn(self):
+        self.lostTurn = not self.lostTurn
 
     def setMoney(self, money):
         self.money = money
@@ -43,6 +51,9 @@ class BoardPlayer(pygame.sprite.Sprite):
 
     def getPlayerID(self):
         return self.playerID
+
+    def getLostTurn(self):
+        return self.lostTurn
 
 
 player1 = BoardPlayer(1)

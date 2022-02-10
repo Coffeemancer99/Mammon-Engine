@@ -62,7 +62,7 @@ class ItemFunctionalityBad:
     def __init__(self, name=""):
         self.name = name
 
-    def getFunctionality(self, name):
+    def getFunctionality(self, name, player):
         if name == "B-moveOneSpotLess":
             pass
         elif name == "B-invertedControlMG":
@@ -72,12 +72,11 @@ class ItemFunctionalityBad:
         elif name == "B-loseMoneyRandom":
             pass
         elif name == "B-loseTurn":
-            pass
+            player.setLostTurn()  # Need to reset this lost turn later
         elif name == "B-oneDice":
             pass
         elif name == "B-moveToPrevSpot":
             pass
-
 
 
 class ItemFunctionalityGood:

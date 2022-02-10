@@ -9,21 +9,49 @@ import pygame
 import math
 import sympy
 
+"""
+    
+
+
+"""
+
+
+def applyGravityPlayer(isGrounded, velY, fallSpeed, terminalV):
+    if isGrounded:
+        velY = 0
+    else:
+        # Falling here
+        velY += fallSpeed
+        # Terminal Velocity
+        if velY > terminalV:
+            velY = terminalV
+    return float(velY)
+
+
+
+def movementLeftRight(dx, speed):
+    dx += speed
+    return float(dx)
+
+
+def collision():
+    pass
+
 
 """ (Force formula)
-    
+
     Uses mass and multiplies it by acceleration
     This function needs to be looped so it can be updated
-    
+
     :param mass: - the mass that needs to be computed
     :param acceleration: - that acceleration that needs to be computed
-    
+
     :return: - float type: the force 
 
 """
 
 
-def force(mass, acceleration):
+def force(mass, acceleration, obj1, obj2):
     return float(mass * acceleration)
 
 
