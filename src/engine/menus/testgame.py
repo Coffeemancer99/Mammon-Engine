@@ -60,7 +60,7 @@ def startGame(mainWindow, scale, framerate):
                 isCollided=True
                 print("collision")
                 brian.isGrounded=True
-                #brian.rect.y=tile.rectCol.top-33
+                brian.rect.y=tile.rectCol.top-32
             if isCollided==False:
                 brian.isGrounded=False
 
