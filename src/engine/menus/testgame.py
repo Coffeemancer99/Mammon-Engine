@@ -32,7 +32,7 @@ def startGame(mainWindow, scale, framerate):
     groundSprite = pygame.image.load("../../data/assets/sprites/groundSprite1.png")
     groundSprite = pygame.transform.scale(groundSprite, ((groundSprite.get_width()) * scale, (groundSprite.get_height()) * scale))
 
-    brian = player.Player(300,150)
+    brian = player.Player(300,150, scale)
 
     images = [None, groundSprite]
     currMap = getGameMap()
