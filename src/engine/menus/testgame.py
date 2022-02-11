@@ -32,8 +32,10 @@ def startGame(mainWindow, scale, framerate):
     groundSprite = pygame.image.load("../../data/assets/sprites/groundSprite1.png")
     groundSprite = pygame.transform.scale(groundSprite, ((groundSprite.get_width()) * scale, (groundSprite.get_height()) * scale))
 
-    # ANDREW -- changed what is needed to init player, check it out
-    brian = player.Player(300,150, scale, pygame.K_w, pygame.K_a, pygame.K_d)
+    # ANDREW -- changed what is needed to init player, check it out (need keys and image)
+    brian = player.Player(300,150, scale, pygame.K_w,
+                          pygame.K_a, pygame.K_d,
+                          pygame.image.load("../../data/assets/sprites/bolSprite.png"))
 
     images = [None, groundSprite]
     currMap = getGameMap()
