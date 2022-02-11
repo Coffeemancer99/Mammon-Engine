@@ -1,12 +1,14 @@
 import pygame
-import src.engine.collision as collision
-
-# import esper
 from src.engine.physics.physics import movementLeftRight, applyGravityPlayer
 
 
+'''
+playerController.py created by Andrew Bunn
+Player class implemented by Andrew Bunn
+'''
+
 class Player():
-    def __init__(self, x, y, scale):
+    def __init__(self, x, y, scale, jumpKey, leftKey, rightKey):
         self.scale = scale
         self.sprite = pygame.image.load("../../data/assets/sprites/bolSprite.png")
         self.sprite = pygame.transform.scale(self.sprite, ((self.sprite.get_width()) * scale, (self.sprite.get_height()) * scale))
@@ -15,6 +17,9 @@ class Player():
         self.rect.x = x
         self.rect.y = y
         self.velY = 0
+        self.jumpKey = jumpKey
+        self.leftKey = leftKey
+        self.rightKey = rightKey
         self.jumped = False
 
         self.width = self.sprite.get_width()
@@ -35,14 +40,14 @@ class Player():
         transformSpeed = 4 *self.scale
 
         key = pygame.key.get_pressed()
-        if key[pygame.K_UP] and self.jumped == False:
+        if key[self.jumpKey] and self.jumped == False:
             self.velY = -jumpHeight # negative moves up
 
             self.jumped = True
 
-        if key[pygame.K_LEFT]:
+        if key[self.leftKey]:
             self.dX = movementLeftRight(self.dX, -transformSpeed)
-        if key[pygame.K_RIGHT]:
+        if key[self.rightKey]:
             self.dX = movementLeftRight(self.dX, transformSpeed)
         # add some form of gravity
         self.velY = applyGravityPlayer(self.velY, fallSpeed, terminalV)

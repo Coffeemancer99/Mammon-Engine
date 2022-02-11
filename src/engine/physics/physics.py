@@ -16,9 +16,11 @@ import sympy
 """
 
 
+# Gravity created by Andrew Bunn, extracted from
+# playerController.py by Joel Tanig
 def applyGravityPlayer(velY, fallSpeed, terminalV):
     velY += fallSpeed # Falling here
-    if velY > terminalV:# Terminal Velocity
+    if velY > terminalV: # Terminal Velocity
         velY = terminalV
     return velY
 
