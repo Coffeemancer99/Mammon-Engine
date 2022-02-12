@@ -1,5 +1,5 @@
 import networkx as nx
-import src.game.boardTileGraph.tile as tile
+import src.game.boardTile.tile as tile
 
 '''
 boardGraph.py created by Andrew Bunn

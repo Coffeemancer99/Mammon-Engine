@@ -29,7 +29,9 @@ class Player():
         self.dX = 0
         self.dY = 0
 
-
+    '''
+    update - updates the player position based on inputs
+    '''
     def update(self):
         self.dX = 0
         self.dY = 0
@@ -43,9 +45,7 @@ class Player():
         key = pygame.key.get_pressed()
         if key[self.jumpKey] and self.jumped == False:
             self.velY = -jumpHeight # negative moves up
-
             self.jumped = True
-
         if key[self.leftKey]:
             self.dX = movementLeftRight(self.dX, -transformSpeed)
         if key[self.rightKey]:
