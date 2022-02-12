@@ -1,5 +1,7 @@
 import pygame
-import math
+
+from src.game.boardGame.boardPlayers import BoardPlayer
+from src.game.boardGame.boardGame import rollOfDice, goesFirstScreen, setPlacementsForBoardPlayers
 
 """
     About this file:
@@ -13,6 +15,8 @@ import random
 
 def main():
     #print("Welcome to the Mammon Engine!")
+    # This is the logic for who goes first in the board game
+
     pygame.init()
     clock=pygame.time.Clock() #Clock used for frame rate
     framerate=60

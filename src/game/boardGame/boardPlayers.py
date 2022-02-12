@@ -1,9 +1,6 @@
 import pygame.sprite
 
 
-# Need to make a BoardPlayer Array
-
-
 class BoardPlayer(pygame.sprite.Sprite):
     def __init__(self, playerID):
         pygame.sprite.Sprite.__init__(self)
@@ -15,6 +12,10 @@ class BoardPlayer(pygame.sprite.Sprite):
         self.lostTurn = False
         self.playerID = playerID
         self.inventory = []
+
+    # Do some magical operator overload magic
+    def __lt__(self, other):
+        return self.getPlacementInGame() < other.getPlacementInGame()
 
     def setInventory(self, inventory):
         self.inventory.append(inventory)
@@ -56,7 +57,3 @@ class BoardPlayer(pygame.sprite.Sprite):
         return self.lostTurn
 
 
-player1 = BoardPlayer(1)
-# player2 = BoardPlayer(2)
-# player3 = BoardPlayer(3)
-# player4 = BoardPlayer(4)
