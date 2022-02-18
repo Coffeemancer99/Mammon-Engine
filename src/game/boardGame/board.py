@@ -16,9 +16,8 @@ class Board:
     def generateBoard(self, width, height):
         self.width = width
         self.height = height
-        # init a matrix of zeros
+        # init a matrix of lists
         self.matrix = [[[] for x in range(width)] for y in range(height)]
-        # need to init with lists
 
     '''
     getWidth - returns board width
