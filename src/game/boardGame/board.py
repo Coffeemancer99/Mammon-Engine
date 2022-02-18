@@ -1,10 +1,4 @@
 '''
-playerController.py created by Andrew Bunn
-Player class implemented by Andrew Bunn
-
-'''
-
-'''
 board.py created by Andrew Bunn
 Board class implemented by Andrew Bunn
 '''
@@ -71,7 +65,6 @@ class Board:
     '''
     debugBoard - prints out the whole board cell by cell
     '''
-
     def debugBoard(self):
         for x in range(0, self.width):
             for y in range(0, self.height):
