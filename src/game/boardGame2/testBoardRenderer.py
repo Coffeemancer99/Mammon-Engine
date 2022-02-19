@@ -1,5 +1,5 @@
 import unittest
-
+import time
 import pygame
 
 from boardRenderer import BoardRenderer
@@ -32,7 +32,6 @@ class TestBoardRenderer(unittest.TestCase):
         tile4 = Tile(tile3)
         tile4.x += 32
 
-
         # Split high
         tile5 = Tile(tile4)
         tile5.x += 32
@@ -46,8 +45,6 @@ class TestBoardRenderer(unittest.TestCase):
         # change tile color after so 5 and 6 don't inherit the color
         tile4.image = SpriteLoader().loadImage("redTile.png")
 
-        # player1.x = tile2.x
-        # player1.y = tile2.y
         player1.image = SpriteLoader().loadImage("testPlayer.png")
         tile2.players.append(player1)
 
@@ -68,12 +65,21 @@ class TestBoardRenderer(unittest.TestCase):
         renderer = BoardRenderer(board)
         isRunning = True
         while(isRunning):
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
             # render everything
             renderer.render()
+            time.sleep(1)
+
+            # get all the moves for player 1
+            moves = board.getPotentialMoves(player1)
+
+            # move player 1 to the first possible move in the move array
+            if(len(moves) > 0):
+                board.movePlayer(moves[0], player1)
 
         # Come back for backtiles later
 

@@ -20,9 +20,11 @@ class Tile:
             self.y = tile.y
             self.width = tile.width
             self.height = tile.height
-            self.prevTiles = tile.prevTiles
-            self.nextTiles = tile.nextTiles
+            self.prevTiles = [] # dont want them to copy other's next or prev tiles
+            # for tile in tile.prevTiles:
+            #     self.prevTiles.append(tile)
+            self.nextTiles = []
             self.players = []
-            for player in tile.players:
-                self.players.append(player)
+            # for player in tile.players:
+            #     self.players.append(player)
             self.image = tile.image
