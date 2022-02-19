@@ -1,4 +1,4 @@
-from spriteLoader import SpriteLoader
+from src.game.boardGame2.spriteLoader import SpriteLoader
 
 class Player:
 

@@ -1,6 +1,6 @@
-from board import Board
-from tile import Tile
-from player import Player
+from src.game.boardGame2.board import Board
+from src.game.boardGame2.tile import Tile
+from src.game.boardGame2.player import Player
 import pygame
 
 class BoardRenderer:

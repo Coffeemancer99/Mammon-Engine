@@ -2,13 +2,13 @@ import unittest
 import time
 import pygame
 
-from boardRenderer import BoardRenderer
-from board import Board
-from tile import Tile
-from spriteLoader import SpriteLoader
-from player import Player
+from src.game.boardGame2.boardRenderer import BoardRenderer
+from src.game.boardGame2.board import Board
+from src.game.boardGame2.tile import Tile
+from src.game.boardGame2.spriteLoader import SpriteLoader
+from src.game.boardGame2.player import Player
 
-class firstBoard(unittest.TestCase):
+class FirstBoard(unittest.TestCase):
 
     def testFirstBoard(self):
         #make a player
