@@ -150,7 +150,7 @@ def getPlayerTurn(player, board):
 def startGame(mainWindow, scale, framerate, board):
     currentState = States.PLAYERMOVE
     currentPlayer = 0
-    moveTracker = 0
+    playerMovement = 0
     numOfSpots = 0
     playerSelectFork = 0
     clock = pygame.time.Clock()
@@ -174,12 +174,12 @@ def startGame(mainWindow, scale, framerate, board):
 
     firstIterationOfGame = True
     while True:
-        clock.tick(2)
+        clock.tick(framerate)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 break
             pos = pygame.mouse.get_pos()
-            if not firstIterationOfGame:
+            if not firstIterationOfGame: ## TODO: Make this not NOT
                 # This is to activate the screen on who goes first
                 firstIterationOfGame = not firstIterationOfGame
                 goesFirstScreen(mainWindow, scale, framerate, listOfPlayers, board)
@@ -192,7 +192,7 @@ def startGame(mainWindow, scale, framerate, board):
                     currentPlayer += 1
                     # Set it to false
                     listOfPlayers[currentPlayer].setLostTurn()
-                moveTracker = 2 # getPlayerTurn(listOfPlayers[currentPlayer], board)
+                playerMovement = getPlayerTurn(listOfPlayers[currentPlayer], board)
                 currentState = States.ANNIMATING
             if currentState == States.ANNIMATING:
                 nextTiles = board.getPotentialMoves(listOfPlayers[currentPlayer])
@@ -209,22 +209,25 @@ def startGame(mainWindow, scale, framerate, board):
                     # If we have no fork in the road, then we just go straight
                     board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])
                 numOfSpots += 1
-            if numOfSpots == moveTracker:
+            if numOfSpots == playerMovement:
                 # If we reach here, that means that we are done animating
                 numOfSpots = 0
                 # We set the player's position to where they are now within the tile after all the potential paths
                 # they went
                 listOfPlayers[currentPlayer].setCurrentPosition(board.getCurrentTile(listOfPlayers[currentPlayer]))
                 getTypeOfTile(board.getCurrentTile(listOfPlayers[currentPlayer]), listOfPlayers[currentPlayer])
-                if currentPlayer == 4:
+                if currentPlayer == 3: # TODO: Might have to make this 4 (Start here) FIX THEY ONLY MOVE WITH MOUSE BUG
                     currentState = States.STARTMINIGAME
                 else:
                     currentPlayer += 1
                     currentState = States.PLAYERMOVE
             # Once all the players are done here, we start a random mini-game
-            if States.STARTMINIGAME:
+            if currentState == States.STARTMINIGAME:
                 currentPlayer = 0
                 # TODO: This is where drake comes in start here Drake
+
+                # At the end
+                currentState = States.PLAYERMOVE
                 pass
             renderer.render()
 
