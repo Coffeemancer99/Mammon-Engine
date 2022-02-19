@@ -1,5 +1,6 @@
 from board import Board
 from tile import Tile
+from player import Player
 import pygame
 
 class BoardRenderer:
@@ -18,9 +19,20 @@ class BoardRenderer:
     def renderTile(self, tile):
         self.window.blit(tile.image, (tile.x, tile.y))
         pygame.display.update()
-        pass
+
+
+    def renderPlayer(self, player):
+        self.window.blit(player.image, (player.x, player.y))
+        pygame.display.update()
 
 
     def render(self):
         for tile in self.board.getTiles():
             self.renderTile(tile)
+
+        for tile in self.board.getTiles():
+            for player in tile.players:
+                self.renderPlayer(player)
+
+
+
