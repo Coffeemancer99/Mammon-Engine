@@ -54,6 +54,7 @@ class TestBoardRenderer(unittest.TestCase):
         tile4.nextTiles.append(tile5)
         tile4.nextTiles.append(tile6)
 
+
         board = Board()
         board.addTile(startTile)
         board.addTile(tile2)
@@ -70,7 +71,7 @@ class TestBoardRenderer(unittest.TestCase):
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
-            # render everything
+            # render everything === change to render and update movement separately
             renderer.render()
             time.sleep(1)
 

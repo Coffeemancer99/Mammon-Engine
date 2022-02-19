@@ -5,7 +5,7 @@ import pygame
 
 class BoardRenderer:
     width = 512
-    height = 512
+    height = 448
 
     def __init__(self, board):
         self.board = board
@@ -27,7 +27,7 @@ class BoardRenderer:
 
 
     def render(self):
-        self.window.fill((255, 255, 255))
+        self.window.fill((155, 155, 155))
 
         for tile in self.board.getTiles():
             self.renderTile(tile)

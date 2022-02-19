@@ -1,7 +1,7 @@
 
 class Tile:
 
-    # leave out of constructor for now, just to mess around with some things
+    # leave out of constructor for now
     x = None
     y = None
     width = None
