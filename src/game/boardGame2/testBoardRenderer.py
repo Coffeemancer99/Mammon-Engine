@@ -32,6 +32,7 @@ class TestBoardRenderer(unittest.TestCase):
         tile4 = Tile(tile3)
         tile4.x += 32
 
+
         # Split high
         tile5 = Tile(tile4)
         tile5.x += 32
@@ -42,9 +43,12 @@ class TestBoardRenderer(unittest.TestCase):
         tile6.x += 32
         tile6.y -= 32
 
-        player1.x = tile2.x
-        player1.y = tile2.y
-        player1.image = SpriteLoader().loadImage("testSprite.png")
+        # change tile color after so 5 and 6 don't inherit the color
+        tile4.image = SpriteLoader().loadImage("redTile.png")
+
+        # player1.x = tile2.x
+        # player1.y = tile2.y
+        player1.image = SpriteLoader().loadImage("testPlayer.png")
         tile2.players.append(player1)
 
         startTile.nextTiles.append(tile2)

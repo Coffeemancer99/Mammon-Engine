@@ -22,5 +22,7 @@ class Tile:
             self.height = tile.height
             self.prevTiles = tile.prevTiles
             self.nextTiles = tile.nextTiles
-            self.players = tile.players
+            self.players = []
+            for player in tile.players:
+                self.players.append(player)
             self.image = tile.image

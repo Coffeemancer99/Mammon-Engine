@@ -18,12 +18,12 @@ class BoardRenderer:
 
     def renderTile(self, tile):
         self.window.blit(tile.image, (tile.x, tile.y))
-        pygame.display.update()
 
 
-    def renderPlayer(self, player):
-        self.window.blit(player.image, (player.x, player.y))
-        pygame.display.update()
+
+    def renderPlayer(self, player, tile):
+        self.window.blit(player.image, (tile.x, tile.y))
+
 
 
     def render(self):
@@ -32,7 +32,8 @@ class BoardRenderer:
 
         for tile in self.board.getTiles():
             for player in tile.players:
-                self.renderPlayer(player)
+                self.renderPlayer(player, tile)
 
+        pygame.display.update()
 
 
