@@ -10,6 +10,8 @@ from src.game.boardGame2.spriteLoader import SpriteLoader
 
 """
     File authored by Joel Tanig
+    115 lines
+    
 """
 
 
@@ -177,6 +179,11 @@ def startGame(mainWindow, scale, framerate, board):
             # Game starts here
             # for each player in listOfPlayers, make them do a move by rolling dice and going to a tile
             if currentState == States.PLAYERMOVE:
+                # If the player lost their turn, skip
+                if listOfPlayers[currentPlayer].getLostTurn():
+                    currentPlayer += 1
+                    # Set it to false
+                    listOfPlayers[currentPlayer].setLostTurn()
                 moveTracker = getPlayerTurn(listOfPlayers[currentPlayer], board)
                 currentState = States.ANNIMATING
             if currentState == States.ANNIMATING:

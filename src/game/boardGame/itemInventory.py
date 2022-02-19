@@ -1,6 +1,11 @@
 # This stores a pool of items and return one item from a list that will be put into item array of the boardPlayer
 import random
 
+"""
+    File authored by Joel Tanig
+    60 lines
+
+"""
 
 def initGoodItems():
     goodItems = [Item("G-pickPlayerToLoseMG", False, None, 40), Item("G-thirdDice", False, None, 15),

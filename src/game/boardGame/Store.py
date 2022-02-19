@@ -6,6 +6,13 @@ from src.game.boardGame2.board import Board
 
 # @NEED a Store Screen and this Store must be destroyed and remade every time the tile is called
 
+"""
+    File authored by Joel Tanig
+    30 lines
+
+"""
+
+
 class Store:
     def __init__(self):
         self.listOfGoodItems = initGoodItems()
@@ -19,6 +26,7 @@ class Store:
         self.storeInventory = storeInventory
 
         # Need to make a screen that picks items and for each "iteration" increase or deprecate the index
+
     def buyItem(self, player, index):
         priceOfItem = self.storeInventory[index].getPrice()
         if player.getMoney() >= priceOfItem:
@@ -32,11 +40,9 @@ class Store:
 
     def sellItem(self, player, index):
         # The price of the selling item that player wants to sell will be 20 percent off the original price
-        priceOfSellingItem = player.getInventoryItem(index).getPrice() - int(20*player.getInventoryItem(index).getPrice()/100)
+        priceOfSellingItem = player.getInventoryItem(index).getPrice() - int(
+            20 * player.getInventoryItem(index).getPrice() / 100)
         player.setMoney(priceOfSellingItem)
-        print(f"Player {player.getPlayerID()} has sold item {player.getInventoryItem(index)} and now has {player.getMoney()}")
+        print(
+            f"Player {player.getPlayerID()} has sold item {player.getInventoryItem(index)} and now has {player.getMoney()}")
         player.removeInventoryItem(index)
-
-
-
-

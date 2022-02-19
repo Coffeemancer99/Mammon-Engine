@@ -1,5 +1,11 @@
 import pygame.sprite
 
+"""
+    File authored by Joel Tanig
+    44 lines
+
+"""
+
 
 class BoardPlayer(pygame.sprite.Sprite):
     def __init__(self, playerID):
