@@ -35,19 +35,21 @@ class Player():
     def update(self):
         self.dX = 0
         self.dY = 0
-        transformSpeed = 4 *self.scale
+        transformSpeed = 4 * self.scale
 
         key = pygame.key.get_pressed()
-        if key[self.upKey]:
-            self.dY = movementLeftRight(self.dY, -transformSpeed)
-        if key[self.downKey]:
-            self.dY = movementLeftRight(self.dY, transformSpeed)
+        # if key[self.upKey]:
+        #     self.dY = movementLeftRight(self.dY, -transformSpeed)
+        # if key[self.downKey]:
+        #     self.dY = movementLeftRight(self.dY, transformSpeed)
         if key[self.leftKey]:
             self.dX = movementLeftRight(self.dX, -transformSpeed)
         if key[self.rightKey]:
             self.dX = movementLeftRight(self.dX, transformSpeed)
 
         self.dY += self.velY
+
+        return self
 
 
 #ONLY UPDATE RECTANGLE IN ONE PLACE!!! O_O SHARED MUTABLE STATE OH MY
