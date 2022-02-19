@@ -4,6 +4,7 @@ class Board:
     players = []
 
     def __init__(self):
+        self.startTile = None
         pass
 
     def addTile(self, tile):
@@ -54,3 +55,6 @@ class Board:
         if foundTile:
             foundTile.players.remove(player)
             nextTile.players.append(player)
+
+    def getStartTile(self):
+        return self.startTile

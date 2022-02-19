@@ -8,7 +8,6 @@ from src.game.boardGame2.firstBoard import FirstBoard
 
 
 
-
 def main():
     pygame.init()
     framerate = 60

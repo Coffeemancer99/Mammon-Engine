@@ -10,9 +10,13 @@ from src.game.boardGame2.player import Player
 
 class FirstBoard(unittest.TestCase):
 
+    def __init__(self):
+        self.startTile = None
+        pass
+
     def testFirstBoard(self):
         #make a player
-        player1 = Player()
+        # player1 = Player()
 
         startTile = Tile()
         startTile.x = 0
@@ -169,8 +173,8 @@ class FirstBoard(unittest.TestCase):
         tile4.image = SpriteLoader().loadImage("redTile.png")
         tile14.image = SpriteLoader().loadImage("redTile.png")
 
-        player1.image = SpriteLoader().loadImage("testPlayer.png")
-        tile2.players.append(player1)
+        # player1.image = SpriteLoader().loadImage("testPlayer.png")
+        # tile2.players.append(player1)
 
         startTile.nextTiles.append(tile2)
         tile2.nextTiles.append(tile3)
@@ -254,17 +258,19 @@ class FirstBoard(unittest.TestCase):
         board.addTile(tile38)
 
 
+        board.startTile = startTile
         renderer = BoardRenderer(board)
-        isRunning = True
-        while(isRunning):
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-
-            # render everything
-            renderer.render()
-            time.sleep(0.25)
+        return board
+        # isRunning = True
+        # while(isRunning):
+        #
+        #     for event in pygame.event.get():
+        #         if event.type == pygame.QUIT:
+        #             pygame.quit()
+        #
+        #     # render everything
+        #     renderer.render()
+        #     time.sleep(0.25)
 
             # # get all the moves for player 1
             # moves = board.getPotentialMoves(player1)

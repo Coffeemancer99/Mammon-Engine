@@ -6,6 +6,7 @@ import random
 from src.game.boardGame.boardPlayers import BoardPlayer
 from enum import Enum, auto
 from src.game.boardGame2.board import Board
+from src.game.boardGame2.boardRenderer import BoardRenderer
 from src.game.boardGame2.spriteLoader import SpriteLoader
 
 """
@@ -133,6 +134,8 @@ def getPlayerTurn(player, board):
     # Repeat until all players have gone and done a turn so we can do the mini game
 
 
+
+
 """
     The function is what starts the BoardGame and is the runner for the main game and the mini-games
 
@@ -151,11 +154,13 @@ def startGame(mainWindow, scale, framerate, board):
     numOfSpots = 0
     playerSelectFork = 0
     clock = pygame.time.Clock()
+    renderer = BoardRenderer(board)
     # init the players
     playerOne = BoardPlayer(1)
     playerTwo = BoardPlayer(2)
     playerThree = BoardPlayer(3)
     playerFour = BoardPlayer(4)
+
     playerOne.image = SpriteLoader().loadImage("testPlayer.png")
     playerTwo.image = SpriteLoader().loadImage("testPlayer2.png")
     playerThree.image = SpriteLoader().loadImage("testPlayer3.png")
@@ -163,15 +168,18 @@ def startGame(mainWindow, scale, framerate, board):
     # TODO: NEED TO GET THE TILE MAP FROM ANDREW
 
     listOfPlayers = [playerOne, playerTwo, playerThree, playerFour]
+    startTile = board.getStartTile()
+    for i in range(len(listOfPlayers)):
+        startTile.players.append(listOfPlayers[i])
 
     firstIterationOfGame = True
     while True:
-        clock.tick(framerate)
+        clock.tick(2)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 break
             pos = pygame.mouse.get_pos()
-            if firstIterationOfGame:
+            if not firstIterationOfGame:
                 # This is to activate the screen on who goes first
                 firstIterationOfGame = not firstIterationOfGame
                 goesFirstScreen(mainWindow, scale, framerate, listOfPlayers, board)
@@ -218,6 +226,7 @@ def startGame(mainWindow, scale, framerate, board):
                 currentPlayer = 0
                 # TODO: This is where drake comes in start here Drake
                 pass
+            renderer.render()
 
     #########################################################################################
     # playerOne = BoardPlayer(1)
