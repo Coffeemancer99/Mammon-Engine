@@ -142,6 +142,7 @@ def getPlayerTurn(player, board):
     :param: mainWindow - window of the game
     :param: scale - the scale of the game
     :param: frameRate - frame rate of the game
+    :param: board - the board that will be used for the game
     :return: - None 
     
 """
@@ -172,63 +173,68 @@ def startGame(mainWindow, scale, framerate, board):
     for i in range(len(listOfPlayers)):
         startTile.players.append(listOfPlayers[i])
 
+    isRunning = True
     firstIterationOfGame = True
-    while True:
+    while isRunning:
         clock.tick(framerate)
+        key = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                break
-            pos = pygame.mouse.get_pos()
-            if not firstIterationOfGame: ## TODO: Make this not NOT
-                # This is to activate the screen on who goes first
-                firstIterationOfGame = not firstIterationOfGame
-                goesFirstScreen(mainWindow, scale, framerate, listOfPlayers, board)
-                continue
-            # Game starts here
-            # for each player in listOfPlayers, make them do a move by rolling dice and going to a tile
-            if currentState == States.PLAYERMOVE:
-                # If the player lost their turn, skip
-                if listOfPlayers[currentPlayer].getLostTurn():
-                    currentPlayer += 1
-                    # Set it to false
-                    listOfPlayers[currentPlayer].setLostTurn()
-                playerMovement = getPlayerTurn(listOfPlayers[currentPlayer], board)
-                currentState = States.ANNIMATING
-            if currentState == States.ANNIMATING:
-                nextTiles = board.getPotentialMoves(listOfPlayers[currentPlayer])
-                # If I see a fork in the road, then we need to pick which path to go to next
-                if len(nextTiles) > 1:
-                    # TODO: Need to make the selection screen for multiple paths
-                    if playerSelectFork == 0:
+                isRunning = False
+            if key[pygame.K_SPACE]:
+                if not firstIterationOfGame: ## TODO: Make this not NOT
+                    # This is to activate the screen on who goes first
+                    firstIterationOfGame = not firstIterationOfGame
+                    goesFirstScreen(mainWindow, scale, framerate, listOfPlayers, board)
+                    continue
+                # Game starts here
+                # for each player in listOfPlayers, make them do a move by rolling dice and going to a tile
+                if currentState == States.PLAYERMOVE:
+                    # If the player lost their turn, skip
+                    if listOfPlayers[currentPlayer].getLostTurn():
+                        # Set it to false
+                        listOfPlayers[currentPlayer].setLostTurn()
+                        currentPlayer += 1
+                    playerMovement = getPlayerTurn(listOfPlayers[currentPlayer], board)
+                    print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} rolled a {playerMovement}")
+                    currentState = States.ANNIMATING
+                if currentState == States.ANNIMATING:
+                    nextTiles = board.getPotentialMoves(listOfPlayers[currentPlayer])
+                    # If I see a fork in the road, then we need to pick which path to go to next
+                    if len(nextTiles) > 1:
+                        # TODO: Need to make the selection screen for multiple paths
+                        if playerSelectFork == 0:
+                            board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])
+                        elif playerSelectFork == 1:
+                            board.movePlayer(nextTiles[1], listOfPlayers[currentPlayer])
+                        elif playerSelectFork == 2:
+                            board.movePlayer(nextTiles[2], listOfPlayers[currentPlayer])
+                    else:
+                        # If we have no fork in the road, then we just go straight
                         board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])
-                    elif playerSelectFork == 1:
-                        board.movePlayer(nextTiles[1], listOfPlayers[currentPlayer])
-                    elif playerSelectFork == 2:
-                        board.movePlayer(nextTiles[2], listOfPlayers[currentPlayer])
-                else:
-                    # If we have no fork in the road, then we just go straight
-                    board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])
-                numOfSpots += 1
-            if numOfSpots == playerMovement:
-                # If we reach here, that means that we are done animating
-                numOfSpots = 0
-                # We set the player's position to where they are now within the tile after all the potential paths
-                # they went
-                listOfPlayers[currentPlayer].setCurrentPosition(board.getCurrentTile(listOfPlayers[currentPlayer]))
-                getTypeOfTile(board.getCurrentTile(listOfPlayers[currentPlayer]), listOfPlayers[currentPlayer])
-                if currentPlayer == 3: # TODO: Might have to make this 4 (Start here) FIX THEY ONLY MOVE WITH MOUSE BUG
-                    currentState = States.STARTMINIGAME
-                else:
-                    currentPlayer += 1
-                    currentState = States.PLAYERMOVE
-            # Once all the players are done here, we start a random mini-game
-            if currentState == States.STARTMINIGAME:
-                currentPlayer = 0
-                # TODO: This is where drake comes in start here Drake
 
-                # At the end
-                currentState = States.PLAYERMOVE
-                pass
+                    # TODO: Might have to make this a while loop
+                    numOfSpots += 1
+                if numOfSpots == playerMovement:
+                    # If we reach here, that means that we are done animating
+                    numOfSpots = 0
+                    # We set the player's position to where they are now within the tile after all the potential paths
+                    # they went
+                    listOfPlayers[currentPlayer].setCurrentPosition(board.getCurrentTile(listOfPlayers[currentPlayer]))
+                    getTypeOfTile(board.getCurrentTile(listOfPlayers[currentPlayer]), listOfPlayers[currentPlayer])
+                    if currentPlayer == 3: # TODO: Might have to make this 4 (Start here) FIX THEY ONLY MOVE WITH MOUSE BUG
+                        currentState = States.STARTMINIGAME
+                    else:
+                        currentPlayer += 1
+                        currentState = States.PLAYERMOVE
+                # Once all the players are done here, we start a random mini-game
+                if currentState == States.STARTMINIGAME:
+                    currentPlayer = 0
+                    # TODO: This is where drake comes in Start Here Drake
+
+                    # At the end
+                    currentState = States.PLAYERMOVE
+                    pass
             renderer.render()
 
     #########################################################################################
