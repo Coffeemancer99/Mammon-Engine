@@ -182,7 +182,7 @@ def startGame(mainWindow, scale, framerate, board):
             if event.type == pygame.QUIT:
                 isRunning = False
             if key[pygame.K_SPACE]:
-                if not firstIterationOfGame: ## TODO: Make this not NOT
+                if not firstIterationOfGame: ## TODO: Make this not NOTt
                     # This is to activate the screen on who goes first
                     firstIterationOfGame = not firstIterationOfGame
                     goesFirstScreen(mainWindow, scale, framerate, listOfPlayers, board)
