@@ -1,4 +1,3 @@
-from tile import Tile
 
 class Board:
     tiles = []
@@ -31,6 +30,12 @@ class Board:
             for searchPlayer in tile.players:
                 if player == searchPlayer:
                     return tile.nextTiles
+
+    def getCurrentTile(self, player):
+        for tile in self.tiles:
+            for searchPlayer in tile.players:
+                if player == searchPlayer:
+                    return tile
 
 
     '''

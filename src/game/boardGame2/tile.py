@@ -10,6 +10,7 @@ class Tile:
     nextTiles = []
     players = []
     image = None
+    typeOfTile = ""
 
 #  Works with nothing or can work as a
 #  Copy Constructor

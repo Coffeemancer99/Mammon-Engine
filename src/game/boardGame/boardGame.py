@@ -4,10 +4,35 @@ import time
 import src.engine.scenecreator.drawTileMap as drawTileMap
 import random
 from src.game.boardGame.boardPlayers import BoardPlayer
+from enum import Enum, auto
+from src.game.boardGame2.board import Board
+from src.game.boardGame2.spriteLoader import SpriteLoader
 
 """
     File authored by Joel Tanig
 """
+
+
+class States(Enum):
+    PLAYERMOVE = auto()
+    ANNIMATING = auto()
+    STARTMINIGAME = auto()
+
+
+def getTypeOfTile(currentTile, player):
+    if currentTile.typeOfTile == "Regular":
+        # If it is a regular tile, we just need to give them 5 coins
+        player.setMoney(5)
+    elif currentTile.typeOfTile == "Dual":
+        pass
+    elif currentTile.typeOfTile == "Store":
+        pass
+    elif currentTile.typeOfTile == "Bad":
+        amountLost = rollOfDice(6)
+        player.setMoney(amountLost)
+    elif currentTile.typeOfTile == "Gate":
+        pass
+
 
 """
     Rolls one dice
@@ -68,7 +93,7 @@ def setPlacementsForBoardPlayers(listOfPlayers, listOfPlacements, listOfDice):
 """
 
 
-def goesFirstScreen(mainWindow, scale, frameRate, listOfPlayers):
+def goesFirstScreen(mainWindow, scale, frameRate, listOfPlayers, board):
     clock = pygame.time.Clock()  # Clock used for frame rate
     # First start the game by rolling dice, this will contain no duplicates
     listOfPlacements = [0, 0, 0, 0]
@@ -95,21 +120,12 @@ def goesFirstScreen(mainWindow, scale, frameRate, listOfPlayers):
 """
 
 
-def doPlayerTurn(player):
+#TODO: Refactor this later
+def getPlayerTurn(player, board):
     # We are going to assume 2 dice rolls for now
-    diceRoll = rollOfDice(6) + rollOfDice(6)
-    player.setCurrentPosition(diceRoll)
+    diceRoll = rollOfDice(3)
     # @Need someone to animate this dice roll stuff
-
-    # Then we go on a tile one by one until current position is 0 to know that we are at the right tile
-    for i in range(len(player.getCurrentPosition())):
-        # @Need to animate the player here, so they can go on the board one by one
-        pass
-
-    # TODO: START HERE and do the moving logic here!!!!
-    # THIS IS HOW THE PLAYER MOVES
-    # From here, we have landed ona tile, and now we need to do some checks
-    # First check, what type of tile is it, make a method for it
+    return diceRoll
     # @Need to get andrew's graph working so i can even do this check with the tiles
     # Second check, from the method, do what the tile says and set params from the player class
     # Repeat until all players have gone and done a turn so we can do the mini game
@@ -126,17 +142,24 @@ def doPlayerTurn(player):
 """
 
 
-def startGame(mainWindow, scale, framerate):
-    # PLACE IMAGES
-    # Load the map
-    # currMap = getGameMap()
-    # drawTileMap.drawScene(mainWindow, currMap, images)
+def startGame(mainWindow, scale, framerate, board):
+    currentState = States.PLAYERMOVE
+    currentPlayer = 0
+    moveTracker = 0
+    numOfSpots = 0
+    playerSelectFork = 0
     clock = pygame.time.Clock()
     # init the players
     playerOne = BoardPlayer(1)
     playerTwo = BoardPlayer(2)
     playerThree = BoardPlayer(3)
     playerFour = BoardPlayer(4)
+    playerOne.image = SpriteLoader().loadImage("testPlayer.png")
+    playerTwo.image = SpriteLoader().loadImage("testPlayer2.png")
+    playerThree.image = SpriteLoader().loadImage("testPlayer3.png")
+    playerFour.image = SpriteLoader().loadImage("testPlayer4.png")
+    # TODO: NEED TO GET THE TILE MAP FROM ANDREW
+
     listOfPlayers = [playerOne, playerTwo, playerThree, playerFour]
 
     firstIterationOfGame = True
@@ -149,14 +172,45 @@ def startGame(mainWindow, scale, framerate):
             if firstIterationOfGame:
                 # This is to activate the screen on who goes first
                 firstIterationOfGame = not firstIterationOfGame
-                goesFirstScreen(mainWindow, scale, framerate, listOfPlayers)
+                goesFirstScreen(mainWindow, scale, framerate, listOfPlayers, board)
                 continue
             # Game starts here
-
             # for each player in listOfPlayers, make them do a move by rolling dice and going to a tile
-            for i in range(len(listOfPlayers)):
-                doPlayerTurn(listOfPlayers[i])
+            if currentState == States.PLAYERMOVE:
+                moveTracker = getPlayerTurn(listOfPlayers[currentPlayer], board)
+                currentState = States.ANNIMATING
+            if currentState == States.ANNIMATING:
+                nextTiles = board.getPotentialMoves(listOfPlayers[currentPlayer])
+                # If I see a fork in the road, then we need to pick which path to go to next
+                if len(nextTiles) > 1:
+                    # TODO: Need to make the selection screen for multiple paths
+                    if playerSelectFork == 0:
+                        board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])
+                    elif playerSelectFork == 1:
+                        board.movePlayer(nextTiles[1], listOfPlayers[currentPlayer])
+                    elif playerSelectFork == 2:
+                        board.movePlayer(nextTiles[2], listOfPlayers[currentPlayer])
+                else:
+                    # If we have no fork in the road, then we just go straight
+                    board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])
+                numOfSpots += 1
+            if numOfSpots == moveTracker:
+                # If we reach here, that means that we are done animating
+                numOfSpots = 0
+                # We set the player's position to where they are now within the tile after all the potential paths
+                # they went
+                listOfPlayers[currentPlayer].setCurrentPosition(board.getCurrentTile(listOfPlayers[currentPlayer]))
+                getTypeOfTile(board.getCurrentTile(listOfPlayers[currentPlayer]), listOfPlayers[currentPlayer])
+                if currentPlayer == 4:
+                    currentState = States.STARTMINIGAME
+                else:
+                    currentPlayer += 1
+                    currentState = States.PLAYERMOVE
             # Once all the players are done here, we start a random mini-game
+            if States.STARTMINIGAME:
+                currentPlayer = 0
+                # TODO: This is where drake comes in start here Drake
+                pass
 
     #########################################################################################
     # playerOne = BoardPlayer(1)

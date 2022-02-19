@@ -3,10 +3,10 @@ import random
 
 
 def initGoodItems():
-    goodItems = [Item("G-pickPlayerToLoseMG", False, None), Item("G-thirdDice", False, None),
-                 Item("G-speedBoostMG", False, None), (Item("G-gainMoneyRandom", False, None)),
-                 Item("G-teleportClose", False, None), Item("G-sabotageDice", False, None),
-                 Item("G-stealItem", False, None), Item("G-opponentLoseTurn", False, None)]
+    goodItems = [Item("G-pickPlayerToLoseMG", False, None, 40), Item("G-thirdDice", False, None, 15),
+                 Item("G-speedBoostMG", False, None, 10), (Item("G-gainMoneyRandom", False, None, 30)),
+                 Item("G-teleportClose", False, None, 25), Item("G-sabotageDice", False, None, 15),
+                 Item("G-stealItem", False, None, 40), Item("G-opponentLoseTurn", False, None, 50)]
     return goodItems
 
     # Make a init good function and a init bad function.
@@ -15,20 +15,24 @@ def initGoodItems():
 
 
 def initBadItems():
-    badItems = [Item("B-moveOneSpotLess", True, None), Item("B-invertedControlMG", True, None),
-                Item("B-changeSpots", True, None), Item("B-loseMoneyRandom", True, None),
-                Item("B-loseTurn", True, None), Item("B-oneDice", True, None), Item("B-moveToPrevSpot", True, None)]
+    badItems = [Item("B-moveOneSpotLess", True, None, 15), Item("B-invertedControlMG", True, None, 40),
+                Item("B-changeSpots", True, None,40), Item("B-loseMoneyRandom", True, None,30),
+                Item("B-loseTurn", True, None, 40), Item("B-oneDice", True, None,20), Item("B-moveToPrevSpot", True, None, 15)]
     return badItems
 
 
 class Item:
-    def __init__(self, name, isbad, rarity):
+    def __init__(self, name, isbad, rarity, price):
         self.name = name
         self.isbad = isbad
         self.rarity = rarity
+        self.price = price
 
     def getName(self):
         return self.name
+
+    def getPrice(self):
+        return self.price
 
 
 class ItemHandler:
