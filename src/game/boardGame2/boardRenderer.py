@@ -25,7 +25,6 @@ class BoardRenderer:
         self.window.blit(player.image, (tile.x, tile.y))
 
 
-
     def render(self):
         self.window.fill((155, 155, 155))
 

@@ -83,4 +83,3 @@ class TestBoardRenderer(unittest.TestCase):
                 board.movePlayer(moves[0], player1)
 
         # Come back for backtiles later
-

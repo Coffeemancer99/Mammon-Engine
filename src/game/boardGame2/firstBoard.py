@@ -19,11 +19,13 @@ class FirstBoard(unittest.TestCase):
         startTile.y = 416
         startTile.width = 32
         startTile.height = 32
+        # startTile.image = pygame.image.load("data/assets/sprites/blueTile.png")
         startTile.image = SpriteLoader().loadImage("blueTile.png")
 
         tile2 = Tile(startTile)
         tile2.x += 32
         tile2.y -= 32
+        # tile2.image = pygame.image.load("data/assets/sprites/blueTile.png")
         tile2.image = SpriteLoader().loadImage("blueTile.png")
 
         tile3 = Tile(tile2)
@@ -160,6 +162,10 @@ class FirstBoard(unittest.TestCase):
         tile38.x += 32
 
         # change tile color after so 5 and 6 don't inherit the color
+        # tile4.image = pygame.image.load("data/assets/sprites/redTile.png")
+        # tile14.image = pygame.image.load("data/assets/sprites/redTile.png")
+        # player1.image = pygame.image.load("../../../data/assets/sprites/testPlayer.png")
+
         tile4.image = SpriteLoader().loadImage("redTile.png")
         tile14.image = SpriteLoader().loadImage("redTile.png")
 
@@ -260,11 +266,11 @@ class FirstBoard(unittest.TestCase):
             renderer.render()
             time.sleep(0.25)
 
-            # get all the moves for player 1
-            moves = board.getPotentialMoves(player1)
-
-            # move player 1 to the first possible move in the move array
-            if(len(moves) > 1):
-                board.movePlayer(moves[1], player1)
-            elif(len(moves) > 0):
-                board.movePlayer(moves[0], player1)
+            # # get all the moves for player 1
+            # moves = board.getPotentialMoves(player1)
+            #
+            # # move player 1 to the first possible move in the move array
+            # if(len(moves) > 1):
+            #     board.movePlayer(moves[1], player1)
+            # elif(len(moves) > 0):
+            #     board.movePlayer(moves[0], player1)

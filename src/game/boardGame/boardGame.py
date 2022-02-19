@@ -184,7 +184,7 @@ def startGame(mainWindow, scale, framerate, board):
                     currentPlayer += 1
                     # Set it to false
                     listOfPlayers[currentPlayer].setLostTurn()
-                moveTracker = getPlayerTurn(listOfPlayers[currentPlayer], board)
+                moveTracker = 2 # getPlayerTurn(listOfPlayers[currentPlayer], board)
                 currentState = States.ANNIMATING
             if currentState == States.ANNIMATING:
                 nextTiles = board.getPotentialMoves(listOfPlayers[currentPlayer])

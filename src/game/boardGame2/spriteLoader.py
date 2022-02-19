@@ -10,4 +10,4 @@ class SpriteLoader:
         pass
 
     def loadImage(self, name):
-        return pygame.image.load("../../../data/assets/sprites/" + name)
+        return pygame.image.load("data/assets/sprites/" + name)

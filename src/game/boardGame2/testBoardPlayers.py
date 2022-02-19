@@ -2,13 +2,13 @@ import unittest
 import time
 import pygame
 
-from boardRenderer import BoardRenderer
-from board import Board
+from src.game.boardGame2.boardRenderer import BoardRenderer
+from src.game.boardGame2.board import Board
 from src.game.boardGame.boardGame import getPlayerTurn
 from src.game.boardGame.boardPlayers import BoardPlayer
-from tile import Tile
-from spriteLoader import SpriteLoader
-from player import Player
+from src.game.boardGame2.tile import Tile
+from src.game.boardGame2.spriteLoader import SpriteLoader
+# from player import Player
 
 # 262
 
@@ -97,5 +97,3 @@ class TestBoardPlayers(unittest.TestCase):
                self.thing = 2
                moveTracker = 0
                numOfSpots = 0
-
-
