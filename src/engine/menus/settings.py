@@ -12,6 +12,7 @@ def launch(width, height, framerate, window, scale):
     windowSizeImg=pygame.transform.scale(windowSizeImg, ((windowSizeImg.get_width()) * scale, (windowSizeImg.get_height()) * scale))
     sizesPng=pygame.transform.scale(sizesPng, ((sizesPng.get_width()) * scale, (sizesPng.get_height()) * scale))
     backPng = pygame.transform.scale(backPng, ((backPng.get_width()) * scale, (backPng.get_height()) * scale))
+
     #Paint them on screen
     window.blit(windowSizeImg, (0,0)) #1
     window.blit(sizesPng, (0,112*scale)) #2
@@ -21,14 +22,12 @@ def launch(width, height, framerate, window, scale):
     isRunning=True
     while(isRunning):
         clock.tick(framerate)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning=False
             #KEYBOARD INPUTS
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
-
                 #Resolution Option
                 if (pos[1]>111*scale and pos[1]<224*scale):
                     #SMALL RES

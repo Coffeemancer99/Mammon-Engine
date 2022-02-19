@@ -31,8 +31,6 @@ def startGame(mainWindow, scale, framerate):
     #groundTile.scale(scale)
     groundSprite = pygame.image.load("../../data/assets/sprites/groundSprite1.png")
     groundSprite = pygame.transform.scale(groundSprite, ((groundSprite.get_width()) * scale, (groundSprite.get_height()) * scale))
-
-    # ANDREW -- changed what is needed to init player, check it out (need keys and image)
     brian = player.Player(300,150, scale, pygame.K_w,
                           pygame.K_a, pygame.K_d,
                           pygame.image.load("../../data/assets/sprites/bolSprite.png"))
@@ -47,8 +45,6 @@ def startGame(mainWindow, scale, framerate):
     while(isRunning):
         clock.tick(framerate)
         brian.update()
-
-        #isCollided = False
         drawTileMap.drawScene(mainWindow, currMap, images) #Redraws the main window
         mainWindow.blit(brian.sprite, (brian.rect.x, brian.rect.y))
         for event in pygame.event.get():
@@ -57,6 +53,4 @@ def startGame(mainWindow, scale, framerate):
         collision.staticHandler(staticTiles, brian)
         brian.updateRect()
 
-        # if isCollided == False:
-        #     brian.isGrounded = False
         pygame.display.update()
