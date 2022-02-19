@@ -86,9 +86,12 @@ def startGame(mainWindow, scale, framerate):
         players = list(map(lambda x: checkBound(x, Lz, scale), players))
 
 
-        map(lambda x: mainWindow.blit(x.sprite, (x.rect.x, x.rect.y)), players)
+        list(map(lambda x: mainWindow.blit(x.sprite, (x.rect.x, x.rect.y)), players))
 
-
+        # mainWindow.blit(brian.sprite, (brian.rect.x, brian.rect.y))
+        # mainWindow.blit(jerry.sprite, (jerry.rect.x, jerry.rect.y))
+        # mainWindow.blit(sally.sprite, (sally.rect.x, sally.rect.y))
+        # mainWindow.blit(henry.sprite, (henry.rect.x, henry.rect.y))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning=False
