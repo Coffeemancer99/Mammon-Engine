@@ -3,13 +3,18 @@ import src.minigame.fruitPanic.fruit as fruit
 import src.engine.scenecreator.tile as tile
 import src.minigame.fruitPanic.handController as player
 import pygame
+import time as time
 
-
-def dropFruit(scale):
+def dropFruit(scale, mainWindow):
+    windowX, windowY = pygame.display.get_surface().get_size()
     coconut = pygame.image.load("data/assets/sprites/coconut.png")
     lemon = pygame.image.load("data/assets/sprites/lemon.png")
     pineapple = pygame.image.load("data/assets/sprites/pineapple.png")
-    cocoDrop = fruit.Fruit(20,0, scale, coconut)
+    fruits = [coconut, lemon, pineapple]
+    random.seed(time.time())
+    randFruit = random.randrange(0,3)
+    fruitPost = random.randrange(0,int(windowX/4))
+    cocoDrop = fruit.Fruit(fruitPost, 0,  randFruit+1, scale, fruits[randFruit])
     return cocoDrop
 
 def drawCross(mainWindow, scale):
@@ -26,9 +31,23 @@ def checkBound(player, boundaries, scale):
 
         if currTile.rectCol.colliderect(player.rect.x + player.dX, player.rect.y, player.width, player.height):
             player.dX = 0
-    # if (player.rect.x + player.dX <= (-(player.width - 1) / 2)+lineWidth):
-    #     print("FUCK YOU")
-    #     player.dX = 0
+
+
+
+
+def checkFruit(players, fruits):
+    windowX, windowY = pygame.display.get_surface().get_size()
+    existingFruit = [] #Fruit that were not caught yet
+    for currFruit in fruits:
+        fruitFalling = True
+        for player in players:
+            if currFruit.rectCol.colliderect(player.rect.x + player.dX, player.rect.y, player.width/2, player.height/4):
+                fruitFalling = False
+                print(player.score)
+                player.score += 1
+        if(fruitFalling):
+            existingFruit.append(currFruit)
+    return existingFruit
 
 
 
@@ -75,28 +94,36 @@ def startGame(mainWindow, scale, framerate):
 
     players = [brian, jerry, sally, henry]
 
-    p1_camera = pygame.Rect(0, 0, 400, 300)
-    p2_camera = pygame.Rect(400, 0, 400, 300)
-    p3_camera = pygame.Rect(0, 300, 400, 300)
-    p4_camera = pygame.Rect(400, 300, 400, 300)
+    p1Camera = pygame.Rect(0, 0, windowX/4, windowY/4)
+    p2Camera = pygame.Rect(windowX - windowX/4, 0, windowX/4, windowY/4)
+    p3Camera = pygame.Rect(0, windowY - windowY/4, windowX/4, windowY/4)
+    p4Camera = pygame.Rect(windowX - windowX/4, windowY - windowY/4, windowX/4, windowY/4)
+    cameras = [p1Camera, p2Camera, p3Camera, p4Camera]
     coco=None
     fruitTimer = 120
+    fruitList = []
 
     while(isRunning):
         clock.tick(framerate)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning=False
         mainWindow.fill((0, 0, 0))
-        drawCross(mainWindow, scale)
-        if(fruitTimer==0):
-            coco=dropFruit(0.5)
-            print("YO")
-            fruitTimer=random.randrange(30,250)
 
-        if(coco!=None):
-            players.append(coco)
-            #mainWindow.blit(coco.sprite, (coco.rect.x, coco.rect.y))
+        drawCross(mainWindow, scale)
+        if(fruitTimer<=0):
+            coco=dropFruit(scale, mainWindow)
+            fruitList.append(coco)
+
+            random.seed(time.time())
+            print("YO")
+            fruitTimer=random.randrange(1,75)
+        fruitList = checkFruit(players, fruitList)
+        if(len(fruitList)>0):
+            list(map(lambda x: x.update(), fruitList))  #Fruit falling
+            list(map(lambda x: x.updateRect(), fruitList))  # Update collision
+            list(map(lambda x: mainWindow.blit(x.sprite, (x.rectCol.x, x.rectCol.y)), fruitList))  # Draw fruits
         fruitTimer -= 1
 
         list(map(lambda x: x.update(), players)) #Get player input

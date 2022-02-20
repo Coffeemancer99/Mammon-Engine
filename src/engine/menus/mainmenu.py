@@ -3,7 +3,7 @@ import src.engine.menus.testgame as testgame
 #Launches main menu
 import src.engine.menus.settings as settings
 import src.minigame.fruitPanic.handGame as handGame
-
+import src.engine.andrewMenus.mapSelectionMenu as boardMenu
 
 def launch(width, height, framerate, scale):
     clock = pygame.time.Clock()  # Clock used for frame rate
@@ -11,12 +11,16 @@ def launch(width, height, framerate, scale):
     #Button images
     newGameImg=pygame.image.load("data/assets/sprites/newgame.png")
     settingsImg=pygame.image.load("data/assets/sprites/settings.png")
+    minigames=pygame.image.load("data/assets/sprites/minigames.png")
     #Scale images
     newGameImg=pygame.transform.scale(newGameImg, ((newGameImg.get_width()) * scale, (newGameImg.get_height()) * scale))
     settingsImg=pygame.transform.scale(settingsImg, ((settingsImg.get_width()) * scale, (settingsImg.get_height()) * scale))
+    minigames = pygame.transform.scale(minigames, ((minigames.get_width()) * scale, (minigames.get_height()) * scale))
     #Paint them on screen
     mainWindow.blit(newGameImg, (0,0)) #1
     mainWindow.blit(settingsImg, (0,112*scale)) #2
+    mainWindow.blit(minigames, (0, 224 * scale))  # 2
+
     pygame.display.update()
     isRunning=True
 
@@ -32,17 +36,16 @@ def launch(width, height, framerate, scale):
                 #new game button
                 if (pos[1]<112*scale and pos[1]>=0):
                     print("NEW GAME PRESSED")
-                    #TURN OFF HAND TEST IF YOU WANT TO USE THE PHYSICS ENGINE
-                    if(handTest):
-                        return handGame.startGame(mainWindow, scale, framerate)
+                    return boardMenu.launchMapMenu(mainWindow, framerate, scale)
 
-                    return testgame.startGame(mainWindow, scale, framerate)
-                    #TEMPORARY
 
                 #Settings button
                 if (pos[1]>112*scale and pos[1]<224*scale):
                     print("SETTINGS")
                     return settings.launch(width, height, framerate, mainWindow, scale)
+                if (pos[1]>224*scale and pos[1]<336*scale):
+
+                    return handGame.startGame(mainWindow, scale, framerate)
 
 
 

@@ -26,6 +26,8 @@ class Player():
         self.width = self.sprite.get_width()
         self.height = self.sprite.get_height()
 
+        self.score = 0
+
         self.dX = 0
         self.dY = 0
 

@@ -3,9 +3,9 @@ from src.game.boardGame import boardGame
 from src.game.boardGame2.firstBoard import FirstBoard
 
 
-def launchMapMenu(width, height, framerate, scale):
+def launchMapMenu(mainWindow, framerate, scale):
     clock = pygame.time.Clock()
-    mainWindow = pygame.display.set_mode((width, height))
+    width, height = pygame.display.get_surface().get_size()
 
     # menu buttons for now
     mapPrevImg = pygame.image.load("data/assets/sprites/mapPreview.png")

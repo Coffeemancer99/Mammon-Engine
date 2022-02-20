@@ -5,17 +5,18 @@ from src.engine.physics.physics import movementLeftRight, applyGravityPlayer
 
 
 class Fruit():
-    def __init__(self, x, y, scale, sprite):
+    def __init__(self, x, y, speed, scale, sprite):
         self.scale = scale
       #  self.sprite = pygame.image.load("../../data/assets/sprites/bolSprite.png")
         self.sprite = sprite
-        self.sprite = pygame.transform.scale(self.sprite, ((self.sprite.get_width()) * scale, (self.sprite.get_height()) * scale))
+        self.sprite = pygame.transform.scale(self.sprite, ((self.sprite.get_width()) * scale/2, (self.sprite.get_height()) * scale/2))
         # may need to scale later
-        self.rect = self.sprite.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.rectCol = self.sprite.get_rect()
+        self.rectCol.x = x
+        self.rectCol.y = y
         self.velY = 0
 
+        self.speed = speed
 
         self.width = self.sprite.get_width()
         self.height = self.sprite.get_height()
@@ -26,11 +27,9 @@ class Fruit():
     def update(self):
         self.dX = 0
         self.dY = 0
-        jumpHeight = 16*self.scale
-        curX = 0
-        curY = 0
-        fallSpeed = 1*self.scale
-        terminalV = 3*self.scale
+
+        fallSpeed = 2 * self.speed * self.scale
+        terminalV = 8 * self.scale
 
         # add some form of gravity
         self.velY = applyGravityPlayer(self.velY, fallSpeed, terminalV)
@@ -40,5 +39,5 @@ class Fruit():
 
 #ONLY UPDATE RECTANGLE IN ONE PLACE!!! O_O SHARED MUTABLE STATE OH MY
     def updateRect(self):
-        self.rect.x += self.dX
-        self.rect.y += self.dY
+        self.rectCol.x += self.dX
+        self.rectCol.y += self.dY
