@@ -1,14 +1,10 @@
-import unittest
-import time
-import pygame
-
 from src.game.boardGame2.boardRenderer import BoardRenderer
 from src.game.boardGame2.board import Board
 from src.game.boardGame2.tile import Tile
 from src.game.boardGame2.spriteLoader import SpriteLoader
 from src.game.boardGame2.player import Player
 
-class FirstBoard(unittest.TestCase):
+class FirstBoard():
 
     def __init__(self):
         self.startTile = None
