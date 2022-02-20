@@ -1,12 +1,16 @@
-import src.engine.scenecreator.drawTileMap as drawTileMap
+import random
+import src.minigame.fruitPanic.fruit as fruit
 import src.engine.scenecreator.tile as tile
-import src.minigame.handController as player
-import src.engine.collision as collision
-import src.engine.menus.testgame as testgame
+import src.minigame.fruitPanic.handController as player
 import pygame
-import src.engine.scenecreator.drawTileMap as drawTileMap
 
 
+def dropFruit(scale):
+    coconut = pygame.image.load("data/assets/sprites/coconut.png")
+    lemon = pygame.image.load("data/assets/sprites/lemon.png")
+    pineapple = pygame.image.load("data/assets/sprites/pineapple.png")
+    cocoDrop = fruit.Fruit(20,0, scale, coconut)
+    return cocoDrop
 
 def drawCross(mainWindow, scale):
     lineWidth = 3*scale
@@ -25,7 +29,7 @@ def checkBound(player, boundaries, scale):
     # if (player.rect.x + player.dX <= (-(player.width - 1) / 2)+lineWidth):
     #     print("FUCK YOU")
     #     player.dX = 0
-    return player
+
 
 
 #Testing out a 4 player minigame
@@ -75,31 +79,28 @@ def startGame(mainWindow, scale, framerate):
     p2_camera = pygame.Rect(400, 0, 400, 300)
     p3_camera = pygame.Rect(0, 300, 400, 300)
     p4_camera = pygame.Rect(400, 300, 400, 300)
+    coco=None
+    fruitTimer = 120
 
     while(isRunning):
         clock.tick(framerate)
-        mainWindow.fill((0, 0, 0))
-
-        drawCross(mainWindow, scale)
-        players= list(map(lambda x: x.update(), players))
-
-        players = list(map(lambda x: checkBound(x, Lz, scale), players))
-
-
-        list(map(lambda x: mainWindow.blit(x.sprite, (x.rect.x, x.rect.y)), players))
-
-        # mainWindow.blit(brian.sprite, (brian.rect.x, brian.rect.y))
-        # mainWindow.blit(jerry.sprite, (jerry.rect.x, jerry.rect.y))
-        # mainWindow.blit(sally.sprite, (sally.rect.x, sally.rect.y))
-        # mainWindow.blit(henry.sprite, (henry.rect.x, henry.rect.y))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning=False
+        mainWindow.fill((0, 0, 0))
+        drawCross(mainWindow, scale)
+        if(fruitTimer==0):
+            coco=dropFruit(0.5)
+            print("YO")
+            fruitTimer=random.randrange(30,250)
 
-        brian.updateRect()
-        jerry.updateRect()
-        sally.updateRect()
-        henry.updateRect()
+        if(coco!=None):
+            players.append(coco)
+            #mainWindow.blit(coco.sprite, (coco.rect.x, coco.rect.y))
+        fruitTimer -= 1
 
-
-        pygame.display.update()
+        list(map(lambda x: x.update(), players)) #Get player input
+        list(map(lambda x: checkBound(x, Lz, scale), players)) #Confirm that players are in bounds of game
+        list(map(lambda x: x.updateRect(), players)) #Update collision
+        list(map(lambda x: mainWindow.blit(x.sprite, (x.rect.x, x.rect.y)), players))  # Draw players
+        pygame.display.update() #Update display window

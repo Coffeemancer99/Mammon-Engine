@@ -5,9 +5,9 @@ def launch(width, height, framerate, window, scale):
     clock = pygame.time.Clock()  # Clock used for frame rate
     window.fill((0, 0, 0))
     #Button images
-    windowSizeImg=pygame.image.load("../../data/assets/sprites/windowsize.png")
-    sizesPng=pygame.image.load("../../data/assets/sprites/sizes.png")
-    backPng = pygame.image.load("../../data/assets/sprites/back.png")
+    windowSizeImg=pygame.image.load("data/assets/sprites/windowsize.png")
+    sizesPng=pygame.image.load("data/assets/sprites/sizes.png")
+    backPng = pygame.image.load("data/assets/sprites/back.png")
     #Rescale images
     windowSizeImg=pygame.transform.scale(windowSizeImg, ((windowSizeImg.get_width()) * scale, (windowSizeImg.get_height()) * scale))
     sizesPng=pygame.transform.scale(sizesPng, ((sizesPng.get_width()) * scale, (sizesPng.get_height()) * scale))

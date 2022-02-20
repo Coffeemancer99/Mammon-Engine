@@ -1,10 +1,10 @@
 import pygame
-import time
 import src.engine.menus.testgame as testgame
 #Launches main menu
 import src.engine.menus.settings as settings
-import src.minigame.handGame as handGame
-import src.engine.scenecreator.drawTileMap as drawTileMap
+import src.minigame.fruitPanic.handGame as handGame
+
+
 def launch(width, height, framerate, scale):
     clock = pygame.time.Clock()  # Clock used for frame rate
     mainWindow = pygame.display.set_mode((width, height)) #The main window display
