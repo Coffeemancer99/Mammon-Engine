@@ -15,15 +15,15 @@ def dropFruit(scale, mainWindow, pId, position, randFruit):
     random.seed(time.time())
     lineWidth = 3 * scale
     fruitPost = random.randrange(position.left+lineWidth,position.right-lineWidth)
-    print(fruitPost)
+
     cocoDrop = fruit.Fruit(fruitPost, position.top,  randFruit+1, scale, fruits[randFruit], pId)
     return cocoDrop
 
 def drawCross(mainWindow, scale):
     lineWidth = 3*scale
     windowX, windowY = pygame.display.get_surface().get_size()
-    pygame.draw.line(mainWindow, (255, 255, 255), (windowX/2 +lineWidth, 0), (windowX/2 +lineWidth, windowY), lineWidth)
-    pygame.draw.line(mainWindow, (255, 255, 255), (0, windowY/2 + lineWidth), (windowX, windowY/2 + lineWidth), lineWidth)
+    pygame.draw.line(mainWindow, (255, 255, 255), (windowX/2, 0), (windowX/2, windowY), lineWidth)
+    pygame.draw.line(mainWindow, (255, 255, 255), (0, windowY/2), (windowX, windowY/2), lineWidth)
 
 def checkBound(player, boundaries, scale):
     windowX, windowY = pygame.display.get_surface().get_size()
@@ -44,13 +44,11 @@ def checkFruit(players, fruits):
         fruitFalling = True
         for player in players:
             if (currFruit.fruitId == player.pId):
-                if(player.pId==2):
-                    print(player.rect)
+
                 if currFruit.rectCol.colliderect(player.rect.x + player.dX, player.rect.y, player.width, player.height):
 
                     fruitFalling = False
 
-                    print(player.score)
                     player.score += 1
                 if(currFruit.rectCol.top>=player.rect.top):
                     fruitFalling = False
@@ -73,7 +71,7 @@ def startGame(mainWindow, scale, framerate):
     pirateX = pirateSprite.get_width() * scale
     pirateY = pirateSprite.get_height() * scale
     lineLength = 3 * scale
-    p1Pos = [windowX/4-windowX/16, (windowY/2)-(pirateY/2)-lineLength]
+    p1Pos = [windowX/4-windowX/16, (windowY/2)-pirateY-lineLength]
     p2Pos = [windowX - windowX/4 -windowX/16, (windowY/2)-(pirateY/2)-lineLength]
     p4Pos = [windowX - windowX/4 - windowX/16, windowY-(pirateY/2)-lineLength]
     p3Pos = [windowX/2 - windowX/4 -windowX/16, windowY-(pirateY/2)-lineLength ]
@@ -106,9 +104,9 @@ def startGame(mainWindow, scale, framerate):
     players = [brian, jerry, sally, henry]
 
     p1Camera = pygame.Rect(0, 0, windowX/2, windowY/2)
-    p2Camera = pygame.Rect(windowX - windowX/2 + lineLength*2, 0, windowX/2, windowY/2)
-    p3Camera = pygame.Rect(0, windowY - windowY/2, windowX/2, windowY/2)
-    p4Camera = pygame.Rect(windowX - windowX/2 + lineLength*2, windowY - windowY/2, windowX/2, windowY/2)
+    p2Camera = pygame.Rect(windowX/2, 0, windowX/2, windowY/2)
+    p3Camera = pygame.Rect(0, windowY/2, windowX/2, windowY/2)
+    p4Camera = pygame.Rect(windowX/2, windowY/2, windowX/2, windowY/2)
 
 
 

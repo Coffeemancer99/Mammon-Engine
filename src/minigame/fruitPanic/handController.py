@@ -39,7 +39,7 @@ class Player():
     def update(self):
         self.dX = 0
         self.dY = 0
-        transformSpeed = 4 * self.scale * 1.5
+        transformSpeed = 3 * self.scale
 
         key = pygame.key.get_pressed()
         # if key[self.upKey]:

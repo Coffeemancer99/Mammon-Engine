@@ -31,7 +31,7 @@ class Fruit():
         self.dY = 0
 
         fallSpeed = 2 * self.speed * self.scale
-        terminalV = 8 * self.scale
+        terminalV = 4 * self.scale
 
         # add some form of gravity
         self.velY = applyGravityPlayer(self.velY, fallSpeed, terminalV)
