@@ -18,6 +18,8 @@ class BoardPlayer(pygame.sprite.Sprite):
         self.lostTurn = False
         self.playerID = playerID
         self.inventory = []
+        self.diceOnePlacement = 0
+        self.diceTwoPlacement = 0
 
     # Do some magical operator overload magic
     def __lt__(self, other):
@@ -25,6 +27,12 @@ class BoardPlayer(pygame.sprite.Sprite):
 
     def setInventory(self, inventory):
         self.inventory.append(inventory)
+
+    def setDiceOnePlacement(self, dice):
+        self.diceOnePlacement = dice
+
+    def setDiceTwoPlacement(self, dice):
+        self.diceTwoPlacement = dice
 
     def removeInventoryItem(self, index):
         self.inventory.pop(index)
@@ -70,3 +78,9 @@ class BoardPlayer(pygame.sprite.Sprite):
 
     def getInventoryItem(self, index):
         return self.inventory[index]
+
+    def getDiceOnePlacement(self):
+        return self.diceOnePlacement
+
+    def getDiceTwoPlacement(self):
+        return self.diceTwoPlacement
