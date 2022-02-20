@@ -8,10 +8,12 @@ Player class implemented by Andrew Bunn
 '''
 
 class Player():
-    def __init__(self, x, y, scale,  upKey, leftKey, rightKey, downKey, sprite):
+    def __init__(self, x, y, scale,  upKey, leftKey, rightKey, downKey, sprite, pId):
         self.scale = scale
         self.sprite = sprite
         self.sprite = pygame.transform.scale(self.sprite, ((self.sprite.get_width()) * scale, (self.sprite.get_height()) * scale))
+
+        self.pId = pId
 
         self.rect = self.sprite.get_rect()
         self.rect.x = x
@@ -37,7 +39,7 @@ class Player():
     def update(self):
         self.dX = 0
         self.dY = 0
-        transformSpeed = 4 * self.scale
+        transformSpeed = 4 * self.scale * 1.5
 
         key = pygame.key.get_pressed()
         # if key[self.upKey]:
@@ -58,3 +60,6 @@ class Player():
     def updateRect(self):
         self.rect.x += self.dX
         self.rect.y += self.dY
+
+    def __repr__(self):
+        return (str(self.pId))
