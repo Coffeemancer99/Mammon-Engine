@@ -14,6 +14,8 @@ def launchMapMenu(mainWindow, framerate, scale):
     comingSoonButtonImg = pygame.image.load("data/assets/sprites/comingSoonMenuButton.png")
     acceptButtonImg = pygame.image.load("data/assets/sprites/acceptMenuButton.png")
     backButtonImg = pygame.image.load("data/assets/sprites/backMenuButton.png")
+    firstBoardPrevImg = pygame.image.load("data/assets/sprites/boardPrev.png")
+    unreleasedMapPrevImg = pygame.image.load("data/assets/sprites/unreleasedMapPrev.png")
 
     # Scale menu buttons and images
     mapPrevImg = pygame.transform.scale(mapPrevImg,
@@ -31,6 +33,13 @@ def launchMapMenu(mainWindow, framerate, scale):
     backButtonImg = pygame.transform.scale(backButtonImg,
                                          ((backButtonImg.get_width()) * scale,
                                           (backButtonImg.get_height()) * scale))
+    # needed to decrease the size of the image, div by 1.6 if full res to get to 320x280
+    firstBoardPrevImg = pygame.transform.scale(firstBoardPrevImg,
+                                         (((firstBoardPrevImg.get_width()) * scale)/1.6,
+                                          ((firstBoardPrevImg.get_height()) * scale)/1.6))
+    unreleasedMapPrevImg = pygame.transform.scale(unreleasedMapPrevImg,
+                                         ((unreleasedMapPrevImg.get_width()) * scale,
+                                          (unreleasedMapPrevImg.get_height()) * scale))
 
     # Paint buttons and images to screen
     mainWindow.fill((55, 55, 55))
@@ -40,6 +49,7 @@ def launchMapMenu(mainWindow, framerate, scale):
     mainWindow.blit(comingSoonButtonImg,(340 * scale, 112 * scale))
     mainWindow.blit(acceptButtonImg,(380 * scale, 348 * scale))
     mainWindow.blit(backButtonImg,(4 * scale, 412 * scale))
+
 
     pygame.display.update()
     isRunning = True
@@ -60,15 +70,19 @@ def launchMapMenu(mainWindow, framerate, scale):
                     if((click[1] > 16 * scale) and (click[1] <= 48 * scale)):   # y
                         print("First Board button pressed")
                         currentMap = "FirstBoard"
+                        mainWindow.blit(firstBoardPrevImg, (0, 0))
                         # check if accept is hit, and if so, pass first board to joel
                     elif((click[1] > 64 * scale) and (click[1] <= 96 * scale)): # y
                         print("It ain't here yet")
                         currentMap = "DNE"
+                        mainWindow.blit(unreleasedMapPrevImg, (0, 0))
                         # if accept hit, print error
                     elif ((click[1] > 112 * scale) and (click[1] <= 148 * scale)): # y
                         print("Nor is this one")
                         currentMap = "DNE"
+                        mainWindow.blit(unreleasedMapPrevImg, (0, 0))
                         # if accept hit while this selected, print error
+
                         # else check if the click was Accept NEED IF HERE OR IT FALLS IN FIRST IF
                 if((click[0] > 380 * scale) and (click[0] <= 508 * scale)):     # x
                     if((click[1] > 348 * scale) and (click[1] <= 444 * scale)): # y
@@ -81,7 +95,9 @@ def launchMapMenu(mainWindow, framerate, scale):
                         elif(currentMap == "DNE"):
                             print("Invalid Map Selection")
 
-                if ((click[0] > 4 * scale) and (click[0] <= 100 * scale)):  # x
-                    if ((click[1] > 412 * scale) and (click[1] <= 444 * scale)):  # y
+                if ((click[0] > 4 * scale) and (click[0] <= 100 * scale)):          # x
+                    if ((click[1] > 412 * scale) and (click[1] <= 444 * scale)):    # y
                         print("BACK")
                         return mainmenu.launch(width, height, framerate, scale)
+
+        pygame.display.update()
