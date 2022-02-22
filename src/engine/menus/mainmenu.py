@@ -3,6 +3,7 @@ import src.engine.menus.testgame as testgame
 #Launches main menu
 import src.engine.menus.settings as settings
 import src.minigame.fruitPanic.handGame as handGame
+import src.minigame.physicsTest.physicstest as physicstest
 import src.engine.andrewMenus.mapSelectionMenu as boardMenu
 
 def launch(width, height, framerate, scale):
@@ -45,6 +46,7 @@ def launch(width, height, framerate, scale):
                     return settings.launch(width, height, framerate, mainWindow, scale)
                 if (pos[1]>224*scale and pos[1]<336*scale):
 
+                    # return physicstest.startGame(mainWindow, scale, framerate)
                     return handGame.startGame(mainWindow, scale, framerate)
 
 
