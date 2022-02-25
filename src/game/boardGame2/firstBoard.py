@@ -4,6 +4,12 @@ from src.game.boardGame2.tile import Tile
 from src.game.boardGame2.spriteLoader import SpriteLoader
 from src.game.boardGame2.player import Player
 
+
+'''
+Will be shoved into a csv file or something of the sort later on
+Use pandas to manipulate data?
+'''
+
 class FirstBoard():
 
     def __init__(self):

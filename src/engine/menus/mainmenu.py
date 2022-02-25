@@ -5,6 +5,7 @@ import src.engine.menus.settings as settings
 import src.minigame.fruitPanic.handGame as handGame
 import src.minigame.physicsTest.physicstest as physicstest
 import src.engine.andrewMenus.mapSelectionMenu as boardMenu
+from src.engine.andrewMenus import minigameTypeMenu
 
 def launch(width, height, framerate, scale):
     clock = pygame.time.Clock()  # Clock used for frame rate
@@ -45,9 +46,10 @@ def launch(width, height, framerate, scale):
                     print("SETTINGS")
                     return settings.launch(width, height, framerate, mainWindow, scale)
                 if (pos[1]>224*scale and pos[1]<336*scale):
-
+                    print("MINIGAMES")
+                    return minigameTypeMenu.launchMinigameMenu(mainWindow, framerate, scale)
                     # return physicstest.startGame(mainWindow, scale, framerate)
-                    return handGame.startGame(mainWindow, scale, framerate)
+                    # return handGame.startGame(mainWindow, scale, framerate)
 
 
 

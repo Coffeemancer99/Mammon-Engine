@@ -10,7 +10,6 @@ Player class implemented by Andrew Bunn
 class Player():
     def __init__(self, x, y, scale, jumpKey, leftKey, rightKey, sprite):
         self.scale = scale
-      #  self.sprite = pygame.image.load("../../data/assets/sprites/bolSprite.png")
         self.sprite = sprite
         self.sprite = pygame.transform.scale(self.sprite, ((self.sprite.get_width()) * scale, (self.sprite.get_height()) * scale))
         # may need to scale later
