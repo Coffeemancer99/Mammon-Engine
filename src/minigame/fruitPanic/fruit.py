@@ -5,14 +5,12 @@ from src.engine.physics.physics import movementLeftRight, applyGravityPlayer
 
 
 class Fruit():
-    def __init__(self, x, y, speed, scale, sprite, fId):
-
+    def __init__(self, x, y, speed, scale, sprite, fId, badFruit):
         self.fruitId = fId
+        self.badFruit = badFruit
         self.scale = scale
-      #  self.sprite = pygame.image.load("../../data/assets/sprites/bolSprite.png")
         self.sprite = sprite
         self.sprite = pygame.transform.scale(self.sprite, ((self.sprite.get_width()) * scale/2, (self.sprite.get_height()) * scale/2))
-        # may need to scale later
         self.rectCol = self.sprite.get_rect()
         self.rectCol.x = x
         self.rectCol.y = y

@@ -10,7 +10,6 @@ from src.engine import physics
 #Start X/Start Y = The position to start
 #up = Boolean, true is vertical platform false is horizontal
 def createPlatform(window, sprite, ground, numBlocks, spriteSize, startX, startY, up):
-
     start = 0
     while(start<numBlocks):
         if(up):
@@ -29,7 +28,6 @@ def clearBG(window, background, staticAssets=None):
     if staticAssets!=None:
         for asset in staticAssets:
             pass
-
     pygame.display.update()
 
 # ground can be a list i append objs to

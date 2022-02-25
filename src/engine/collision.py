@@ -3,7 +3,6 @@ def staticHandler(staticTiles, obj):
     for tile in staticTiles: #For every tile in the tile list
         # Vertical Case
         if tile.rectCol.colliderect(obj.rect.x, obj.rect.y + obj.dY, obj.width-5, obj.height):#Y collision has occured
-
             if(tile.rectCol.top == obj.rect.bottom): #When the acting object touches the ground...
                 obj.jumped = False #They are no longer jumping
             if obj.velY < 0: #If the acting object is moving up but is colliding, they should no longer be moving

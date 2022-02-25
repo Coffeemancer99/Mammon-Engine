@@ -40,7 +40,6 @@ def launch(width, height, framerate, window, scale):
                     #LARGE ERS
                     if(pos[0]>332*scale and pos[0]<448*scale):
                         return launch(512 * 3, 448 * 3, framerate, window, 3)
-
                 #Back Button
                 if (pos[1] > 335 * scale and pos[1] < 448* scale):
                     return mainmenu.launch(width, height, framerate, scale)

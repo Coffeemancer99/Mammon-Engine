@@ -15,6 +15,7 @@ def launch(width, height, framerate, scale):
     settingsImg=pygame.image.load("data/assets/sprites/settings.png")
     minigames=pygame.image.load("data/assets/sprites/minigames.png")
     #Scale images
+    #TODO: Replace with functional operators later, use relative size of window instead of hardcoded values
     newGameImg=pygame.transform.scale(newGameImg, ((newGameImg.get_width()) * scale, (newGameImg.get_height()) * scale))
     settingsImg=pygame.transform.scale(settingsImg, ((settingsImg.get_width()) * scale, (settingsImg.get_height()) * scale))
     minigames = pygame.transform.scale(minigames, ((minigames.get_width()) * scale, (minigames.get_height()) * scale))
@@ -39,8 +40,6 @@ def launch(width, height, framerate, scale):
                 if (pos[1]<112*scale and pos[1]>=0):
                     print("NEW GAME PRESSED")
                     return boardMenu.launchMapMenu(mainWindow, framerate, scale)
-
-
                 #Settings button
                 if (pos[1]>112*scale and pos[1]<224*scale):
                     print("SETTINGS")
