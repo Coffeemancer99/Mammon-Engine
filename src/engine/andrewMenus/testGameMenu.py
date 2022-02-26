@@ -2,7 +2,7 @@ import pygame
 from src.engine.andrewMenus import minigameTypeMenu
 from src.minigame.fruitPanic import handGame
 from src.minigame.physicsTest import physicstest
-
+from src.minigame.teamMasher import masher
 
 def launchTestMinigame(mainWindow, framerate, scale):
     clock = pygame.time.Clock()
@@ -70,6 +70,7 @@ def launchTestMinigame(mainWindow, framerate, scale):
                         return handGame.startGame(mainWindow, scale, framerate)
                     elif((click[1] > 96 * scale) and (click[1] <= 160 * scale)):
                         print("Game 3")
+                        return masher.startGame(mainWindow, scale, framerate)
                     elif ((click[1] > 176 * scale) and (click[1] <= 240 * scale)):
                         print("Game 5")
 
