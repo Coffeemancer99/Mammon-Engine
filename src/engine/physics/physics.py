@@ -9,11 +9,122 @@ import pygame
 import math
 import sympy
 
-"""
-    
+class Object:
+    def __init__(self, sprite, scale, x, y, name = "undefined"):
+
+        self.sprite = pygame.transform.scale(sprite, ((sprite.get_width()) * scale/2, (sprite.get_height()) * scale/2)) #inherited code
+        self.scale = scale
+        self.x = x # (x,y) refers to top-left position of object
+        self.y = y
+        self.mask = pygame.mask.from_surface(self.sprite)
+        self.name = name # development value for debug statements
+
+    def draw(self, window):
+        window.blit(self.sprite,(self.x,self.y))
+
+    def __repr__(self):
+        return f'DynamicObject "{self.name}", (x,y) = ("{self.x}","{self.y}")'
 
 
-"""
+class DynamicObject(Object):
+    def __init__(self, sprite, scale, x, y, name = "undefinedDynamic", mass = 5):
+        Object.__init__(self, sprite, scale, x, y, name)
+        self.mass = mass
+        self.momX = 0
+        self.momY = 0
+        self.dX = 0
+        self.dY = 0
+
+    def update(self, airRes=.95, minMom = 0.1, maxMom = 40):
+        if(self.momX > maxMom): self.momX = maxMom
+        if(self.momY > maxMom): self.momY = maxMom
+
+        self.momX = self.momX*airRes
+        if abs(self.momX/self.mass) < minMom: self.momX = 0
+        self.momY = self.momY*airRes
+        if abs(self.momY/self.mass) < minMom: self.momY = 0
+
+        # fractional dXY values will accumulate allowing e.g. moving 1px every other frame
+        if self.momX == 0: self.dX = 0
+        else: self.dX += self.momX/self.mass
+        if self.momY == 0: self.dY = 0
+        else: self.dY += self.momY/self.mass
+
+    def __repr__(self):
+        return f'DynamicObject "{self.name}", (x,y) = ("{self.x}","{self.y}"), (dX,dY) = ("{self.dX}","{self.dY}"), (momX, momY) = ("{self.momX}","{self.momY}")'
+
+def velHandler(obj1, obj2):
+    # print("\n------------------------------------------------------")
+    # print("velChecker: obj1 [" + obj1.name + "] Type = ", end = "")
+    # print(type(obj1))
+    # print("            obj2 [" + obj2.name + "] Type = ", end = "")
+    # print(type(obj2))
+
+    assert not(obj1.mask.overlap(obj2.mask,(obj2.x - obj1.x, obj2.y - obj1.y) )) # Assert: are the objects already overlapping?
+    overlap = obj1.mask.overlap(
+        obj2.mask, (obj2.x - (obj1.x + int(obj1.dX)), obj2.y - (obj1.y + int(obj1.dY)))
+    )
+    if overlap:
+        # print("            overlapping- initial (dX, dY) = (" + str(obj1.dX) + " / " + str(int(obj1.dX)) + ", " + str(obj1.dY) + " / " + str(int(obj1.dY)) + ")")
+        sign = [0,0] # indicates the sign of dX and dY
+        if obj1.dX < 0:
+            sign[0] = 1
+        else:
+            sign[0] = -1
+        if obj1.dY < 0:
+            sign[1] = 1
+        else:
+            sign[1] = -1
+
+
+
+        for weight in [[1,0],[0,1]]: # first dX is handled, then dY
+            weight[0] = weight[0]*int(obj1.dX)
+            weight[1] = weight[1]*int(obj1.dY)
+            if(weight == [0,0]):continue
+
+            for i in range(max(weight)): # max(weight) will return obj1.dX or obj1.dY
+                overlap = obj1.mask.overlap(
+                    obj2.mask, (obj2.x - (obj1.x + weight[0]), obj2.y - (obj1.y + weight[1]))
+                )
+                if not overlap: # an acceptable new position for obj1 was found
+                    if weight[0]:
+                        # print("dX: overlap ended! (dX,dY) = (" + str(weight[0]) + ", " + str(weight[1]) + ")")
+                        obj1.x += weight[0]
+                        obj1.momX = 0
+                        obj1.dX = 0
+                    if weight[1]:
+                        # print("dY: overlap ended! (dX,dY) = (" + str(weight[0]) + ", " + str(weight[1]) + ")")
+                        obj1.y += weight[1]
+                        obj1.momY = 0
+                        obj1.dY = 0
+                    break
+                else:
+                    if weight[0] == 1: # adjacent horizontally
+                        # print("dX: found to be adjacent, dX->0. (dX,dY) = (" + str(weight[0]) + ", " + str(weight[1]) + ")")
+                        obj1.dX = 0
+                        obj1.momX = 0
+                    if weight[1] == 1: # adjacent vertically
+                        # print("dY: found to be adjacent, dY->0. (dX,dY) = (" + str(weight[0]) + ", " + str(weight[1]) + ")")
+                        obj1.dY = 0
+                        obj1.momY = 0
+                if weight[0]:
+                    weight[0] += sign[0]
+                if weight[1]:
+                    weight[1] += sign[1]
+
+
+
+    else: # if there is no collision at the destination, dX and dY are applied normally.
+        # print("            overlap = None --- (dX, dY) = (" + str(obj1.dX) + ", " + str(obj1.dY) + ")")
+        obj1.x += int(obj1.dX)
+        obj1.y += int(obj1.dY)
+    obj1.dX = obj1.dX - int(obj1.dX) # fractional values of dX and dY will add up, resulting in e.g. 1px moved every other frame
+    obj1.dY = obj1.dY - int(obj1.dY)
+
+
+#     dx = dx*scale
+
 
 
 # Gravity created by Andrew Bunn, extracted from
