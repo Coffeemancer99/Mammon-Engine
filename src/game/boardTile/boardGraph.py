@@ -42,8 +42,7 @@ class BoardGraph:
             print(tileList[i])
         print("========= TILE LIST END ========")
 
-    #
-    #
+
     #     boardTile = tile.Tile(None, None, None, None, [False, False, False, False])
 
        # instantiate a directed graph

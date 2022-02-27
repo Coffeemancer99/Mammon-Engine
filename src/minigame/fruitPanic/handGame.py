@@ -158,3 +158,4 @@ def startGame(mainWindow, scale, framerate):
         list(map(lambda x: checkBound(x, Lz, scale), players)) #Confirm that players are in bounds of game
         list(map(lambda x: x.updateRect(), players)) #Update collision
         pygame.display.update() #Update display window
+

@@ -2,11 +2,11 @@ import unittest
 import time
 import pygame
 
-from boardRenderer import BoardRenderer
-from board import Board
-from tile import Tile
-from spriteLoader import SpriteLoader
-from player import Player
+from src.game.boardGame2.boardRenderer import BoardRenderer
+from src.game.boardGame2.board import Board
+from src.game.boardGame2.tile import Tile
+from src.game.boardGame2.spriteLoader import SpriteLoader
+from src.game.boardGame2.player import Player
 
 
 class TestBoardRenderer(unittest.TestCase):
@@ -20,11 +20,11 @@ class TestBoardRenderer(unittest.TestCase):
         startTile.y = 64
         startTile.width = 32
         startTile.height = 32
-        startTile.image = SpriteLoader().loadImage("blueTile.png")
+        startTile.image = pygame.image.load("data/assets/sprites/blueTile.png")
 
         tile2 = Tile(startTile)
         tile2.x += 32
-        tile2.image = SpriteLoader().loadImage("blueTile.png")
+        tile2.image = pygame.image.load("data/assets/sprites/blueTile.png")
 
         tile3 = Tile(tile2)
         tile3.x += 32

@@ -41,7 +41,7 @@ def launchMapMenu(mainWindow, framerate, scale):
                                          ((unreleasedMapPrevImg.get_width()) * scale,
                                           (unreleasedMapPrevImg.get_height()) * scale))
 
-    # Paint buttons and images to screen
+    # Paint buttons and images to screen ==== VIEW =====
     mainWindow.fill((55, 55, 55))
     mainWindow.blit(mapPrevImg, (0, 0))
     mainWindow.blit(mapButton1Img, (340 * scale, 16 * scale))
@@ -61,7 +61,7 @@ def launchMapMenu(mainWindow, framerate, scale):
             if event.type == pygame.QUIT:
                 isRunning = False
 
-            # Handle Clicks
+            # Handle Clicks ====  VIEW  =====
             if event.type == pygame.MOUSEBUTTONUP:
                 click = pygame.mouse.get_pos()
               #  print(click[0], click[1])
@@ -89,8 +89,8 @@ def launchMapMenu(mainWindow, framerate, scale):
                         print("ACCEPT")
                         if(currentMap == "FirstBoard"):
                             print("PLAY FIRST BOARD")
-                            newWindow = pygame.display.set_mode((width, height))
-                            firstBoard = FirstBoard().testFirstBoard()
+                            # newWindow = pygame.display.set_mode((width, height))
+                            firstBoard = FirstBoard().testFirstBoard()  # ==== CONTROLLER ====
                             return boardGame.startGame(mainWindow, scale, framerate, firstBoard)
                         elif(currentMap == "DNE"):
                             print("Invalid Map Selection")
@@ -99,5 +99,3 @@ def launchMapMenu(mainWindow, framerate, scale):
                     if ((click[1] > 412 * scale) and (click[1] <= 444 * scale)):    # y
                         print("BACK")
                         return mainmenu.launch(width, height, framerate, scale)
-
-        pygame.display.update()
