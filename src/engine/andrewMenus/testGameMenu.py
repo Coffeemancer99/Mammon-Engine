@@ -10,6 +10,7 @@ def launchTestMinigame(mainWindow, framerate, scale):
     clock = pygame.time.Clock()
     width, height = pygame.display.get_surface().get_size()
 
+
     def onClickRando1Button():
         return handGame.startGame(mainWindow, scale, framerate)
 
@@ -19,11 +20,11 @@ def launchTestMinigame(mainWindow, framerate, scale):
     def onClickRando3Button():
         return masher.startGame(mainWindow, scale, framerate)
 
-    def onClickRandoButtonUnassigned():
-        print("Unassigned to anything, Goodbye")
-
     def onClickBackButton():
         return minigameTypeMenu.launchMinigameMenu(mainWindow, framerate, scale)
+
+    def onClickRandoButtonUnassigned():
+        print("Unassigned to anything, Goodbye")
 
 
     # generate buttons
@@ -35,7 +36,7 @@ def launchTestMinigame(mainWindow, framerate, scale):
                        "data/assets/sprites/rando3Button.png", mainWindow)
     newRando4 = Button(264, 96, 232, 64, scale, onClickRandoButtonUnassigned,
                        "data/assets/sprites/rando4Button.png", mainWindow)
-    newRando4.dummy = True
+    newRando4.dummy = True # Assign dummy to true if button returns nothing
     newRando5 = Button(16, 176, 232, 64, scale, onClickRandoButtonUnassigned,
                        "data/assets/sprites/rando5Button.png", mainWindow)
     newRando5.dummy = True
@@ -44,13 +45,6 @@ def launchTestMinigame(mainWindow, framerate, scale):
     newRando6.dummy = True
     newBackButton = Button(4, 412, 96, 32, scale, onClickBackButton,
                        "data/assets/sprites/backMenuButton.png", mainWindow)
-
-    backButtonImg = pygame.image.load("data/assets/sprites/backMenuButton.png")
-
-    # Scale buttons
-    backButtonImg = pygame.transform.scale(backButtonImg,
-                                         ((backButtonImg.get_width()) * scale,
-                                          (backButtonImg.get_height()) * scale))
 
     buttons = []
     buttons.extend((newRando1, newRando2, newRando3,
@@ -82,11 +76,3 @@ def launchTestMinigame(mainWindow, framerate, scale):
                         else:
                             button.handleClick(click)
                         break
-
-
-                # Back button
-                # if ((click[1] > 412 * scale) and (click[1] <= 444 * scale)):
-                #     if ((click[0] > 4 * scale) and (click[0] <= 100 * scale)):
-                #         print("BACK")
-                #         return minigameTypeMenu.launchMinigameMenu(mainWindow, framerate, scale)
-
