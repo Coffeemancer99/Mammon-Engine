@@ -1,21 +1,21 @@
 import pygame
-import math
 import time
-import src.engine.scenecreator.drawTileMap as drawTileMap
 import random
+from src.game.boardGame.Store import Store
 from src.game.boardGame.boardPlayers import BoardPlayer
 from enum import Enum, auto
-from src.game.boardGame2.board import Board
 from src.game.boardGame2.boardRenderer import BoardRenderer
 from src.game.boardGame2.spriteLoader import SpriteLoader
 
 """
+    475 total
     File authored by Joel Tanig
-    115 lines
+    273 lines
 """
 
 
 class States(Enum):
+    FIRSTITERATION = auto()
     PLAYERMOVE = auto()
     ANNIMATING = auto()
     STARTMINIGAME = auto()
@@ -26,14 +26,14 @@ class DiceStates(Enum):
     DICETWO = auto()
 
 
-def getTypeOfTile(currentTile, player):
+def getTypeOfTile(currentTile, player, mainWindow, scale, framerate):
     if currentTile.typeOfTile == "Regular":
         # If it is a regular tile, we just need to give them 5 coins
         player.setMoney(5)
     elif currentTile.typeOfTile == "Dual":
         pass
     elif currentTile.typeOfTile == "Store":
-        pass
+        return storeScreen(mainWindow, scale, framerate, player)
     elif currentTile.typeOfTile == "Bad":
         amountLost = rollOfDice(6)
         player.setMoney(amountLost)
@@ -41,6 +41,77 @@ def getTypeOfTile(currentTile, player):
         pass
 
 
+# TODO: Start here
+# TODO: Remodel to MVC later, fix pixel math, and make new images
+# This function is the "store" that will be in the game and I am using dice.png as placeholder
+# images for now 
+def storeScreen(mainWindow, scale, framerate, currentPlayer):
+    clock = pygame.time.Clock()
+    transaction = False
+    store = Store()
+
+    # TODO: Need to blit different images that relate to the storeInventory list
+    gooditemOne = SpriteLoader().loadImage("die1.png")
+    gooditemTwo = SpriteLoader().loadImage("die2.png")
+    gooditemThree = SpriteLoader().loadImage("die3.png")
+    baditemOne = SpriteLoader().loadImage("die4.png")
+
+    gooditemOne = pygame.transform.scale(gooditemOne,
+                                         ((gooditemOne.get_width()) * scale, (gooditemOne.get_height()) * scale))
+    gooditemTwo = pygame.transform.scale(gooditemTwo,
+                                         ((gooditemTwo.get_width()) * scale, (gooditemTwo.get_height()) * scale))
+    gooditemThree = pygame.transform.scale(gooditemThree,
+                                           ((gooditemThree.get_width()) * scale, (gooditemThree.get_height()) * scale))
+    baditemOne = pygame.transform.scale(baditemOne,
+                                        ((baditemOne.get_width()) * scale, (baditemOne.get_height()) * scale))
+
+    mainWindow.fill((55, 55, 55))
+    # Put buttons here
+    mainWindow.blit(gooditemOne, (32 * scale, 32 * scale))
+    mainWindow.blit(gooditemTwo, (32 * scale, 112 * scale))
+    mainWindow.blit(gooditemThree, (32 * scale, 208 * scale))
+    mainWindow.blit(baditemOne, (412 * scale, 356 * scale))
+
+    isRunning = True
+    while isRunning:
+        pygame.display.update()
+        clock.tick(framerate)  # 39
+        key = pygame.key.get_pressed()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                isRunning = False
+            if event.type == pygame.MOUSEBUTTONUP:
+                click = pygame.mouse.get_pos()
+                print(click)
+                # Buying logic
+                if (click[0] > 32 * scale) and (click[0] <= 488 * scale):  # x
+                    if (click[1] > 24 * scale) and (click[1] <= 60 * scale):  # y
+                        print("Bought Good item 1")
+                        transaction = store.buyItem(currentPlayer, 0)
+                    elif (click[1] > 112 * scale) and (click[1] <= 176 * scale):
+                        print("Bought Good item 2")
+                        transaction = store.buyItem(currentPlayer, 1)
+                    elif (click[1] > 208 * scale) and (click[1] <= 252 * scale):
+                        print("Bought Good item 3")
+                        transaction = store.buyItem(currentPlayer, 2)
+                    elif (click[1] > 304 * scale) and (click[1] <= 328 * scale):
+                        print("Bad item 1")
+                        transaction = store.buyItem(currentPlayer, 3)
+                    if transaction:
+                        currentPlayer.getInventory()
+                        isRunning = False
+                # TODO: Need to do selling logic
+                if (click[0] > 4 * scale) and (click[0] <= 100 * scale):  # x
+                    if (click[1] > 412 * scale) and (click[1] <= 444 * scale):  # y
+                        print("Sold item")
+                        store.sellItem(currentPlayer, 0)
+
+
+"""
+    This function rolls dice on the screen, it is also important to note that the dice rolls
+    are already determined in the setPlacementsForBoardPlayers function as I wanted to make sure we had no
+    duplicates
+"""
 
 
 def rollingDiceAnnimation(scale, framerate, listOfPlayers):
@@ -52,7 +123,7 @@ def rollingDiceAnnimation(scale, framerate, listOfPlayers):
     dice4 = SpriteLoader().loadImage("die4.png")
     dice5 = SpriteLoader().loadImage("die5.png")
     dice6 = SpriteLoader().loadImage("die6.png")
-    diceWindow = pygame.display.set_mode((512, 448))
+    diceWindow = pygame.display.set_mode((512, 448))  # 27
     # Set up the scaling
 
     dice1 = pygame.transform.scale(dice1, ((dice1.get_width()) * scale, (dice1.get_height()) * scale))
@@ -68,7 +139,7 @@ def rollingDiceAnnimation(scale, framerate, listOfPlayers):
     currentPlayerIndex = 0
     diceState = DiceStates.DICEONE
     while isRunning:
-        clock.tick(framerate)
+        clock.tick(framerate)  # 39
         key = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -89,7 +160,7 @@ def rollingDiceAnnimation(scale, framerate, listOfPlayers):
                         diceWindow.blit(dice5, (256, 256))
                     elif currentPlayer.getDiceOnePlacement() == 6:
                         diceWindow.blit(dice6, (256, 256))
-                    diceState = DiceStates.DICETWO
+                    diceState = DiceStates.DICETWO  # 60
                 elif diceState == DiceStates.DICETWO:
                     if currentPlayer.getDiceTwoPlacement() == 1:
                         diceWindow.blit(dice1, (256, 256))
@@ -134,7 +205,7 @@ def rollingDiceAnnimation(scale, framerate, listOfPlayers):
         time.sleep(0.01)
         pygame.display.update()
     listOfPlayers.sort()
-    pass
+    pass  # 105
 
 
 """
@@ -168,7 +239,18 @@ def rollTwoDice(x):
     return random.choice(range(1, x + 1)) + random.choice(range(1, x + 1))
 
 
-def setPlacementsForBoardPlayers(listOfPlayers, listOfPlacements, listOfDice):
+"""
+    This determines the placement of each player and it makes sure that the dice that is rolled
+    will contain no duplicates what so ever
+    
+    :param: listOfPlayers - listOfPlayerObjects to be edited
+    :param: listOfPlacements - listofPlacements is a list of 0 number of 0 associated with each player
+    :param: listOfDice - listOfDice is a list of dice the game in rolling associated with (eg. 6) with 4 players
+    
+"""
+
+
+def setPlacementsForBoardPlayers(listOfPlayers, listOfPlacements, listOfDice):  # 110
     while True:
         # First rolled dice
         # Second rolled dice
@@ -191,7 +273,7 @@ def setPlacementsForBoardPlayers(listOfPlayers, listOfPlacements, listOfDice):
 
     listOfDice = addedDice
     for i in range(len(listOfDice1)):
-        print(f"Player {listOfPlayers[i].getPlayerID()} dice are....")
+        print(f"Player {listOfPlayers[i].getPlayerID()} dice are....")  # 125
         print(listOfPlayers[i].getDiceOnePlacement())
         print(listOfPlayers[i].getDiceTwoPlacement())
     # We now have the placements of each player on who will now go in order
@@ -203,7 +285,7 @@ def setPlacementsForBoardPlayers(listOfPlayers, listOfPlacements, listOfDice):
         print("List of placements is", listOfPlacements)
     for i in range(len(listOfDice)):
         listOfPlayers[i].setPlacementInGame(listOfPlacements[i])
-        print("List of placements is", listOfPlayers[i].getPlacementInGame())
+        print("List of placements is", listOfPlayers[i].getPlacementInGame())  # 136
 
 
 """
@@ -224,20 +306,11 @@ def goesFirstScreen(mainWindow, scale, frameRate, listOfPlayers, board):
     listOfDice = [6, 6, 6, 6]
     setPlacementsForBoardPlayers(listOfPlayers, listOfPlacements, listOfDice)
     # Sort players by placements
-    # TODO: Start here something with the sort
 
     for i in range(len(listOfPlayers)):
         print(f"The order of the players are {listOfPlayers[i].getPlayerID()}")
 
-
     rollingDiceAnnimation(scale, frameRate, listOfPlayers)
-
-    # isRunning = True
-    # while isRunning:
-    #     clock.tick(frameRate)
-    #     for event in pygame.event.get():
-    #         if event.type == pygame.QUIT:
-    #             isRunning = False
 
 
 """
@@ -254,7 +327,7 @@ def getPlayerTurn(player, board):
     # We are going to assume 2 dice rolls for now
     diceRoll = rollOfDice(6)
     # @Need someone to animate this dice roll stuff
-    return diceRoll
+    return diceRoll  # 147
     # @Need to get andrew's graph working so i can even do this check with the tiles
     # Second check, from the method, do what the tile says and set params from the player class
     # Repeat until all players have gone and done a turn so we can do the mini game
@@ -273,7 +346,7 @@ def getPlayerTurn(player, board):
 
 
 def startGame(mainWindow, scale, framerate, board):
-    currentState = States.PLAYERMOVE
+    currentState = States.FIRSTITERATION
     currentPlayer = 0
     playerMovement = 0
     numOfSpots = 0
@@ -298,18 +371,19 @@ def startGame(mainWindow, scale, framerate, board):
         startTile.players.append(listOfPlayers[i])
 
     isRunning = True
-    firstIterationOfGame = True
-    while isRunning:
+    # storeScreen(mainWindow, scale, framerate, listOfPlayers[currentPlayer])
+    while isRunning:  # 170
         clock.tick(framerate)
         key = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning = False
             if key[pygame.K_SPACE]:
-                if firstIterationOfGame:  ## TODO: Make this not NOT
+                if currentState == States.FIRSTITERATION:
                     # This is to activate the screen on who goes first
-                    firstIterationOfGame = not firstIterationOfGame
+                    currentState = States.PLAYERMOVE
                     goesFirstScreen(mainWindow, scale, framerate, listOfPlayers, board)
+                    # storeScreen(mainWindow, scale, framerate, listOfPlayers[currentPlayer])
                     time.sleep(2)
                     continue
                 # Game starts here
@@ -324,7 +398,7 @@ def startGame(mainWindow, scale, framerate, board):
                     print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} rolled a {playerMovement}")
                     currentState = States.ANNIMATING
                 if currentState == States.ANNIMATING:
-                    while True:
+                    while True:  # 190
                         nextTiles = board.getPotentialMoves(listOfPlayers[currentPlayer])
                         # If I see a fork in the road, then we need to pick which path to go to next
                         if len(nextTiles) > 1:
@@ -337,17 +411,18 @@ def startGame(mainWindow, scale, framerate, board):
                                 board.movePlayer(nextTiles[2], listOfPlayers[currentPlayer])
                         else:
                             # If we have no fork in the road, then we just go straight
-                            board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])
+                            board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])  # 200
 
                         numOfSpots += 1
                         if numOfSpots == playerMovement:
                             # If we reach here, that means that we are done animating
                             numOfSpots = 0
-                            # We set the player's position to where they are now within the tile after all the potential paths
-                            # they went
+                            # We set the player's position to where they are now within the tile after all the
+                            # potential paths they went
                             aPlayer = listOfPlayers[currentPlayer]
                             listOfPlayers[currentPlayer].setCurrentPosition(board.getCurrentTile(aPlayer))
-                            getTypeOfTile(board.getCurrentTile(aPlayer), listOfPlayers[currentPlayer])
+                            getTypeOfTile(board.getCurrentTile(aPlayer), listOfPlayers[currentPlayer], mainWindow,
+                                          framerate, scale)
                             # Must be the length of players -1
                             if currentPlayer == 3:
                                 currentState = States.STARTMINIGAME
@@ -355,17 +430,17 @@ def startGame(mainWindow, scale, framerate, board):
                             else:
                                 currentPlayer += 1
                                 currentState = States.PLAYERMOVE
-                                break
+                                break  # 213
                         renderer.render()
                         time.sleep(0.25)  # Don't take out the sleep!
                 # Once all the players are done here, we start a random mini-game
                 if currentState == States.STARTMINIGAME:
                     currentPlayer = 0
-                    # TODO: This is where drake comes in Start Here Drake
+                    # TODO: This is where Drake Farmer comes in, Start Here Drake
 
                     # At the end
                     currentState = States.PLAYERMOVE
-            renderer.render()
+            renderer.render()  # 225
 
     #########################################################################################
     # playerOne = BoardPlayer(1)

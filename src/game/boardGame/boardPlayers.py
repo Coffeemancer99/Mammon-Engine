@@ -2,8 +2,8 @@ import pygame.sprite
 
 """
     File authored by Joel Tanig
-    44 lines
-
+    55 lines
+    The storage for each board player
 """
 
 
@@ -56,7 +56,7 @@ class BoardPlayer(pygame.sprite.Sprite):
         return self.inventory
 
     def getMoney(self):
-        return self.getMoney
+        return self.money
 
     def getPlacementInGame(self):
         return self.placementInGame

@@ -1,11 +1,19 @@
 # This stores a pool of items and return one item from a list that will be put into item array of the boardPlayer
 import random
+from enum import Enum, auto
 
 """
     File authored by Joel Tanig
-    60 lines
+    98 lines
 
 """
+
+
+class ItemType(Enum):
+    BADITEM = auto()
+    GOODITEM = auto()
+    BARTERITEM = auto()
+
 
 def initGoodItems():
     goodItems = [Item("G-pickPlayerToLoseMG", False, None, 40), Item("G-thirdDice", False, None, 15),
@@ -21,9 +29,15 @@ def initGoodItems():
 
 def initBadItems():
     badItems = [Item("B-moveOneSpotLess", True, None, 15), Item("B-invertedControlMG", True, None, 40),
-                Item("B-changeSpots", True, None,40), Item("B-loseMoneyRandom", True, None,30),
-                Item("B-loseTurn", True, None, 40), Item("B-oneDice", True, None,20), Item("B-moveToPrevSpot", True, None, 15)]
-    return badItems
+                Item("B-changeSpots", True, None, 40), Item("B-loseMoneyRandom", True, None, 30),
+                Item("B-loseTurn", True, None, 40), Item("B-oneDice", True, None, 20)]
+    return badItems  # 12
+
+
+def initBarterItems():
+    barterItems = [BarterItem("W-BarterItemOne", False, None, 15), BarterItem("W-BarterItemTwo", False, None, 15),
+                   BarterItem("W-BarterItemThree", False, None, 15), BarterItem("W-BarterItemFour", False, None, 15)]
+    return barterItems  # 12
 
 
 class Item:
@@ -63,7 +77,7 @@ class ItemHandler:
         return random.choice(self.listOfBadItems)
 
     def getGoodItem(self):
-        return random.choice(self.listOfGoodItems)
+        return random.choice(self.listOfGoodItems)  # 41
 
 
 # This class will handle all the functionality, put this is a separate file
@@ -71,6 +85,7 @@ class ItemFunctionalityBad:
     def __init__(self, name=""):
         self.name = name
 
+    # Need to refactor later as I am breaking open closed :(
     def getFunctionality(self, name, player):
         if name == "B-moveOneSpotLess":
             pass
@@ -89,4 +104,29 @@ class ItemFunctionalityBad:
 
 
 class ItemFunctionalityGood:
-    pass
+    def __init__(self, name=""):
+        self.name = name
+
+    # Need to refactor later as I am breaking open closed :(
+    def getFunctionality(self, name, player):
+        if name == "G-pickPlayerToLoseMG":
+            pass
+        elif name == "G-thirdDice":
+            pass
+        elif name == "G-speedBoostM":
+            pass
+        elif name == "G-gainMoneyRandom":
+            pass
+        elif name == "G-teleportClose":
+            player.setLostTurn()  # Need to reset this lost turn later
+        elif name == "G-sabotageDice":
+            pass
+        elif name == "G-stealItem":
+            pass
+        elif name == "G-opponentLoseTurn":
+            pass
+
+
+class BarterItem(Item):
+    def __init__(self, name, isBad, rarity, price):
+        super().__init__(name, isBad, rarity, price)
