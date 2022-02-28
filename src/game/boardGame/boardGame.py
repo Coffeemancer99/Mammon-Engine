@@ -4,6 +4,7 @@ import random
 from src.game.boardGame.Store import Store
 from src.game.boardGame.boardPlayers import BoardPlayer
 from enum import Enum, auto
+from src.game.boardGame.minigameManager import runMinigame
 from src.game.boardGame2.boardRenderer import BoardRenderer
 from src.game.boardGame2.spriteLoader import SpriteLoader
 
@@ -436,9 +437,9 @@ def startGame(mainWindow, scale, framerate, board):
                 # Once all the players are done here, we start a random mini-game
                 if currentState == States.STARTMINIGAME:
                     currentPlayer = 0
-
-                    #Call minigame function in minigameManager.py
-
+                    print("calling runMinigame")
+                    #runMinigame(mainWindow, scale, framerate)
+                    print("runMinigame ran")
                     # At the end
                     currentState = States.PLAYERMOVE
             renderer.render()  # 225
