@@ -6,22 +6,23 @@ import src.engine.collision as collision
 import src.engine.physics.physics as physics
 import src.minigame.physicsTest.ball as ball
 import pygame
+import time
 def getGameMap():
     L=[
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     ]
     return L
 
@@ -30,18 +31,26 @@ def startGame(mainWindow, scale, framerate):
     #Load in sprites and get dimensions of sprites and window
     groundSprite = pygame.image.load("data/assets/sprites/groundSprite1.png")
     groundSprite = pygame.transform.scale(groundSprite, ((groundSprite.get_width()) * scale, (groundSprite.get_height()) * scale))
+    images = [None, groundSprite]
 
-    coco = ball.Ball(pygame.image.load("data/assets/sprites/coconut.png"), scale, 240, 300, name="coco")
-    lemon = physics.Object(pygame.image.load("data/assets/sprites/lemon.png"), 3*scale, 280, 300, name="lemon")
+    coco = ball.Ball(pygame.image.load("data/assets/sprites/coconut.png"), scale, 376, 333, name="coco")
+    lemon = physics.DynamicObject(pygame.image.load("data/assets/sprites/lemon.png"), scale, 280, 300, name="lemon")
+    box = physics.Object(pygame.image.load("data/assets/sprites/groundSprite1.png"), scale*4, 80,80, name="box")
+    objects = [coco, lemon, box]
+
     currMap = getGameMap()
 
+    # ------------------------------
+    # "coco", (x, y) = ("376", "333"), (dX, dY) = ("0", "0"), (momX, momY) = ("0", "0")
+    # "lemon", (x, y) = ("280", "300")
+    # ------------------------------
 
     isRunning=True
     print("\n-----------------------------------------------")
     print("PHYSICS TESTING")
     print("-----------------------------------------------")
     print("press u-i-o-j-k to manipulate the cannon settings")
-    print("WASD to move, C to stop")
+    print("WASD and arrow keys to move around")
 
     while(isRunning):
         clock.tick(framerate)
@@ -59,26 +68,57 @@ def startGame(mainWindow, scale, framerate):
             coco.momX -= 3
         if key[pygame.K_d]:
             coco.momX += 3
+
         # if key[pygame.K_f]:
+        #     coco.x -= 1
+        #     time.sleep(.3)
+        # if key[pygame.K_g]:
         #     coco.x += 1
+        #     time.sleep(.3)
+        # if key[pygame.K_h]:
+        #     (coco.x, coco.y) = (376, 333)
+        #     coco.momX = 0
+        #     coco.momY = 0
+        #     time.sleep(.3)
+
         if key[pygame.K_c]:
             coco.momX = 0
             coco.momY = 0
 
+        if key[pygame.K_UP]:
+            lemon.momY -= 3
+        if key[pygame.K_DOWN]:
+            lemon.momY += 3
+        if key[pygame.K_LEFT]:
+            lemon.momX -= 3
+        if key[pygame.K_RIGHT]:
+            lemon.momX += 3
+
         if key[pygame.K_b]:
-            print("\n------------------------------")
-            print(coco)
-            print(lemon)
-            print("------------------------------\n")
+            print("\n######################################")
+            for object in objects:
+                print(object)
+            print("######################################")
+            time.sleep(0.3)
 
+        # if key[pygame.K_r]:
+        #     coco.dX = -1
+        #     time.sleep(.3)
+        # if key[pygame.K_t]:
+        #     coco.dX = 1
+        #     time.sleep(.3)
 
-        coco.update()
-        if((abs(coco.dX) >= 1) or (abs(coco.dY) >= 1)):
-            physics.velHandler(coco, lemon)
+        for object in objects: # Physics, movement
+            if isinstance(object, physics.DynamicObject):
+                object.update()
+                if ((abs(object.dX) >= 1) or (abs(object.dY) >= 1)):
+                    physics.velHandler(object, objects)
+
+        for object in objects: # rendering
+            object.draw(mainWindow)
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning=False
-        lemon.draw(mainWindow)
-        coco.draw(mainWindow)
         pygame.display.update()
