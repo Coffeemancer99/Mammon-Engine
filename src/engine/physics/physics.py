@@ -142,7 +142,14 @@ def velChecker(obj1, obj2):
                 if weight[0]: weight[0] += sign[0]
                 if weight[1]: weight[1] += sign[1]
 
-
+def grounded(obj1, objects, onlyStatics = False):
+    for obj2 in objects:
+        if obj1 is obj2:
+            continue
+        if onlyStatics and isinstance(obj2, DynamicObject):
+            continue
+        if obj1.mask.overlap(obj2.mask, (obj2.x - obj1.x, obj2.y - (obj1.y + 1))):
+            return True
 
 
 

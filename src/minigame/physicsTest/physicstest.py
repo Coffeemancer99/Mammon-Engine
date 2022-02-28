@@ -33,9 +33,9 @@ def startGame(mainWindow, scale, framerate):
     groundSprite = pygame.transform.scale(groundSprite, ((groundSprite.get_width()) * scale, (groundSprite.get_height()) * scale))
     images = [None, groundSprite]
 
-    coco = ball.Ball(pygame.image.load("data/assets/sprites/coconut.png"), scale, 376, 333, name="coco")
-    lemon = physics.DynamicObject(pygame.image.load("data/assets/sprites/lemon.png"), scale, 280, 300, name="lemon")
-    box = physics.Object(pygame.image.load("data/assets/sprites/groundSprite1.png"), scale*4, 80,80, name="box")
+    coco = ball.Ball(pygame.image.load("data/assets/sprites/coconut.png"), scale, 80, 185, name="coco")
+    lemon = physics.DynamicObject(pygame.image.load("data/assets/sprites/lemon.png"), scale, 80, 300, name="lemon")
+    box = physics.Object(pygame.image.load("data/assets/sprites/groundSprite1.png"), scale*5, 150,300, name="box")
     objects = [coco, lemon, box]
 
     currMap = getGameMap()
@@ -50,7 +50,7 @@ def startGame(mainWindow, scale, framerate):
     print("PHYSICS TESTING")
     print("-----------------------------------------------")
     print("press u-i-o-j-k to manipulate the cannon settings")
-    print("WASD and arrow keys to move around")
+    print("WASD and arrow keys to move around coconut and lemon,space to jump the coconut")
 
     while(isRunning):
         clock.tick(framerate)
@@ -68,6 +68,9 @@ def startGame(mainWindow, scale, framerate):
             coco.momX -= 3
         if key[pygame.K_d]:
             coco.momX += 3
+        if key[pygame.K_SPACE]:
+            if physics.grounded(coco, objects, onlyStatics=True):
+                coco.momY -= 25
 
         # if key[pygame.K_f]:
         #     coco.x -= 1
@@ -110,6 +113,8 @@ def startGame(mainWindow, scale, framerate):
 
         for object in objects: # Physics, movement
             if isinstance(object, physics.DynamicObject):
+                if object is coco:
+                    coco.momY += 1
                 object.update()
                 if ((abs(object.dX) >= 1) or (abs(object.dY) >= 1)):
                     physics.velHandler(object, objects)
