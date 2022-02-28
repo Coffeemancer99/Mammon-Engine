@@ -436,7 +436,8 @@ def startGame(mainWindow, scale, framerate, board):
                 # Once all the players are done here, we start a random mini-game
                 if currentState == States.STARTMINIGAME:
                     currentPlayer = 0
-                    # TODO: This is where Drake Farmer comes in, Start Here Drake
+
+                    #Call minigame function in minigameManager.py
 
                     # At the end
                     currentState = States.PLAYERMOVE
