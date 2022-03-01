@@ -5,9 +5,15 @@ import time
 import src.minigame as minigames
 import pygame
 import os
-debug = 1           # display error messages if set to 1
-spinnerSize = 3     # How many tags show up on the spinner
-growRate = 10       # Rate at which spinner grows and shrinks
+debug = 1           # display error messages if set to 1, verbose if set to 2
+spinnerSize = 3     # How many tags show up on the spinner.     Default is 3
+growRate = 7       # Rate at which spinner grows and shrinks   Default is 10
+spinnerMargin = 10  # How much of a margin the spinner box has  Default is 10
+tagBuffer = 5       # How much space is between each tag        Default is 5
+BLACK = (0, 0, 0)   # Color used for font
+
+# sysfont = pygame.font.get_default_font()                            # Initialize font
+# font = pygame.font.SysFont(None, 48)                                # create the font
 
 # Calling runMinigame will display a rotating list of minigames, select one, and run it
 # Once a minigame has ended it returns the scores and runMinigame will reward players
@@ -45,26 +51,32 @@ class spinnerTag():
 
 
     def grow(self):
-        changeRate = (self.growRate/self.height)*2
+        changeRate = (self.height/self.growRate)
         self.height = self.height + changeRate
         if(self.height > self.maxHeight):
             self.height = self.maxHeight
             return True
         self.sprite = pygame.transform.scale(self.sprite, (self.width, self.height ))
-        self.y = self.y - changeRate/2.5
+        self.y = self.y + changeRate
 
     def shrink(self):
-        changeRate = (self.growRate/self.height)*2
+        changeRate = (self.height/self.growRate)
         self.height = self.height - changeRate
         if(self.height < 0):
             self.height = 1
         self.sprite = pygame.transform.scale(self.sprite, (self.width, self.height))
-        self.y = self.y - changeRate/2.5
+        self.y = self.y + changeRate
 
 
-    def move(self):
-        changeRate = (self.growRate/self.height)
-        self.y = self.y - changeRate/2.5
+    def move(self, spinnerHeight, spinnerY):
+        #changeRate = (((self.y-((self.height+spinnerMargin)/self.growRate))-spinnerY)/self.growRate)
+        changeRate = (((spinnerHeight-self.height)-(self.y-spinnerY))/growRate)/(spinnerSize-2)
+        self.y = self.y + changeRate
+        #print("New Y Position for minigame ",self.name,": ", self.y)
+
+    def renderText(self):
+        pass
+        # Create text over spinner here
 
 
 path = __file__ + "\..\..\..\minigame"                              # Set the path to the minigame folder
@@ -79,7 +91,7 @@ def runMinigame(mainWindow, scale, framerate):
     winY = pygame.display.get_surface().get_size()[1]                   # Get the y-dimension of the window
     pointer = 0                                                         # Keep track of where we are in the games list
     spins = 0                                                           # How many times will the spinner spin?
-    gamePool = []                                                       # Array to hold minigames actively on the spinner
+    gamePool = [None] * spinnerSize                                                       # Array to hold minigames actively on the spinner
 
     if(debug):print("Finding minigames in " + os.getcwd() + path)
     gameList = os.listdir(path)                                         # Get all of the minigame names from the minigame folder
@@ -106,7 +118,8 @@ def runMinigame(mainWindow, scale, framerate):
     spinnerY = (winY/2)-(spinnerHeight/2)
     spinnerBG = pygame.transform.scale(spinnerBG, (spinnerWidth, spinnerHeight))     #Set the size of the spinnerBG, then draw it
     mainWindow.blit(spinnerBG, ((winX/2)-(spinnerWidth/2), (winY/2)-(spinnerHeight/2)))
-    tagHeight = spinnerHeight / spinnerSize                             # Save our tag height for future use
+    tagHeight = ((spinnerHeight-spinnerMargin) / spinnerSize) - tagBuffer                             # Save our tag height for future use
+    tagWidth = spinnerWidth - spinnerMargin                             # Save our tag width for future use
 
     spins = random.randrange( len(gameList), (spinnerSize*len(gameList)) )  # How many times will we spin the spinner?
 
@@ -118,33 +131,42 @@ def runMinigame(mainWindow, scale, framerate):
               "winY/2: ", winY/2,
               "tagPos: ", (winY/2+((tagHeight/2)*(spinnerSize-0))))
 
-    for i in range(spinnerSize):                                        # Fill gamePool with some games to initiate the spinning
-        # x, y, width, height, maxHeight, scale, sprite, name, growRate
-        if(i==spinnerSize-1):
-            newHeight = tagHeight / growRate
-        else:
-            newHeight = tagHeight
-        tag = spinnerTag(spinnerX,
-                         spinnerY+(tagHeight*(spinnerSize-(i+1))),
-                         spinnerWidth,
-                         newHeight,
+    # for i in range(spinnerSize):                                        # Fill gamePool with some games to initiate the spinning
+    #     # x, y, width, height, maxHeight, scale, sprite, name, growRate
+    #    if(i==spinnerSize-1):
+    #        newHeight = tagHeight / growRate
+    #    else:
+    #        newHeight = tagHeight
+    #    tag = spinnerTag(spinnerX,
+    #                     spinnerY+(tagHeight*(spinnerSize-(i+1))),
+    #                     spinnerWidth,
+    #                     newHeight,
+    #                     tagHeight,
+    #                     scale,
+    #                     tagBG,
+    #                     gameList[pointer],
+    #                     growRate)
+    #    print(">>",tagHeight, spinnerSize, i, tagHeight*(spinnerSize-(i+1)))
+    #    pointer = pointer + 1
+    #    if(pointer>=len(gameList)):                                      # Edgecase in case somebody sets spinnerSize > total minigames
+    #        pointer = 0
+    #    gamePool.append(tag)
+    # if(debug):
+    #    for tag in gamePool:
+    #        print(tag.name, "|", tag.y, ", ", tag.height)
+
+    tag = spinnerTag(spinnerX + (spinnerMargin/2),
+                         spinnerY + (spinnerMargin/2),
+                         tagWidth,
+                         tagHeight / growRate,
                          tagHeight,
                          scale,
                          tagBG,
                          gameList[pointer],
                          growRate)
-        print(">>",tagHeight, spinnerSize, i, tagHeight*(spinnerSize-(i+1)))
-        pointer = pointer + 1
-        if(pointer>=len(gameList)):                                      # Edgecase in case somebody sets spinnerSize > total minigames
-            pointer = 0
-        gamePool.append(tag)
-    if(debug):
-        for tag in gamePool:
-            print(tag.name, "|", tag.y, ", ", tag.height)
+    pointer = pointer + 1
+    gamePool[0] = tag
 
-
-
-    if(debug):print("Spins: ", spins)
     while (isRunning):
         clock.tick(framerate)
         for event in pygame.event.get():
@@ -154,64 +176,70 @@ def runMinigame(mainWindow, scale, framerate):
         mainWindow.blit(spinnerBG, ((winX/2)-(spinnerWidth/2), (winY/2)-(spinnerHeight/2)))
         time.sleep(0.25)
         if spins > 0:
-            list(map(lambda x: mainWindow.blit(x.sprite, (x.x, x.y)), gamePool))  # Draw tags
-
+            try:
+                list(map(lambda x: mainWindow.blit(x.sprite, (x.x, x.y)), gamePool))  # Draw tags
+            except:
+                pass
             result = gamePool[0].grow()
-            print("Result:", result)
-            for i in range(1, len(gamePool)-1):
-                gamePool[i].move()
-            gamePool[-1].shrink()
+            if(debug==2):
+                print("Growing minigame ", gamePool[0].name)
+                print("Result for minigame ",gamePool[0].name,":", result)
+            try:
+                for i in gamePool[1:-1]:
+                    if(debug==2):print(" Moving minigame" , i.name)
+                    i.move(spinnerHeight, spinnerY)
+                #map(lambda x: print("Moving minigame ", x.name), gamePool[1:-1])
+                #map(lambda x: x.move(), gamePool[1:-1])
+            except:
+                pass
+            try:
+                pass
+                gamePool[-1].shrink()
+                if(debug==2):print("Shrinking minigame ", gamePool[-1].name)
+            except:
+                pass
 
             if(result):
-                print("DELETE AND SHIFT!")
-                for i in range(len(gamePool)-1, 1, -1):
-                    print("delete i:", i)
+                if(debug==2):print("DELETE AND SHIFT!")
+                for i in range(len(gamePool)-1, 0, -1):
+                    if(debug==2):print("Moving tag at [",i-1,"] to [",i,"]")
                     gamePool[i] = gamePool[i-1]
-                print("Make a new tab")
-                tag = spinnerTag(spinnerX,
-                                 spinnerY + (tagHeight * (spinnerSize - (i + 1))),
-                                 spinnerWidth,
-                                 tagHeight,
-                                 tagHeight,
-                                 scale,
-                                 tagBG,
-                                 gameList[pointer],
-                                 growRate)
+                if(debug==2):print("Make a new tab")
+                tag = spinnerTag(spinnerX + (spinnerMargin/2),
+                                spinnerY + (spinnerMargin/2),
+                                tagWidth,
+                                tagHeight / growRate,
+                                tagHeight,
+                                scale,
+                                tagBG,
+                                gameList[pointer],
+                                growRate)
                 pointer = pointer + 1
                 if(pointer>=len(gameList)):
                     pointer = 0
                 gamePool[0] = tag
-            result = False
-            # grow gamePool[0]
-            # move gamePool[0]-gamePool[len(gamePool)-1]
-            # if shrink gamePool[len(gamePool)]
-                # move all gamepools up one
-                #create a new gamepool
+                spins = spins - 1
+                if (debug): print("Spins: ", spins)
 
         else:
-            pass
-                        #For loop
-                            #grow array[0] slightly and move down
-                            #move array[1] down slightly
-                            #shrink array[0] slightly
-                            #if array[2] size is small enough...
-                                #move array[1] to array[2]
-                                #move array[0] to array[1]
-                                #Create a new text display with next minigame on it, set height to start height and put in array[0]
-                        #Not in for loop
-                            #Once we exit for loop...
-                            #Select minigame in array[1]
-                            #result = minigame folder -> minigame -> gameMain.py.launch()
-                            #print("Minigame ended")
-                            #isDuel = result[4]
-                            #if(!isDuel):
-                                #print("Standard - rewarding players")
-                                #player1.addmoney(result[0])
-                                #player2.addmoney(result[1])
-                                #player3.addmoney(result[2])
-                                #player4.addmoney(result[3])
-                            #else:
-                                #print("Duel - rewarding victor")
-                                #figure out duel logic here
-                        #print("Minigame state completed")
-                        #quit minigame
+            print("!!! SPINNER HAS STOPPED SPINNING !!!")
+            middle = (len(gamePool)-1)/2
+            selectedGame = gamePool[int(middle)].name
+            print("Selected minigame is: ", selectedGame)
+            result = [0, 0, 0, 0, None]#Launch minigame here minigame folder -> minigame -> gameMain.py.launch()
+            print("Minigame ended")
+            isDuel = result[4]
+            if(not isDuel):
+                print("Standard - rewarding players")
+                    #player1.addmoney(result[0])
+                    #player2.addmoney(result[1])
+                    #player3.addmoney(result[2])
+                    #player4.addmoney(result[3])
+            else:
+                print("Duel - rewarding victor")
+                    #print("Duel - rewarding victor")
+                    #figure out duel logic here
+            print("Minigame state completed")
+            time.sleep(5)
+            isRunning = False
+    print("Exiting back to minigame state function")

@@ -438,7 +438,7 @@ def startGame(mainWindow, scale, framerate, board):
                 if currentState == States.STARTMINIGAME:
                     currentPlayer = 0
                     print("calling runMinigame")
-                    #runMinigame(mainWindow, scale, framerate)
+                    runMinigame(mainWindow, scale, framerate)
                     print("runMinigame ran")
                     # At the end
                     currentState = States.PLAYERMOVE
