@@ -6,6 +6,9 @@ from src.game.boardGame2.player import Player
 
 
 '''
+Created by: Andrew Bunn
+Was hesitant to upload, but it is a critical part of the project.
+This setup does not need to be in here.
 Will be shoved into a csv file or something of the sort later on
 Use pandas to manipulate data?
 '''
@@ -17,21 +20,24 @@ class FirstBoard():
         pass
 
     def testFirstBoard(self):
-        #make a player
-        # player1 = Player()
+        """
+        The first game board everyone will work with
+        Consists of 38 tiles, and a couple split paths
+        No previous tiles hooked up yet (can't walk backward)
+
+        :return: returns the instantiated board filled with tiles
+        """
 
         startTile = Tile()
         startTile.x = 0
         startTile.y = 416
         startTile.width = 32
         startTile.height = 32
-        # startTile.image = pygame.image.load("data/assets/sprites/blueTile.png")
         startTile.image = SpriteLoader().loadImage("blueTile.png")
 
         tile2 = Tile(startTile)
         tile2.x += 32
         tile2.y -= 32
-        # tile2.image = pygame.image.load("data/assets/sprites/blueTile.png")
         tile2.image = SpriteLoader().loadImage("blueTile.png")
 
         tile3 = Tile(tile2)
@@ -167,22 +173,16 @@ class FirstBoard():
         tile38 = Tile(tile37)
         tile38.x += 32
 
-        # change tile color after so 5 and 6 don't inherit the color
-        # tile4.image = pygame.image.load("data/assets/sprites/redTile.png")
-        # tile14.image = pygame.image.load("data/assets/sprites/redTile.png")
-        # player1.image = pygame.image.load("../../../data/assets/sprites/testPlayer.png")
-
+        # make split path tiles red
         tile4.image = SpriteLoader().loadImage("redTile.png")
         tile14.image = SpriteLoader().loadImage("redTile.png")
 
-        # player1.image = SpriteLoader().loadImage("testPlayer.png")
-        # tile2.players.append(player1)
-
+        # Create the path
         startTile.nextTiles.append(tile2)
         tile2.nextTiles.append(tile3)
         tile3.nextTiles.append(tile4)
         tile4.nextTiles.append(tile5)
-        # tile4.nextTiles.append(tile6)
+        tile4.nextTiles.append(tile6)
         tile5.nextTiles.append(tile7)
         tile6.nextTiles.append(tile4)
         tile7.nextTiles.append(tile8)
@@ -219,6 +219,7 @@ class FirstBoard():
         tile37.nextTiles.append(tile38)
         tile38.nextTiles.append(tile14)
 
+        # put all tiles in the board
         board = Board()
         board.addTile(startTile)
         board.addTile(tile2)
@@ -259,26 +260,6 @@ class FirstBoard():
         board.addTile(tile37)
         board.addTile(tile38)
 
-
         board.startTile = startTile
         renderer = BoardRenderer(board)
         return board
-        # isRunning = True
-        # while(isRunning):
-        #
-        #     for event in pygame.event.get():
-        #         if event.type == pygame.QUIT:
-        #             pygame.quit()
-        #
-        #     # render everything
-        #     renderer.render()
-        #     time.sleep(0.25)
-
-            # # get all the moves for player 1
-            # moves = board.getPotentialMoves(player1)
-            #
-            # # move player 1 to the first possible move in the move array
-            # if(len(moves) > 1):
-            #     board.movePlayer(moves[1], player1)
-            # elif(len(moves) > 0):
-            #     board.movePlayer(moves[0], player1)

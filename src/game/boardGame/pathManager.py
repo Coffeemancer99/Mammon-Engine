@@ -1,4 +1,10 @@
 
+
+'''
+OLD CODE
+Created by: Andrew Bunn
+Finds paths among tiles
+'''
 class PathManager:
 
     def __init__(self):

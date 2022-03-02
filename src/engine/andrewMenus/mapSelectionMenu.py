@@ -4,7 +4,21 @@ from src.game.boardGame2.firstBoard import FirstBoard
 from src.engine.menus import mainmenu
 
 
+'''
+Created by: Andrew Bunn
+Menu to choose what game board to play on
+'''
+
 def launchMapMenu(mainWindow, framerate, scale):
+    """
+    NEED TO REFACTOR LIKE OTHER MENUS, DON'T WANT TO BREAK ANYTHING
+    RIGHT NOW
+    :param mainWindow: window to display in
+    :param framerate: refresh rate for the display
+    :param scale: what to scale the window and all items inside by (factor)
+    :return: currently returns either the previous menu or
+             launches the minigame
+    """
     clock = pygame.time.Clock()
     width, height = pygame.display.get_surface().get_size()
 
@@ -61,10 +75,9 @@ def launchMapMenu(mainWindow, framerate, scale):
             if event.type == pygame.QUIT:
                 isRunning = False
 
-            # Handle Clicks ====  VIEW  =====
+            # Handle Clicks
             if event.type == pygame.MOUSEBUTTONUP:
                 click = pygame.mouse.get_pos()
-              #  print(click[0], click[1])
 
                 if((click[0] > 336 * scale) and (click[0] <= 496 * scale)):     # x
                     if((click[1] > 16 * scale) and (click[1] <= 48 * scale)):   # y
@@ -83,19 +96,20 @@ def launchMapMenu(mainWindow, framerate, scale):
                         mainWindow.blit(unreleasedMapPrevImg, (0, 0))
                         # if accept hit while this selected, print error
 
-                        # else check if the click was Accept NEED IF HERE OR IT FALLS IN FIRST IF
+                # else check if the click was Accept
                 if((click[0] > 380 * scale) and (click[0] <= 508 * scale)):     # x
                     if((click[1] > 348 * scale) and (click[1] <= 444 * scale)): # y
                         print("ACCEPT")
                         if(currentMap == "FirstBoard"):
                             print("PLAY FIRST BOARD")
-                            # newWindow = pygame.display.set_mode((width, height))
                             firstBoard = FirstBoard().testFirstBoard()  # ==== CONTROLLER ====
                             return boardGame.startGame(mainWindow, scale, framerate, firstBoard)
                         elif(currentMap == "DNE"):
                             print("Invalid Map Selection")
-
+                # check if back button
                 if ((click[0] > 4 * scale) and (click[0] <= 100 * scale)):          # x
                     if ((click[1] > 412 * scale) and (click[1] <= 444 * scale)):    # y
                         print("BACK")
                         return mainmenu.launch(width, height, framerate, scale)
+
+        pygame.display.update()

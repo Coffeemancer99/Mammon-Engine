@@ -2,54 +2,36 @@ import pygame
 from src.engine.andrewMenus import testGameMenu
 from src.engine.menus import mainmenu
 from src.engine.button import Button
+from src.engine.andrewMenus.menu import Menu
 
 '''
+Created by: Andrew Bunn
 Menu to choose what type of minigames to launch such as 
 FFA, 2v2, 3v1
-Make a back button
-No need to accept, just click and launch
 '''
 
 def launchMinigameMenu(mainWindow, framerate, scale):
-    clock = pygame.time.Clock()
+    """
+    launchs the minigame menu
+    :param mainWindow: the window to display the menu in
+    :param framerate: set the refresh rate of the menu
+    :param scale: what to scale the display by
+    """
+    minigameMenuButtons = createAllMinigameButtons(mainWindow, framerate, scale)
 
-    newBackButtonImg, newFfaButton, newOneVThreeButton, newTestButton, \
-    newTwoVTwoButton = createAllMinigameButtons(mainWindow, framerate, scale)
-
-    buttons = []
-    buttons.extend((newFfaButton, newTwoVTwoButton,
-                    newOneVThreeButton, newBackButtonImg, newTestButton))
-
-    # Paint buttons and images to screen
-    mainWindow.fill((55, 55, 55))
-
-    for button in buttons:
-        button.renderButton()
-
-    pygame.display.update()
-    isRunning = True
-
-    while (isRunning):
-        clock.tick(framerate)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                isRunning = False
-
-            # Handle Clicks
-            if event.type == pygame.MOUSEBUTTONUP:
-                click = pygame.mouse.get_pos()
-
-                for button in buttons:
-                    if button.wasClicked(click) == True:
-                        if button.dummy == False:
-                            return button.handleClick(click)
-                        else:
-                            button.handleClick(click)
-                        break
+    minigameMenu = Menu("Minigame Types", minigameMenuButtons)
+    minigameMenu.launch(mainWindow, framerate, scale)
 
 
 
 def createAllMinigameButtons(mainWindow, framerate, scale):
+    """
+    creates all the buttons for the minigame menu and returns them
+    :param mainWindow: the window to display the menu in
+    :param framerate: set the refresh rate of the menu
+    :param scale: what to scale the display by
+    :return:
+    """
     width, height = pygame.display.get_surface().get_size()
 
     def onClickRando():

@@ -5,10 +5,20 @@ from src.engine.physics.physics import movementLeftRight, applyGravityPlayer
 '''
 playerController.py created by Andrew Bunn
 Player class implemented by Andrew Bunn
+Player class defining a user controlled player
 '''
 
 class Player():
     def __init__(self, x, y, scale, jumpKey, leftKey, rightKey, sprite):
+        """
+        :param x: player spawn x coord
+        :param y: player spawn y coord
+        :param scale: scales the player size
+        :param jumpKey: specify pygame key for jump
+        :param leftKey: specify pygame key for moving left
+        :param rightKey: specify pygame key for moving right
+        :param sprite: png of the sprite
+        """
         self.scale = scale
         self.sprite = sprite
         self.sprite = pygame.transform.scale(self.sprite, ((self.sprite.get_width()) * scale, (self.sprite.get_height()) * scale))
@@ -28,18 +38,19 @@ class Player():
         self.dX = 0
         self.dY = 0
 
-    '''
-    update - updates the player position based on inputs
-    '''
+
     def update(self):
+        """
+        updates the player position based on inputs
+        """
         self.dX = 0
         self.dY = 0
-        jumpHeight = 16*self.scale
+        jumpHeight = 16 * self.scale
         curX = 0
         curY = 0
-        fallSpeed = 1*self.scale
-        terminalV = 6*self.scale
-        transformSpeed = 4 *self.scale
+        fallSpeed = 1 * self.scale
+        terminalV = 6 * self.scale
+        transformSpeed = 4 * self.scale
 
         key = pygame.key.get_pressed()
         if key[self.jumpKey] and self.jumped == False:
@@ -55,7 +66,7 @@ class Player():
         self.dY += self.velY
 
 
-#ONLY UPDATE RECTANGLE IN ONE PLACE!!! O_O SHARED MUTABLE STATE OH MY
+    # ONLY UPDATE RECTANGLE IN ONE PLACE!!! O_O SHARED MUTABLE STATE OH MY
     def updateRect(self):
         self.rect.x += self.dX
         self.rect.y += self.dY

@@ -8,30 +8,43 @@ from src.game.boardGame.boardGame import getPlayerTurn
 from src.game.boardGame.boardPlayers import BoardPlayer
 from src.game.boardGame2.tile import Tile
 from src.game.boardGame2.spriteLoader import SpriteLoader
-# from player import Player
 
-# 262
+
+'''
+testBoardPlayers.py
+Created by: Andrew Bunn
+OLD test class to test board players and their movement
+'''
 
 class TestBoardPlayers(unittest.TestCase):
 
     def testMoving(self):
-        self.thing = 0
-        numOfSpots = 0
-        moveTracker = 0
+        """
+        Test the movement of a player from tile to tile
+        Render it on the board
+        === OLD TEST ===
+        Ended up changing things and not asserting anything,
+        worked more like a main than a test
+        Someone else touched file, commented out their additions
+        """
+        # self.thing = 0
+        # numOfSpots = 0
+        # moveTracker = 0
         #make a player
         player1 = BoardPlayer(1)
         player2 = BoardPlayer(2)
 
+        # create the tiles
         startTile = Tile()
         startTile.x = 64
         startTile.y = 64
         startTile.width = 32
         startTile.height = 32
-        startTile.image = SpriteLoader().loadImage("blueTile.png")
+        startTile.image = SpriteLoader().loadImage("bluetile.png")
 
         tile2 = Tile(startTile)
         tile2.x += 32
-        tile2.image = SpriteLoader().loadImage("blueTile.png")
+        tile2.image = SpriteLoader().loadImage("bluetile.png")
 
         tile3 = Tile(tile2)
         tile3.x += 32
@@ -83,17 +96,13 @@ class TestBoardPlayers(unittest.TestCase):
             renderer.render()
             time.sleep(1)
 
-
             # move player 1 to the first possible move in the move array
-            if self.thing == 0:
-                moveTracker = getPlayerTurn(player2, board) # Test case is 2
-                self.thing = 1
-            if self.thing == 1:
-                nextTiles = board.getPotentialMoves(player2)
-                # If the length of the next Tiles > 1 then we need to have the player pick where to go
+            nextTiles = board.getPotentialMoves(player2)
+            # If the length of the next Tiles > 1 then we need to have
+            # the player pick where to go (for now default to first option)
+            if(len(nextTiles) == 0):
+                print("No more moves!")
+                pass
+            else:
                 board.movePlayer(nextTiles[0], player2)
-                numOfSpots += 1
-            if numOfSpots == moveTracker:
-               self.thing = 2
-               moveTracker = 0
-               numOfSpots = 0
+

@@ -8,15 +8,13 @@ class BoardRenderer:
         pass
 
 
-'''
-'''
+
 def getBoardMap():
     boardMap = Board()
     boardMap.generateBoard(14, 14)
     return boardMap
 
-'''
-'''
+
 def drawScene(window, tilemap, images):
     window.fill((0, 0, 0))
 
