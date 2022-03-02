@@ -437,10 +437,11 @@ def startGame(mainWindow, scale, framerate, board):
                 # Once all the players are done here, we start a random mini-game
                 if currentState == States.STARTMINIGAME:
                     currentPlayer = 0
-                    print("calling runMinigame")
-                    runMinigame(mainWindow, scale, framerate, listOfPlayers)
-                    print("runMinigame ran")
-                    # At the end
+                    result = True
+                    while(result):  #Keep trying to launch minigames until it works.
+                        result = runMinigame(mainWindow, scale, framerate, listOfPlayers)
+                        if(result): #Something went wrong
+                            print("ERROR! Failed to launch minigame! Attempting to respin...")
                     currentState = States.PLAYERMOVE
             renderer.render()  # 225
 
