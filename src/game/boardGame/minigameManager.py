@@ -17,7 +17,7 @@ atStartFlag = 0                 # Used to keep track of whether or not we have r
 startSpeed = 0                  # Used if spinDown is enabled
 
 #>> SETTINGS
-debug = 1                       # display error messages if set to 1, verbose if set to 2
+debug = 0                       # display error messages if set to 1, verbose if set to 2
 spinnerSize = 3                 # How many tags show up on the spinner.     Default is 3
 growRate = 10                   # Rate at which spinner grows and shrinks   Default is 10
 spinnerMargin = 10              # How much of a margin the spinner box has  Default is 10
@@ -309,13 +309,36 @@ def runMinigame(mainWindow, scale, framerate, players, spinnerSpeed=spinnerSpeed
                 import launch
             except:
                 print("ERROR minigameManager.py, import of launch failed! Does ", selectedGame," have a python script called 'launch.py'?")
-                return False
+                sys.path.pop()                              # delete path to the game folder
+                return True
+            sys.path.pop()
+            # delete the path to the game folder so we don't bloat sys.path or accidentally call another minigame
             try:
                 result = launch.startGame()                 # try and run the startGame() function
+                del sys.modules['launch']                   # some early black magic
             except:
                 print("ERROR minigameManager.py, running startGame function failed! Does ", selectedGame, " have a function called 'startGame()'?")
-                return False
+                return True
             if(debug):print("Result: ", result)
+
+                                        #                   /\
+                                        #                  /  \
+                                        #                 |    |
+                                        #               --:'''':--
+                                        #                 :'_' :
+                                        #                 _:"":\___
+            # perform illegal python       ' '      ____.' :::     '._
+            del sys.modules['launch']   # . *=====<<=)           \    :
+            # black magic to delete        .  '      '-'-'\_      /'._.'
+            # the imported launch                           \====:_ ""
+                                        #                  .'     \\
+                                        #                 :       :
+                                        #                /   :    \
+                                        #               :   .      '.
+                                        #               :  : :      :
+                                        #               :__:-:__.;--'
+                                        #               '-'   '-'
+
             isDuel = result[4]                              # If this location isn't None it's a duel
             if(not isDuel):                                 # Check for duel
                 if(debug):print("Standard - rewarding players")
@@ -327,8 +350,8 @@ def runMinigame(mainWindow, scale, framerate, players, spinnerSpeed=spinnerSpeed
                 # TODO Figure out duel logic
                 # "loseItem" means that this player has lost the item stored in result[4]
                 # "gainItem" means that this player has gained the item stored in result[4]
-            print("Minigame state completed")
+            if(debug):print("Minigame state completed")
             time.sleep(2)                                   # Wait for two seconds so players can see what game won
             isRunning = False                               # End our loop
-    print("Exiting back to minigame state function")
+    if(debug):print("Exiting back to minigame state function")
     return False
