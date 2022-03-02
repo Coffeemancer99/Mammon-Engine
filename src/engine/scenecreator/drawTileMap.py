@@ -13,7 +13,6 @@ def drawScene(window, tilemap, images):
             x = col * currImage.get_width() #Find it's position on the tilemap and multiply that by the image res
             y = row * currImage.get_height()
             window.blit(currImage, (x, y)) #Paint the sprite on screen
-    pygame.display.update() #Update display
 
 #Similar to DrawScene but is more useful for static tiles. Sprites that do not need to be rendered every
 #time can be referenced here without relying on the draw function.

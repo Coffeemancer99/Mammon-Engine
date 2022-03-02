@@ -4,46 +4,27 @@ import src.engine.scenecreator.tile as tile
 import src.engine.player.playerController as player
 import src.engine.collision as collision
 import src.engine.physics.physics as physics
+import src.engine.physics.terrain as terrain
 import src.minigame.physicsTest.ball as ball
+import src.engine.physics.normal as normal
 import pygame
 import time
-def getGameMap():
-    L=[
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    ]
-    return L
+import math # for dev values
+
+from functools import partial
+
 
 def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
-    #Load in sprites and get dimensions of sprites and window
-    groundSprite = pygame.image.load("data/assets/sprites/groundSprite1.png")
-    groundSprite = pygame.transform.scale(groundSprite, ((groundSprite.get_width()) * scale, (groundSprite.get_height()) * scale))
-    images = [None, groundSprite]
 
-    coco = ball.Ball(pygame.image.load("data/assets/sprites/coconut.png"), scale, 80, 185, name="coco")
-    lemon = physics.DynamicObject(pygame.image.load("data/assets/sprites/lemon.png"), scale, 80, 300, name="lemon")
-    box = physics.Object(pygame.image.load("data/assets/sprites/groundSprite1.png"), scale*5, 150,300, name="box")
-    objects = [coco, lemon, box]
+    coco = ball.Ball(pygame.image.load("data/assets/sprites/bluebox.png"), scale, 80, 185, name="coco")
+    lemon = physics.DynamicObject(pygame.image.load("data/assets/sprites/redbox.png"), scale*3, 30, 275, name="lemon")
+    box = physics.Object(pygame.image.load("data/assets/sprites/groundSprite1.png"), scale*15, 190,300, name="box")
+    triangle = terrain.from_polygon([[120,120],[240,240],[60,180]], 1, color = (0,255,0,255))
+    objects = [coco, lemon, box, triangle]
 
-    currMap = getGameMap()
 
-    # ------------------------------
-    # "coco", (x, y) = ("376", "333"), (dX, dY) = ("0", "0"), (momX, momY) = ("0", "0")
-    # "lemon", (x, y) = ("280", "300")
-    # ------------------------------
+
 
     isRunning=True
     print("\n-----------------------------------------------")
@@ -54,8 +35,7 @@ def startGame(mainWindow, scale, framerate):
 
     while(isRunning):
         clock.tick(framerate)
-        drawTileMap.drawScene(mainWindow, currMap, images)  # Redraws the main window
-
+        mainWindow.fill((0,0,0))
 
 
         key = pygame.key.get_pressed()
@@ -70,7 +50,7 @@ def startGame(mainWindow, scale, framerate):
             coco.momX += 3
         if key[pygame.K_SPACE]:
             if physics.grounded(coco, objects, onlyStatics=True):
-                coco.momY -= 25
+                coco.momY -= 50
 
         # if key[pygame.K_f]:
         #     coco.x -= 1
@@ -89,13 +69,13 @@ def startGame(mainWindow, scale, framerate):
             coco.momY = 0
 
         if key[pygame.K_UP]:
-            lemon.momY -= 3
+            lemon.momY -= 2
         if key[pygame.K_DOWN]:
-            lemon.momY += 3
+            lemon.momY += 2
         if key[pygame.K_LEFT]:
-            lemon.momX -= 3
+            lemon.momX -= 2
         if key[pygame.K_RIGHT]:
-            lemon.momX += 3
+            lemon.momX += 2
 
         if key[pygame.K_b]:
             print("\n######################################")
@@ -104,17 +84,10 @@ def startGame(mainWindow, scale, framerate):
             print("######################################")
             time.sleep(0.3)
 
-        # if key[pygame.K_r]:
-        #     coco.dX = -1
-        #     time.sleep(.3)
-        # if key[pygame.K_t]:
-        #     coco.dX = 1
-        #     time.sleep(.3)
-
         for object in objects: # Physics, movement
             if isinstance(object, physics.DynamicObject):
                 if object is coco:
-                    coco.momY += 1
+                    coco.momY += 1.5 #gravity
                 object.update()
                 if ((abs(object.dX) >= 1) or (abs(object.dY) >= 1)):
                     physics.velHandler(object, objects)

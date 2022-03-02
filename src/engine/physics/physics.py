@@ -8,9 +8,12 @@
 import pygame
 import math
 import sympy
+import functools
+
+
 
 class Object:
-    def __init__(self, sprite, scale, x, y, name = "undefined"):
+    def __init__(self, sprite, scale, x, y, name = "undefined", frict = 0.7):
 
         self.sprite = pygame.transform.scale(sprite, ((sprite.get_width()) * scale/2, (sprite.get_height()) * scale/2)) #inherited code
         self.scale = scale
@@ -18,6 +21,7 @@ class Object:
         self.y = y
         self.mask = pygame.mask.from_surface(self.sprite)
         self.name = name # development value for debug statements
+        self.frict = frict
 
     def draw(self, window):
         window.blit(self.sprite,(self.x,self.y))
@@ -25,17 +29,17 @@ class Object:
     def __repr__(self):
         return f'Object "{self.name}", (x,y) = ("{self.x}","{self.y}")'
 
-
 class DynamicObject(Object):
-    def __init__(self, sprite, scale, x, y, name = "undefinedDynamic", mass = 5):
-        Object.__init__(self, sprite, scale, x, y, name)
+    def __init__(self, sprite, scale, x, y, name = "undefinedDynamic", mass = 10, frict = 0.85):
+        Object.__init__(self, sprite, scale, x, y, name, frict)
         self.mass = mass
         self.momX = 0
         self.momY = 0
         self.dX = 0
         self.dY = 0
 
-    def update(self, airRes=.95, minMom = 0.1, maxMom = 60):
+    def update(self, airRes=.985, minMom = 0.05, maxMom = None):
+        if not maxMom: maxMom = 10*self.mass
         if(self.momX > maxMom): self.momX = maxMom
         if(self.momY > maxMom): self.momY = maxMom
 
@@ -118,17 +122,19 @@ def velChecker(obj1, obj2):
                             # print("dX: overlap ended! (dX,dY) = (" + str(weight[0]) + ", " + str(weight[1]) + ")")
                             obj1.dX = weight[0]
                             obj1.momX = 0
-                        else:
-                            # print("dX: sliding along, no change~")
+                        else: # sliding along the dX direction, apply friction
+                            print("dX: sliding along, no change~")
                             obj1.dX = dXbackup
+                            obj1.momX = obj1.momX * obj2.frict
                     if weight[1]:
                         if(weight[1] != int(dYbackup)):
                             # print("dY: overlap ended! (dX,dY) = (" + str(weight[0]) + ", " + str(weight[1]) + ")")
                             obj1.dY = weight[1]
                             obj1.momY = 0
-                        else:
-                            # print("dY: sliding along, no change~")
+                        else:  # sliding along the dY direction, apply friction
+                            print("dY: sliding along, no change~")
                             obj1.dY = dYbackup
+                            obj1.momY = obj1.momY * obj2.frict
                     break
                 else:
                     if abs(weight[0]) == 1: # adjacent horizontally
@@ -148,7 +154,9 @@ def grounded(obj1, objects, onlyStatics = False):
             continue
         if onlyStatics and isinstance(obj2, DynamicObject):
             continue
-        if obj1.mask.overlap(obj2.mask, (obj2.x - obj1.x, obj2.y - (obj1.y + 1))):
+        if (obj1.mask.overlap(obj2.mask, (obj2.x - obj1.x, obj2.y - (obj1.y + 1))) ):
+            (x,y) = obj1.mask.overlap(obj2.mask, (obj2.x - obj1.x, obj2.y - (obj1.y + 1)))
+            obj2.sprite.set_at((x + obj1.x - obj2.x, y + (obj1.y + 1) - obj2.y), 100)
             return True
 
 

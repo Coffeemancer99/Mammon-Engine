@@ -7,8 +7,8 @@ from src.engine.physics.physics import DynamicObject
 
 
 class Ball(DynamicObject):
-    def __init__(self, sprite, scale, x, y, name="undefinedBall"):
-        DynamicObject.__init__(self, sprite, scale, x, y, name)
+    def __init__(self, sprite, scale, x, y, name="undefinedBall", mass = 10):
+        DynamicObject.__init__(self, sprite, scale, x, y, name, mass)
         self.power = 0
         self.angle = 0
 
