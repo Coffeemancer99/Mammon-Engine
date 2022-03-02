@@ -5,12 +5,13 @@ import time
 import src.minigame as minigames
 import pygame
 import os
-debug = 1           # display error messages if set to 1, verbose if set to 2
-spinnerSize = 3     # How many tags show up on the spinner.     Default is 3
-growRate = 7       # Rate at which spinner grows and shrinks   Default is 10
-spinnerMargin = 10  # How much of a margin the spinner box has  Default is 10
-tagBuffer = 5       # How much space is between each tag        Default is 5
-BLACK = (0, 0, 0)   # Color used for font
+debug = 1                       # display error messages if set to 1, verbose if set to 2
+spinnerSize = 3                # How many tags show up on the spinner.     Default is 3
+growRate = 10                   # Rate at which spinner grows and shrinks   Default is 10
+spinnerMargin = 10              # How much of a margin the spinner box has  Default is 10
+tagBuffer = 5/spinnerSize       # How much space is between each tag        Default is 5
+BLACK = (0, 0, 0)               # Color used for font
+spinnerSpeed = 0.05             # Speed of the spinner loop
 
 # sysfont = pygame.font.get_default_font()                            # Initialize font
 # font = pygame.font.SysFont(None, 48)                                # create the font
@@ -57,7 +58,7 @@ class spinnerTag():
             self.height = self.maxHeight
             return True
         self.sprite = pygame.transform.scale(self.sprite, (self.width, self.height ))
-        self.y = self.y + changeRate
+        self.y = self.y + changeRate#((self.maxHeight-(spinnerMargin/2))/self.growRate)
 
     def shrink(self):
         changeRate = (self.height/self.growRate)
@@ -65,12 +66,12 @@ class spinnerTag():
         if(self.height < 0):
             self.height = 1
         self.sprite = pygame.transform.scale(self.sprite, (self.width, self.height))
-        self.y = self.y + changeRate
+        self.y = self.y + (changeRate+(changeRate/self.growRate))#(self.height/self.growRate)#((self.maxHeight-(spinnerMargin/2))/self.growRate)
 
 
     def move(self, spinnerHeight, spinnerY):
         #changeRate = (((self.y-((self.height+spinnerMargin)/self.growRate))-spinnerY)/self.growRate)
-        changeRate = (((spinnerHeight-self.height)-(self.y-spinnerY))/growRate)/(spinnerSize-2)
+        changeRate = (((spinnerHeight-(self.height+tagBuffer))-(self.y-spinnerY))/growRate)/(spinnerSize-2)
         self.y = self.y + changeRate
         #print("New Y Position for minigame ",self.name,": ", self.y)
 
@@ -81,7 +82,7 @@ class spinnerTag():
 
 path = __file__ + "\..\..\..\minigame"                              # Set the path to the minigame folder
 
-def runMinigame(mainWindow, scale, framerate):
+def runMinigame(mainWindow, scale, framerate, players):
     clock = pygame.time.Clock()                                         # Used for framerate
     isRunning = True
     spinnerBG = pygame.image.load("data/assets/sprites/bluebox.png")    # pre-load background image for the spinner
@@ -118,7 +119,7 @@ def runMinigame(mainWindow, scale, framerate):
     spinnerY = (winY/2)-(spinnerHeight/2)
     spinnerBG = pygame.transform.scale(spinnerBG, (spinnerWidth, spinnerHeight))     #Set the size of the spinnerBG, then draw it
     mainWindow.blit(spinnerBG, ((winX/2)-(spinnerWidth/2), (winY/2)-(spinnerHeight/2)))
-    tagHeight = ((spinnerHeight-spinnerMargin) / spinnerSize) - tagBuffer                             # Save our tag height for future use
+    tagHeight = ((spinnerHeight-spinnerMargin) / spinnerSize) - tagBuffer                         # Save our tag height for future use
     tagWidth = spinnerWidth - spinnerMargin                             # Save our tag width for future use
 
     spins = random.randrange( len(gameList), (spinnerSize*len(gameList)) )  # How many times will we spin the spinner?
@@ -174,7 +175,7 @@ def runMinigame(mainWindow, scale, framerate):
                 isRunning = False
         pygame.display.update()
         mainWindow.blit(spinnerBG, ((winX/2)-(spinnerWidth/2), (winY/2)-(spinnerHeight/2)))
-        time.sleep(0.25)
+        time.sleep(spinnerSpeed)
         if spins > 0:
             try:
                 list(map(lambda x: mainWindow.blit(x.sprite, (x.x, x.y)), gamePool))  # Draw tags
@@ -226,18 +227,18 @@ def runMinigame(mainWindow, scale, framerate):
             middle = (len(gamePool)-1)/2
             selectedGame = gamePool[int(middle)].name
             print("Selected minigame is: ", selectedGame)
-            result = [0, 0, 0, 0, None]#Launch minigame here minigame folder -> minigame -> gameMain.py.launch()
+            result = [1, 2, 3, 4, None]#Launch minigame here minigame folder -> minigame -> gameMain.py.launch()
             print("Minigame ended")
             isDuel = result[4]
             if(not isDuel):
                 print("Standard - rewarding players")
-                    #player1.addmoney(result[0])
-                    #player2.addmoney(result[1])
-                    #player3.addmoney(result[2])
-                    #player4.addmoney(result[3])
+                for player in players:
+                    player.setMoney(result[player.getPlayerID()-1])
+                    print("--Rewarding Player ", player.getPlayerID(), " $", result[player.getPlayerID()-1])
             else:
                 print("Duel - rewarding victor")
-                    #print("Duel - rewarding victor")
+                    # "loseItem" means that this player has lost the item stored in result[4]
+                    # "gainItem" means that this player has gained the item stored in result[4]
                     #figure out duel logic here
             print("Minigame state completed")
             time.sleep(5)
