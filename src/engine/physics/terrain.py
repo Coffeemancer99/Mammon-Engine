@@ -16,20 +16,14 @@ def is_between(point1, point2, testPoint):
     (x3, y3) = testPoint
     (y1, y2, y3) = (-y1, -y2, -y3) # to allow for typical slope calculations
     if testPoint in [point1, point2]:
-        # print("deffo True")
         return True
     if (x2 == x1):
-        # print("linearly-like: ", end = "")
-        # print((x1 == x3) and (y3 >= min(y1,y2)) and (y3 <= max(y1,y2)))
         return ((x1 == x3) and (y3 >= min(y1,y2)) and (y3 <= max(y1,y2)))
     if (y2 == y1):
-        # print("linearly-like: ", end="")
-        # print((y1 == y3) and (y3 >= min(y1,y2)) and (y3 <= max(y1,y2)))
         return ((y1 == y3) and (y3 >= min(y1,y2)) and (y3 <= max(y1,y2)))
 
     m = (y2-y1)/(x2-x1)
     b = y1-(m*x1)
-    # print("equation:  ", end = "")
 
     y = m*x3 + b
     floor = math.floor(y)
@@ -50,8 +44,7 @@ def from_polygon(points, scale, color = (0,255,0,255), name = "undefinedPolygon"
     for point in points:
         point[0] -= minX
         point[1] -= minY
-    sprite = pygame.Surface((maxX-minX, maxY-minY), flags=pygame.SRCALPHA)
-    pygame.draw.polygon(sprite, color, points)
+    sprite = generate_polygon(points,color, size = (maxX - minX, maxY - minY))
 
     outline = []; edges = []
     for point in pygame.mask.from_surface(sprite).outline():
@@ -62,3 +55,20 @@ def from_polygon(points, scale, color = (0,255,0,255), name = "undefinedPolygon"
     for edge in edges:
         print(edge)
     return Terrain(sprite, scale, minX, minY, name, frict, edges)
+
+def generate_polygon(points, color = (0,255,0,255), size = None):
+    if not size:
+        xValues = [point[0] for point in points]
+        yValues = [point[1] for point in points]
+        size = (max(xValues) - min(xValues), max(yValues) - min(yValues))
+    sprite = pygame.Surface(size, flags=pygame.SRCALPHA)
+    pygame.draw.polygon(sprite, color, points)
+    return sprite
+
+def generate_circle(radius, color = (255,0,0,255)):
+    return generate_ellipse(2*radius,2*radius,color)
+
+def generate_ellipse(width, height, color = (255,255,0,255)):
+    sprite = pygame.Surface((width, height), flags = pygame.SRCALPHA)
+    pygame.draw.ellipse(sprite,color,pygame.Rect((0,0),(width,height)))
+    return sprite

@@ -6,11 +6,9 @@ import src.engine.collision as collision
 import src.engine.physics.physics as physics
 import src.engine.physics.terrain as terrain
 import src.minigame.physicsTest.ball as ball
-import src.engine.physics.normal as normal
 import pygame
 import time
 import math # for dev values
-
 from functools import partial
 
 
@@ -18,11 +16,10 @@ def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
 
     coco = ball.Ball(pygame.image.load("data/assets/sprites/bluebox.png"), scale, 80, 185, name="coco")
-    lemon = physics.DynamicObject(pygame.image.load("data/assets/sprites/redbox.png"), scale*3, 30, 275, name="lemon")
-    box = physics.Object(pygame.image.load("data/assets/sprites/groundSprite1.png"), scale*15, 190,300, name="box")
-    triangle = terrain.from_polygon([[120,120],[240,240],[60,180]], 1, color = (0,255,0,255))
+    lemon = physics.DynamicObject(terrain.generate_ellipse(50,100), scale*1, 60,30, name="lemon")
+    box = physics.Object(terrain.generate_circle(40), scale*1, 20,20, name="box")
+    triangle = terrain.from_polygon([[0,400],[800,400],[800,480],[0,480]], 1, color = (0,255,0,255))
     objects = [coco, lemon, box, triangle]
-
 
 
 
@@ -52,12 +49,18 @@ def startGame(mainWindow, scale, framerate):
             if physics.grounded(coco, objects, onlyStatics=True):
                 coco.momY -= 50
 
-        # if key[pygame.K_f]:
-        #     coco.x -= 1
-        #     time.sleep(.3)
-        # if key[pygame.K_g]:
-        #     coco.x += 1
-        #     time.sleep(.3)
+        if key[pygame.K_f]:
+            coco.angle = math.pi/2
+            print("angle = 90")
+
+        if key[pygame.K_g]:
+            coco.angle = math.pi/4
+            print("angle = 45")
+        if key[pygame.K_g]:
+            coco.x = 0
+        if key[pygame.K_h]:
+            isPrimed = True
+            print("Primed")
         # if key[pygame.K_h]:
         #     (coco.x, coco.y) = (376, 333)
         #     coco.momX = 0
@@ -91,6 +94,9 @@ def startGame(mainWindow, scale, framerate):
                 object.update()
                 if ((abs(object.dX) >= 1) or (abs(object.dY) >= 1)):
                     physics.velHandler(object, objects)
+        # if physics.grounded(coco, objects):
+        #     if isPrimed and (coco.power == 0):
+        #         pass
 
         for object in objects: # rendering
             object.draw(mainWindow)

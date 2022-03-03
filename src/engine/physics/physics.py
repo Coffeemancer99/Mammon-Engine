@@ -123,7 +123,6 @@ def velChecker(obj1, obj2):
                             obj1.dX = weight[0]
                             obj1.momX = 0
                         else: # sliding along the dX direction, apply friction
-                            print("dX: sliding along, no change~")
                             obj1.dX = dXbackup
                             obj1.momX = obj1.momX * obj2.frict
                     if weight[1]:
@@ -132,7 +131,6 @@ def velChecker(obj1, obj2):
                             obj1.dY = weight[1]
                             obj1.momY = 0
                         else:  # sliding along the dY direction, apply friction
-                            print("dY: sliding along, no change~")
                             obj1.dY = dYbackup
                             obj1.momY = obj1.momY * obj2.frict
                     break
