@@ -35,7 +35,7 @@ class BoardPlayer(pygame.sprite.Sprite):
         self.diceTwoPlacement = dice
 
     def removeInventoryItem(self, index):
-        self.inventory.pop(index)
+        return self.inventory.pop(index)
 
     def setLostTurn(self):
         self.lostTurn = not self.lostTurn

@@ -441,7 +441,7 @@ def startGame(mainWindow, scale, framerate, board):
                     while(result):  #Keep trying to launch minigames until it works.
                         result = runMinigame(mainWindow, scale, framerate, listOfPlayers)
                         if(result): #Something went wrong
-                            print("ERROR! Failed to launch minigame! Attempting to respin...")
+                            print("ERROR! minigameManager.py Failed to launch minigame! Attempting to respin...")
                     currentState = States.PLAYERMOVE
             renderer.render()  # 225
 
