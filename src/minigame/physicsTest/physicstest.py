@@ -16,13 +16,17 @@ def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
 
     coco = ball.Ball(pygame.image.load("data/assets/sprites/bluebox.png"), scale, 80, 185, name="coco")
-    lemon = physics.DynamicObject(terrain.generate_ellipse(50,100), scale*1, 60,30, name="lemon")
-    box = physics.Object(terrain.generate_circle(40), scale*1, 20,20, name="box")
-    triangle = terrain.from_polygon([[0,400],[800,400],[800,480],[0,480]], 1, color = (0,255,0,255))
+    lemon = physics.DynamicObject(terrain.generate_ellipse(70,110), scale*1, 100,50, name="lemon")
+    box = physics.Object(terrain.generate_circle(50), 1, 20,20, name="box")
+    triY = 100; triX = 100
+    triangle = terrain.from_polygon([[0,400],[0+triX,400],[0,400-triY]], scale, color = (0,255,0,255))
+    # triangle = physics.Object(terrain.generate_rectangle(800, 50), scale, 0, 400)
     objects = [coco, lemon, box, triangle]
 
-
-
+    print("######")
+    for object in objects:
+        print(object)
+    print("######\n")
     isRunning=True
     print("\n-----------------------------------------------")
     print("PHYSICS TESTING")
@@ -89,8 +93,8 @@ def startGame(mainWindow, scale, framerate):
 
         for object in objects: # Physics, movement
             if isinstance(object, physics.DynamicObject):
-                if object is coco:
-                    coco.momY += 1.5 #gravity
+                # if object is coco:
+                #     coco.momY += 1.5 #gravity
                 object.update()
                 if ((abs(object.dX) >= 1) or (abs(object.dY) >= 1)):
                     physics.velHandler(object, objects)

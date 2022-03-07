@@ -17,8 +17,8 @@ class Object:
 
         self.sprite = pygame.transform.scale(sprite, ((sprite.get_width()) * scale/2, (sprite.get_height()) * scale/2)) #inherited code
         self.scale = scale
-        self.x = x # (x,y) refers to top-left position of object
-        self.y = y
+        self.x = x * scale # (x,y) refers to top-left position of object
+        self.y = y * scale
         self.mask = pygame.mask.from_surface(self.sprite)
         self.name = name # development value for debug statements
         self.frict = frict
@@ -50,9 +50,9 @@ class DynamicObject(Object):
 
         # fractional dXY values will accumulate allowing e.g. moving 1px every other frame
         if self.momX == 0: self.dX = 0
-        else: self.dX += self.momX/self.mass
+        else: self.dX += self.scale*self.momX/self.mass
         if self.momY == 0: self.dY = 0
-        else: self.dY += self.momY/self.mass
+        else: self.dY += self.scale*self.momY/self.mass
 
     def __repr__(self):
         return f'DynamicObject "{self.name}", (x,y) = ("{self.x}","{self.y}"), (dX,dY) = ("{self.dX}","{self.dY}"), (momX, momY) = ("{self.momX}","{self.momY}")'
