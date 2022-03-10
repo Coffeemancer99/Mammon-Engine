@@ -12,9 +12,15 @@ class Ball(DynamicObject):
         self.power = 0
         self.angle = 0
 
-    def update(self):
+    def update(self, airRes=physics.airRes, minMom=physics.minMom, maxMom=None):
         self.takeInputs(pygame.key.get_pressed())
-        DynamicObject.update(self)
+        DynamicObject.update(self, airRes, minMom, maxMom)
+
+    def slide(self, obj2):
+        print("ball ", end = "")
+        obj2.frict = obj2.frict/2
+        DynamicObject.slide(self,obj2)
+        obj2.frict = obj2.frict*2
 
     def takeInputs(self, key):
         if key[pygame.K_u]:

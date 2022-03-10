@@ -1,9 +1,11 @@
-
+from collections.abc import Iterable
 import src.engine.scenecreator.drawTileMap as drawTileMap
 import src.engine.scenecreator.tile as tile
 import src.engine.player.playerController as player
 import src.engine.collision as collision
 import src.engine.physics.physics as physics
+from src.engine.physics.physics import Object, DynamicObject, RectObject
+from src.engine.physics.spritegen import *
 import src.engine.physics.terrain as terrain
 import src.minigame.physicsTest.ball as ball
 import pygame
@@ -15,13 +17,16 @@ from functools import partial
 def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
 
-    coco = ball.Ball(pygame.image.load("data/assets/sprites/bluebox.png"), scale, 80, 185, name="coco")
-    lemon = physics.DynamicObject(terrain.generate_ellipse(70,110), scale*1, 100,50, name="lemon")
-    box = physics.Object(terrain.generate_circle(50), 1, 20,20, name="box")
-    triY = 100; triX = 100
-    triangle = terrain.from_polygon([[0,400],[0+triX,400],[0,400-triY]], scale, color = (0,255,0,255))
-    # triangle = physics.Object(terrain.generate_rectangle(800, 50), scale, 0, 400)
+    cocoX = 25; cocoY = 185
+    coco = ball.Ball(grab_sprite("data/assets/sprites/bluebox.png"), scale, cocoX, cocoY, name="coco")
+    lemonX = 100; lemonY = 50
+    lemon = DynamicObject(generate_ellipse(45,65), scale*1, lemonX,lemonY, name="lemon")
+    triY = 80; triX = 80
+    triangle = terrain.from_polygon([[20,380],[20+triX,380],[20,380-triY]], scale, color = (0,255,0,255), name="triangle")
+    box = RectObject((380,50), scale, 40,380, name="box")
     objects = [coco, lemon, box, triangle]
+
+    objects.append(RectObject((100,100), scale, 300,100))
 
     print("######")
     for object in objects:
@@ -34,6 +39,8 @@ def startGame(mainWindow, scale, framerate):
     print("press u-i-o-j-k to manipulate the cannon settings")
     print("WASD and arrow keys to move around coconut and lemon,space to jump the coconut")
 
+    gravity = 1.5
+    isLoud = False
     while(isRunning):
         clock.tick(framerate)
         mainWindow.fill((0,0,0))
@@ -43,37 +50,64 @@ def startGame(mainWindow, scale, framerate):
 
         if key[pygame.K_w]:
             coco.momY -= 3
+            if key[pygame.K_LSHIFT]:
+                coco.momY -= 3
         if key[pygame.K_s]:
             coco.momY += 3
+            if key[pygame.K_LSHIFT]:
+                coco.momY += 7
         if key[pygame.K_a]:
-            coco.momX -= 3
+            coco.momX -= 2
+            if key[pygame.K_LSHIFT]:
+                coco.momX -= 4
         if key[pygame.K_d]:
-            coco.momX += 3
+            coco.momX += 2
+            if key[pygame.K_LSHIFT]:
+                coco.momX += 4
         if key[pygame.K_SPACE]:
             if physics.grounded(coco, objects, onlyStatics=True):
                 coco.momY -= 50
 
         if key[pygame.K_f]:
-            coco.angle = math.pi/2
-            print("angle = 90")
-
+            coco.x = cocoX; coco.y = cocoY
+            coco.momX = 0; coco.momY = 0
+            lemon.x = lemonX; lemon.y = lemonY
+            lemon.momX = 0; lemon.momY = 0
         if key[pygame.K_g]:
-            coco.angle = math.pi/4
-            print("angle = 45")
-        if key[pygame.K_g]:
-            coco.x = 0
+            if key[pygame.K_LSHIFT]:
+                gravity -= .5
+            if key[pygame.K_LCTRL]:
+                gravity -= .05
+            if not (key[pygame.K_LCTRL] or key[pygame.K_LSHIFT]):
+                gravity -= .1
+            print("gravity = {:.3f}".format(gravity))
+            time.sleep(.3)
+        if key[pygame.K_t]:
+            if key[pygame.K_LSHIFT]:
+                gravity += .5
+            if key[pygame.K_LCTRL]:
+                gravity += .05
+            if not (key[pygame.K_LCTRL] or key[pygame.K_LSHIFT]):
+                gravity += .1
+            print("gravity = {:.3f}".format(gravity))
+            time.sleep(.3)
         if key[pygame.K_h]:
-            isPrimed = True
-            print("Primed")
-        # if key[pygame.K_h]:
-        #     (coco.x, coco.y) = (376, 333)
+            if(isLoud):
+                isLoud = False
+                print("QUIET")
+            else:
+                isLoud = True
+                print("LOUD")
+            time.sleep(.3)
+        if key[pygame.K_n]:
+            print("gravity = 0")
+            gravity = 0
+            time.sleep(.3)
         #     coco.momX = 0
         #     coco.momY = 0
         #     time.sleep(.3)
 
-        if key[pygame.K_c]:
-            coco.momX = 0
-            coco.momY = 0
+
 
         if key[pygame.K_UP]:
             lemon.momY -= 2
@@ -93,9 +127,16 @@ def startGame(mainWindow, scale, framerate):
 
         for object in objects: # Physics, movement
             if isinstance(object, physics.DynamicObject):
-                # if object is coco:
-                #     coco.momY += 1.5 #gravity
-                object.update()
+                if object is coco:
+                    coco.momY += gravity #gravity
+                if (object is coco) and key[pygame.K_c]:
+                    coco.momX = 0
+                    coco.momY = 0
+                if (object is lemon) and key[pygame.K_v]:
+                    lemon.momX = 0
+                    lemon.momY = 0
+                object.update(maxMom = 150)
+                # if(isLoud and (object is coco)): print(coco)
                 if ((abs(object.dX) >= 1) or (abs(object.dY) >= 1)):
                     physics.velHandler(object, objects)
         # if physics.grounded(coco, objects):
@@ -110,3 +151,15 @@ def startGame(mainWindow, scale, framerate):
             if event.type == pygame.QUIT:
                 isRunning=False
         pygame.display.update()
+
+
+def test1a(x,y,z):
+    print("input = {},{},{}".format(x,y,z))
+
+
+def main():
+    myList = [1,2,3]
+    test1a(*myList)
+
+if(__name__ == "__main__"):
+    main()

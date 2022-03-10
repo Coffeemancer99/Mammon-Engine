@@ -35,7 +35,7 @@ class MyTestCase(unittest.TestCase):
         p2 = (10,0)
         self.assertTrue(terrain.is_between(p1,p2,(5,0)))
         self.assertFalse(terrain.is_between(p1,p2,(15,0)))
-        self.assertFalse(terrain.is_between(p1,p2,(1,1)))
+        self.assertFalse(terrain.is_between(p1,p2,(1,2)))
         self.assertTrue(terrain.is_between(p1,p2,(0,0))) # if testPoint in [point1, point2]
 
     def testhorizontalB(self):
@@ -43,7 +43,7 @@ class MyTestCase(unittest.TestCase):
         p1 = (10, 0)
         self.assertTrue(terrain.is_between(p1, p2, (5, 0)))
         self.assertFalse(terrain.is_between(p1, p2, (15, 0)))
-        self.assertFalse(terrain.is_between(p1, p2, (1, 1)))
+        self.assertFalse(terrain.is_between(p1, p2, (1, 2)))
         self.assertTrue(terrain.is_between(p1, p2, (0, 0)))  # if testPoint in [point1, point2]
 
     def testverticalA(self):
@@ -51,7 +51,7 @@ class MyTestCase(unittest.TestCase):
         p2 = (0,10)
         self.assertTrue(terrain.is_between(p1, p2, (0,5)))
         self.assertFalse(terrain.is_between(p1, p2, (0,15)))
-        self.assertFalse(terrain.is_between(p1,p2,(1,1)))
+        self.assertFalse(terrain.is_between(p1,p2,(2,1)))
         self.assertTrue(terrain.is_between(p1, p2, (0, 0)))  # if testPoint in [point1, point2]
 
     def testverticalB(self):
@@ -59,7 +59,7 @@ class MyTestCase(unittest.TestCase):
         p1 = (0, 10)
         self.assertTrue(terrain.is_between(p1, p2, (0, 5)))
         self.assertFalse(terrain.is_between(p1, p2, (0, 15)))
-        self.assertFalse(terrain.is_between(p1, p2, (1, 1)))
+        self.assertFalse(terrain.is_between(p1, p2, (2, 1)))
         self.assertTrue(terrain.is_between(p1, p2, (0, 0)))  # if testPoint in [point1, point2]
 
     def testDiagonalSimpleA(self):
@@ -85,5 +85,25 @@ class MyTestCase(unittest.TestCase):
         p1 = (200,69)
         self.assertTrue(terrain.is_between(p1,p2,(100,35)))
         self.assertFalse(terrain.is_between(p1,p2,(100,37)))
+
+    def testIsBetweenLeftovers(self): # are all points in an outline put into an edge?
+        points = [[0,0],[69,420],[33,380],[11,69]]
+        obj = terrain.from_polygon(points,1)
+        outline = []; edges = []
+        for point in obj.mask.outline():
+            if point not in outline:
+                outline.append(point)
+        for i in range(len(points)):
+            edges.append(list(filter((partial(terrain.is_between, points[i], points[(i + 1) % len(points)])), outline)))
+
+        leftovers = []
+        for point in outline:
+            PointInEdges = False
+            for edge in edges:
+                if point in edge:
+                    PointInEdges = True
+                    break
+            self.assertTrue(PointInEdges)
+
 if __name__ == '__main__':
     unittest.main()

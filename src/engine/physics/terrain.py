@@ -3,26 +3,32 @@ import src.engine.physics.physics as physics
 import src.engine.physics.normal as normal
 import functools
 from functools import partial
+from src.engine.physics.spritegen import *
 import math
 
 class Terrain(physics.Object):
     def __init__(self, sprite, scale, x, y, name = "undefinedTerrain", frict = 0.7, edges = None, normalFuns = None):
         physics.Object.__init__(self, sprite, scale, x, y, name, frict)
-        self.sprite = pygame.transform.scale(sprite, ((sprite.get_width()) * scale, (sprite.get_height()) * scale)) #inherited code
         self.edges = edges
         self.normalFuns = normalFuns
 
 def is_between(point1, point2, testPoint):
-    (x1, y1) = point1
-    (x2, y2) = point2
-    (x3, y3) = testPoint
-    (y1, y2, y3) = (-y1, -y2, -y3) # to allow for typical slope calculations
     if testPoint in [point1, point2]:
         return True
-    if (x2 == x1):
-        return ((x1 == x3) and (y3 >= min(y1,y2)) and (y3 <= max(y1,y2)))
-    if (y2 == y1):
-        return ((y1 == y3) and (x3 >= min(x1,x2)) and (x3 <= max(x1,x2)))
+
+    point1 = list(point1); point2 = list(point2); testPoint = list(testPoint)
+    point1[1] = -point1[1];     point2[1] = -point2[1];     testPoint[1] = -testPoint[1]
+
+    if(abs(point1[1] - point2[1]) > abs(point1[0] - point2[0])): # if dY > dX
+        for point in [point1, point2, testPoint]: #rotate points to minimize computer error with slope calculation
+            backup = point[1]
+            point[1] = point[0]
+            point[0] = backup
+    (x1, y1) = point1; (x2,y2) = point2; (x3,y3) = testPoint
+    if (x2 == x1): # vertical line
+        return ((x3 in [x1, x1-1, x1+1]) and (y3 >= min(y1,y2)) and (y3 <= max(y1,y2)))
+    if (y2 == y1): # horizontal line
+        return ((y3 in [y1, y1-1, y1+1]) and (x3 >= min(x1,x2)) and (x3 <= max(x1,x2)))
 
     m = (y2-y1)/(x2-x1)
     b = y1-(m*x1)
@@ -43,44 +49,22 @@ def from_polygon(points, scale, color = (0,255,0,255), name = "undefinedPolygon"
     yValues = [point[1] for point in points]
     minX = min(xValues); maxX = max(xValues)
     minY = min(yValues); maxY = max(yValues)
-    print("maxX = {}".format(maxX))
     for point in points:
         point[0] -= minX
         point[1] -= minY
     sprite = generate_polygon(points,color, size = (maxX - minX, maxY - minY))
 
-    outline = []; edges = []
+    outline = []; edges = []; normalFuns = []
     for point in pygame.mask.from_surface(sprite).outline():
         if point not in outline:
             outline.append(point)
+
+    print("outline = {}".format(outline))
     for i in range(len(points)):
         edges.append(list(filter((partial(is_between, points[i], points[(i+1)%len(points)])), outline)))
-    # for edge in edges:
-    #     print(edge)
+        normalFuns.append(partial(normal.from_straight,points[i], points[(i+1)%len(points)]))
+        print("for {} and {}, points_between = {}".format(points[i], points[(i+1)%len(points)], list(filter((partial(is_between, points[i], points[(i+1)%len(points)])), outline))))
+    print("")
+
     return Terrain(sprite, scale, minX, minY, name, frict, edges)
 
-def generate_polygon(points, color = (0,255,0,255), size = None):
-    if not size:
-        xValues = [point[0] for point in points]
-        yValues = [point[1] for point in points]
-        size = (max(xValues) - min(xValues), max(yValues) - min(yValues))
-    sprite = pygame.Surface(size, flags=pygame.SRCALPHA)
-    pygame.draw.polygon(sprite, color, points)
-    return sprite
-
-def generate_circle(radius, color = (255,0,0,255)):
-    return generate_ellipse(2*radius,2*radius,color)
-
-def generate_ellipse(width, height, color = (255,255,0,255)):
-    sprite = pygame.Surface((width, height), flags = pygame.SRCALPHA)
-    pygame.draw.ellipse(sprite,color,pygame.Rect((0,0),(width,height)))
-    return sprite
-
-def generate_rectangle(width, height, color = (0,255,255)):
-    return generate_polygon([[0,0],[width,0], [width,height], [0,height]], color, size = (width,height))
-
-# xValues = [0, 1200, 1200, 0]
-# yValues = [800, 800, 960, 960]
-#
-# xValues = [0, 600, 600, 0]
-# yValues = [400, 400, 480, 480]

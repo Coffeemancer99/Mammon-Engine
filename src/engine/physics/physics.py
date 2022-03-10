@@ -6,16 +6,24 @@
 # Treat force and acceleration as a 2d vector and treat them as x and y. Gravity = y vector direction = x vector
 
 import pygame
+from math import pi
+from collections.abc import Iterable
+from src.engine.physics.spritegen import *
+
 import math
 import sympy
 import functools
 
-
+#default values for objects, to be imported into subclass creators
+airRes = 0.985
+frictS = 0.7
+frictD = 0.85
+minMom = 0.005
 
 class Object:
-    def __init__(self, sprite, scale, x, y, name = "undefined", frict = 0.7):
+    def __init__(self, sprite, scale, x, y, name = "undefined", frict = frictS):
 
-        self.sprite = pygame.transform.scale(sprite, ((sprite.get_width()) * scale/2, (sprite.get_height()) * scale/2)) #inherited code
+        self.sprite = pygame.transform.scale(sprite, ((sprite.get_width()) * scale, (sprite.get_height()) * scale)) #inherited code
         self.scale = scale
         self.x = x * scale # (x,y) refers to top-left position of object
         self.y = y * scale
@@ -27,21 +35,34 @@ class Object:
         window.blit(self.sprite,(self.x,self.y))
 
     def __repr__(self):
-        return f'Object "{self.name}", (x,y) = ("{self.x}","{self.y}")'
+        return f'Object "{self.name}", (x,y) = ("{self.x}","{self.y}"), (width, height) = "{self.sprite.get_size()}"'
+
+class RectObject(Object):
+    def __init__(self, sprite, scale, x, y, name = "undefinedRect", frict = frictS):
+        if isinstance(sprite, Iterable): # can pass sprite object or arguments for generate_rectangle
+            print("iterable\n\n")
+            sprite = generate_rectangle(*sprite)
+        Object.__init__(self, sprite, scale, x, y, name, frict)
+        self.mask.fill()
+
+    def __repr__(self):
+        return f'RectObject "{self.name}", (x,y) = ("{self.x}","{self.y}"), (width, height) = "{self.sprite.get_size()}"'
 
 class DynamicObject(Object):
-    def __init__(self, sprite, scale, x, y, name = "undefinedDynamic", mass = 10, frict = 0.85):
+    def __init__(self, sprite, scale, x, y, name = "undefinedDynamic", mass = 10, frict = frictD):
         Object.__init__(self, sprite, scale, x, y, name, frict)
-        self.mass = mass
+        self.mass = mass; assert not(mass < 0)
         self.momX = 0
         self.momY = 0
         self.dX = 0
         self.dY = 0
 
-    def update(self, airRes=.985, minMom = 0.05, maxMom = None):
+    def update(self, airRes = airRes, minMom = minMom, maxMom = None):
         if not maxMom: maxMom = 10*self.mass
-        if(self.momX > maxMom): self.momX = maxMom
-        if(self.momY > maxMom): self.momY = maxMom
+        sign = [0,0]
+        sign[0] = 1-2*(self.momX < 0); sign[1] = 1-2*(self.momY < 0)
+        if(abs(self.momX) > maxMom): self.momX = sign[0]*maxMom
+        if(abs(self.momY) > maxMom): self.momY = sign[1]*maxMom
 
         self.momX = self.momX*airRes
         if abs(self.momX/self.mass) < minMom: self.momX = 0
@@ -54,8 +75,23 @@ class DynamicObject(Object):
         if self.momY == 0: self.dY = 0
         else: self.dY += self.scale*self.momY/self.mass
 
+    def slide(self, obj2):
+        print("'{}' sliding on '{}'! frict = {}".format(self.name,obj2.name, obj2.frict))
+        self.momX = self.momX*(1-obj2.frict)
+        self.momY = self.momY*(1-obj2.frict)
+
+    def impact(self, obj2, sign):
+        print("\nIMPACT:")
+        print(self)
+        overlap = self.mask.overlap(obj2.mask, (obj2.x-(self.x + int(self.dX) - sign[0]), obj2.y - (self.y + int(self.dY) - sign[1])))
+        if not overlap:
+            overlap = (-1,-1)
+            print("[no overlap?]", end =  " ")
+        else:
+            print("[overlap = {}]".format(overlap), end = " ")
+        print("'{}' hit '{}' at position ({},{})!".format(self.name, obj2.name, overlap[0] + self.x + int(self.dX) - sign[0], overlap[1] + self.y + int(self.dY)-sign[1]))
     def __repr__(self):
-        return f'DynamicObject "{self.name}", (x,y) = ("{self.x}","{self.y}"), (dX,dY) = ("{self.dX}","{self.dY}"), (momX, momY) = ("{self.momX}","{self.momY}")'
+        return f'DynamicObject "{self.name}", (x,y) = ("{self.x}","{self.y}"), (dX,dY) = ("{self.dX}","{self.dY}"), (momX, momY) = ("{self.momX}","{self.momY}"), (width, height) = "{self.sprite.get_size()}"'
 
 def velHandler(mover, objects):
     assert isinstance(mover, DynamicObject)
@@ -69,24 +105,19 @@ def velHandler(mover, objects):
     mover.dY = mover.dY - int(mover.dY)
 
 def velChecker(obj1, obj2):
-    # print("\n------------------------------------------------------")
-    # print("velChecker: obj1 [" + obj1.name + "] Type = ", end = "")
-    # print(type(obj1))
-    # print("            (momX,momY) = " + str(obj1.momX) + ", (" + str(obj1.momY)+")")
-    # print("            obj2 [" + obj2.name + "] Type = ", end = "")
-    # print(type(obj2))
 
-    # assert not(obj1.mask.overlap(obj2.mask,(obj2.x - obj1.x, obj2.y - obj1.y) )) # Assert: are the objects already overlapping?
-    if obj1.mask.overlap(obj2.mask,(obj2.x - obj1.x, obj2.y - obj1.y) ):
-        print("ERROR: already overlapping. Attempting escape...")
-        for direction in [[0,1],[1,0],[0,-1],[-1,0],  [1,1],[-1,1],[1,-1],[-1,1]]:
-            if not obj1.mask.overlap(obj2.mask,(obj2.x - (obj1.x + direction[0]), obj2.y - (obj1.y + direction[1]))):
-                print("escape successful! calling velChecker again...")
-                obj1.x += direction[0]
-                obj1.y += direction[1]
-                velChecker(obj1, obj2)
-                return
-        print("")
+    assert not(obj1.mask.overlap(obj2.mask,(obj2.x - obj1.x, obj2.y - obj1.y) )) # Assert: are the objects already overlapping?
+    # if obj1.mask.overlap(obj2.mask,(obj2.x - obj1.x, obj2.y - obj1.y) ):
+    #     print("ERROR: already overlapping. Attempting escape...")
+    #     for direction in [[0,1],[1,0],[0,-1],[-1,0],  [1,1],[-1,1],[1,-1],[-1,1]]:
+    #         if not obj1.mask.overlap(obj2.mask,(obj2.x - (obj1.x + direction[0]), obj2.y - (obj1.y + direction[1]))):
+    #             print("escape successful! calling velChecker again...")
+    #             obj1.x += direction[0]
+    #             obj1.y += direction[1]
+    #             velChecker(obj1, obj2)
+    #             return
+    #     print("")
+
     overlap = obj1.mask.overlap(
         obj2.mask, (obj2.x - (obj1.x + int(obj1.dX)), obj2.y - (obj1.y + int(obj1.dY)))
     )
@@ -98,6 +129,7 @@ def velChecker(obj1, obj2):
         if obj1.dY < 0: sign[1] = 1
         else: sign[1] = -1
 
+        impacted = False
 
 
         for weight in [[1,0],[0,1]]: # first dX is handled, then dY
@@ -119,32 +151,43 @@ def velChecker(obj1, obj2):
                     # print("overlap ended!")
                     if weight[0]:
                         if(weight[0] != int(dXbackup)):
-                            # print("dX: overlap ended! (dX,dY) = (" + str(weight[0]) + ", " + str(weight[1]) + ")")
+                            impacted = True
                             obj1.dX = weight[0]
-                            obj1.momX = 0
+                            # obj1.impact(obj2,(obj2.x - (obj1.x + int(obj1.dX) - sign[0]), obj2.y - (obj1.y + weight[1])))
+
                         else: # sliding along the dX direction, apply friction
                             obj1.dX = dXbackup
-                            obj1.momX = obj1.momX * obj2.frict
+                            obj1.slide(obj2)
                     if weight[1]:
                         if(weight[1] != int(dYbackup)):
-                            # print("dY: overlap ended! (dX,dY) = (" + str(weight[0]) + ", " + str(weight[1]) + ")")
+                            impacted = True
                             obj1.dY = weight[1]
-                            obj1.momY = 0
+                            # obj1.impact( obj2, obj1.mask.overlap(obj2.mask,(obj2.x - (obj1.x + weight[0] + int(obj1.dX)), obj2.y - (obj1.y + weight[1] - sign[1]))) )
                         else:  # sliding along the dY direction, apply friction
                             obj1.dY = dYbackup
-                            obj1.momY = obj1.momY * obj2.frict
+                            obj1.slide(obj2)
                     break
                 else:
                     if abs(weight[0]) == 1: # adjacent horizontally
                         # print("dX: found to be adjacent, dX->0. (dX,dY) = (" + str(weight[0]) + ", " + str(weight[1]) + ")")
+
                         obj1.dX = 0
                         obj1.momX = 0
                     if abs(weight[1]) == 1: # adjacent vertically
-                        # print("dY: found to be adjacent, dY->0. (dX,dY) = (" + str(weight[0]) + ", " + str(weight[1]) + ")")
+                        # # print("dY: found to be adjacent, dY->0. (dX,dY) = (" + str(weight[0]) + ", " + str(weight[1]) + ")")
+                        # if (obj1.momY/obj1.mass) > minMom:
+                        #     obj1.dY = -sign[1]
+                        #     obj1.impact(obj2, (-42,-42))
                         obj1.dY = 0
                         obj1.momY = 0
                 if weight[0]: weight[0] += sign[0]
                 if weight[1]: weight[1] += sign[1]
+
+        if impacted:
+            obj1.impact(obj2, sign)
+
+def touching(obj1, obj2):
+    return ((obj1.mask.overlap(obj2.mask, (obj2.x - obj1.x + 1, obj2.y - obj1.y + 1))) or (obj1.mask.overlap(obj2.mask,(obj2.x - obj1.x - 1, obj2.y - obj1.y - 1) )))
 
 def grounded(obj1, objects, onlyStatics = False):
     for obj2 in objects:
