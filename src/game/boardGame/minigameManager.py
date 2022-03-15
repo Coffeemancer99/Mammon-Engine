@@ -107,9 +107,10 @@ class spinnerTag():
         self.mainWindow.blit(self.text, textRect)
 
 
-path = __file__ + "/../../../minigame"                              # Set the path to the minigame folder
+                            # Set the path to the minigame folder
 
 def runMinigame(mainWindow, scale, framerate, players, spinnerSpeed=spinnerSpeed, acceleration=acceleration, atMaxFlag=atMaxFlag, atStartFlag=atStartFlag):
+    path = "/../../minigame"
     #>> INITIALIZE VARIABLES
     clock = pygame.time.Clock()                                         # Used for framerate
     isRunning = True                                                    # Used to maintain gameloop
@@ -128,8 +129,8 @@ def runMinigame(mainWindow, scale, framerate, players, spinnerSpeed=spinnerSpeed
     spinnerBG = pygame.image.load("data/assets/sprites/bluebox.png")    # pre-load background image for the spinner
     tagBG = pygame.image.load("data/assets/sprites/testingButton.png")  # pre-load background image for spinner tag
 
-
     if(debug):print("Finding minigames in " + os.getcwd() + path)
+    path=os.getcwd()+"/src/game/boardGame"+path
     gameList = os.listdir(path)                                         # Get all of the minigame names from the minigame folder
 
     if(debug):
