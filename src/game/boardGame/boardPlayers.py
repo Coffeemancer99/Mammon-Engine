@@ -20,6 +20,7 @@ class BoardPlayer(pygame.sprite.Sprite):
         self.inventory = []
         self.diceOnePlacement = 0
         self.diceTwoPlacement = 0
+        self.blit = None
 
     # Do some magical operator overload magic
     def __lt__(self, other):
@@ -27,6 +28,12 @@ class BoardPlayer(pygame.sprite.Sprite):
 
     def setInventory(self, inventory):
         self.inventory.append(inventory)
+
+    def setBlit1(self, blit):
+        self.blit = blit
+
+    def setBlit2(self, blit):
+        self.blit = blit
 
     def setDiceOnePlacement(self, dice):
         self.diceOnePlacement = dice
@@ -51,6 +58,12 @@ class BoardPlayer(pygame.sprite.Sprite):
 
     def setPrevPosition(self, prevPosition):
         self.prevPosition = prevPosition
+
+    def getBlit1(self):
+        return self.blit
+
+    def getBlit2(self):
+        return self.blit
 
     def getInventory(self):
         return self.inventory
