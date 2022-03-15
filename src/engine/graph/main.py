@@ -1,6 +1,6 @@
 import node as node
 import random
-import graph as graph
+
 def main():
 
     n1 = node.node(5, 0)

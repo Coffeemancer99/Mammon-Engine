@@ -107,7 +107,7 @@ class spinnerTag():
         self.mainWindow.blit(self.text, textRect)
 
 
-path = __file__ + "\..\..\..\minigame"                              # Set the path to the minigame folder
+path = __file__ + "/../../../minigame"                              # Set the path to the minigame folder
 
 def runMinigame(mainWindow, scale, framerate, players, spinnerSpeed=spinnerSpeed, acceleration=acceleration, atMaxFlag=atMaxFlag, atStartFlag=atStartFlag):
     #>> INITIALIZE VARIABLES

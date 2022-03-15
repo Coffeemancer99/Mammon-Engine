@@ -4,7 +4,7 @@ import src.engine.scenecreator.tile as tile
 import src.minigame.fruitPanic.handController as player
 import pygame
 import time as time
-
+import src.minigame.teamMasher.masher as masher
 
 def dropFruit(scale, mainWindow, pId, position, randFruit):
     #Get the image of each fruit
@@ -116,6 +116,7 @@ def startGame(mainWindow, scale, framerate):
     cameras = [p1Camera, p2Camera, p3Camera, p4Camera]#Put all cameras in list for functional operator shenanigans
     fruitTimer = 120 #When the timer reaches 0, drop a fruit and give a new timer randomly
     fruitList = []
+    testGame = 1
     while(isRunning):
         clock.tick(framerate)
         #TODO: Work out a way to use functional operators and move it over to the window blit functionality
@@ -138,6 +139,11 @@ def startGame(mainWindow, scale, framerate):
         mainWindow.blit(score2, p3Camera)
         mainWindow.blit(score3, p4Camera)
         drawCross(mainWindow, scale)
+
+
+        if(testGame):
+            testGame = False
+            winner = masher.startGame(mainWindow, scale, framerate)
 
         if(fruitTimer<=0): #When the fruit timer ticks to 0(-1 every frame) everyone gets a new fruit
             randFruit = random.randrange(0, 3) #Grab a random fruit
