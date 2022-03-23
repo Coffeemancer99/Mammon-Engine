@@ -17,8 +17,8 @@ atStartFlag = 0                 # Used to keep track of whether or not we have r
 startSpeed = 0                  # Used if spinDown is enabled
 
 #>> SETTINGS
-debug = 0                       # display error messages if set to 1, verbose if set to 2
-spinnerSize = 3                 # How many tags show up on the spinner.     Default is 3
+debug = 1                       # display error messages if set to 1, verbose if set to 2
+spinnerSize = 3              # How many tags show up on the spinner.     Default is 3
 growRate = 10                   # Rate at which spinner grows and shrinks   Default is 10
 spinnerMargin = 10              # How much of a margin the spinner box has  Default is 10
 tagBuffer = 5/spinnerSize       # How much space is between each tag        Default is 5
@@ -107,9 +107,10 @@ class spinnerTag():
         self.mainWindow.blit(self.text, textRect)
 
 
-path = __file__ + "\..\..\..\minigame"                              # Set the path to the minigame folder
+                            # Set the path to the minigame folder
 
 def runMinigame(mainWindow, scale, framerate, players, spinnerSpeed=spinnerSpeed, acceleration=acceleration, atMaxFlag=atMaxFlag, atStartFlag=atStartFlag):
+    path = "/../../minigame"
     #>> INITIALIZE VARIABLES
     clock = pygame.time.Clock()                                         # Used for framerate
     isRunning = True                                                    # Used to maintain gameloop
@@ -120,12 +121,16 @@ def runMinigame(mainWindow, scale, framerate, players, spinnerSpeed=spinnerSpeed
     spins = 0                                                           # How many times will the spinner spin?
     gamePool = [None] * spinnerSize  # Array to hold minigames actively on the spinner
 
+    winningPlayer = None                                                #Identifies winner and loser in duels
+    losingPlayer = None                                                 #Identifies winner and loser in duels
+    itemIndex = None                                                    #Stores item index of item for item duels
+
     #>> PRE-LOADING
     spinnerBG = pygame.image.load("data/assets/sprites/bluebox.png")    # pre-load background image for the spinner
     tagBG = pygame.image.load("data/assets/sprites/testingButton.png")  # pre-load background image for spinner tag
 
-
     if(debug):print("Finding minigames in " + os.getcwd() + path)
+    path=os.getcwd()+"/src/game/boardGame"+path
     gameList = os.listdir(path)                                         # Get all of the minigame names from the minigame folder
 
     if(debug):
@@ -315,9 +320,9 @@ def runMinigame(mainWindow, scale, framerate, players, spinnerSpeed=spinnerSpeed
             # delete the path to the game folder so we don't bloat sys.path or accidentally call another minigame
             try:
                 result = launch.startGame()                 # try and run the startGame() function
-                del sys.modules['launch']                   # some early black magic
             except:
                 print("ERROR minigameManager.py, running startGame function failed! Does ", selectedGame, " have a function called 'startGame()'?")
+                del sys.modules['launch']  # some early black magic
                 return True
             if(debug):print("Result: ", result)
 
@@ -339,17 +344,31 @@ def runMinigame(mainWindow, scale, framerate, players, spinnerSpeed=spinnerSpeed
                                         #               :__:-:__.;--'
                                         #               '-'   '-'
 
-            isDuel = result[4]                              # If this location isn't None it's a duel
-            if(not isDuel):                                 # Check for duel
-                if(debug):print("Standard - rewarding players")
+            isDuel = result[4]                              # used to sort between money and item rewards
+            #If index 4 of result is "item", we move on to item. Anything else we just award money
+            if(isDuel != "item"):                                 # Check if duel is for money
+                if(debug):print("Money - Rewarding players")
                 for player in players:                      # Iterate through the players
                     player.setMoney(result[player.getPlayerID()-1]) # reward correct player
                     if(debug):print("--Rewarding Player ", player.getPlayerID(), " $", result[player.getPlayerID()-1])
             else:
-                if(debug):print("Duel - rewarding victor")
-                # TODO Figure out duel logic
-                # "loseItem" means that this player has lost the item stored in result[4]
-                # "gainItem" means that this player has gained the item stored in result[4]
+                if(debug):print("Items - rewarding victor")
+                # This is the item reward, used exclusively for duels
+                #player location with a negative number (should be -1 for consistency) is the winner
+                #player location with positive number is the loser and is also the item index in their inventory to be lost
+                #losingPlayer = list(filter(lambda x: x=="loser", result))
+                for i in range(len(players)):                           #Couldn't make this as a filter because I need to know array index location
+                    playerID = players[i].getPlayerID()                 #Get the playerID that corresponds with this position
+                    if (debug): print("[", i, "]: ", playerID)
+                    if(result[playerID-1]<0):winningPlayer = players[i] #save the winning player
+                    if(result[playerID-1]>0):                           #save the losing player
+                        losingPlayer = players[i]
+                        itemIndex = result[playerID-1]                  #save the item index
+                if(debug):print("Giving player ", winningPlayer.getPlayerID(), " player ", losingPlayer.getPlayerID(), "'s item at index ", itemIndex)
+                try:
+                    winningPlayer.setInventory(losingPlayer.removeInventoryItem(itemIndex)) #Take item from loser and give it to winner
+                except:
+                    print("ERROR minigameManager.py couldn't grab item [", itemIndex, "] from player",losingPlayer.getPlayerID(),". Is the index out of range?")
             if(debug):print("Minigame state completed")
             time.sleep(2)                                   # Wait for two seconds so players can see what game won
             isRunning = False                               # End our loop

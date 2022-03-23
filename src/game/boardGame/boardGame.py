@@ -151,30 +151,42 @@ def rollingDiceAnnimation(scale, framerate, listOfPlayers):
                 if diceState == DiceStates.DICEONE:
                     if currentPlayer.getDiceOnePlacement() == 1:
                         diceWindow.blit(dice1, (256, 256))
+                        currentPlayer.setBlit1(True)
                     elif currentPlayer.getDiceOnePlacement() == 2:
                         diceWindow.blit(dice2, (256, 256))
+                        currentPlayer.setBlit1(True)
                     elif currentPlayer.getDiceOnePlacement() == 3:
                         diceWindow.blit(dice3, (256, 256))
+                        currentPlayer.setBlit1(True)
                     elif currentPlayer.getDiceOnePlacement() == 4:
                         diceWindow.blit(dice4, (256, 256))
+                        currentPlayer.setBlit1(True)
                     elif currentPlayer.getDiceOnePlacement() == 5:
                         diceWindow.blit(dice5, (256, 256))
+                        currentPlayer.setBlit1(True)
                     elif currentPlayer.getDiceOnePlacement() == 6:
                         diceWindow.blit(dice6, (256, 256))
+                        currentPlayer.setBlit1(True)
                     diceState = DiceStates.DICETWO  # 60
                 elif diceState == DiceStates.DICETWO:
                     if currentPlayer.getDiceTwoPlacement() == 1:
                         diceWindow.blit(dice1, (256, 256))
+                        currentPlayer.setBlit2(True)
                     elif currentPlayer.getDiceTwoPlacement() == 2:
                         diceWindow.blit(dice2, (256, 256))
+                        currentPlayer.setBlit2(True)
                     elif currentPlayer.getDiceTwoPlacement() == 3:
                         diceWindow.blit(dice3, (256, 256))
+                        currentPlayer.setBlit2(True)
                     elif currentPlayer.getDiceTwoPlacement() == 4:
                         diceWindow.blit(dice4, (256, 256))
+                        currentPlayer.setBlit2(True)
                     elif currentPlayer.getDiceTwoPlacement() == 5:
                         diceWindow.blit(dice5, (256, 256))
+                        currentPlayer.setBlit2(True)
                     elif currentPlayer.getDiceTwoPlacement() == 6:
                         diceWindow.blit(dice6, (256, 256))
+                        currentPlayer.setBlit2(True)
                     currentPlayerIndex += 1
                     if currentPlayerIndex == 4:
                         isRunning = False
@@ -441,7 +453,7 @@ def startGame(mainWindow, scale, framerate, board):
                     while(result):  #Keep trying to launch minigames until it works.
                         result = runMinigame(mainWindow, scale, framerate, listOfPlayers)
                         if(result): #Something went wrong
-                            print("ERROR! Failed to launch minigame! Attempting to respin...")
+                            print("ERROR! minigameManager.py Failed to launch minigame! Attempting to respin...")
                     currentState = States.PLAYERMOVE
             renderer.render()  # 225
 

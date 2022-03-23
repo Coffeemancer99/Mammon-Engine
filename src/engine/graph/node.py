@@ -4,8 +4,8 @@ class node():
         self.neighbors = []
         self.edges = []
         self.nID = nID
-        self.start = 0
-        self.end = 0
+        self.start = 0 #If it is the starting node
+        self.end = 0 #If it is the ending node
 
     def addNeighbor(self, neighbor, edge):
         self.neighbors.append(neighbor)
