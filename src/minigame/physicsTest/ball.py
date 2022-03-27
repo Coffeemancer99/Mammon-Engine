@@ -5,12 +5,13 @@ import src.engine.physics.physics as physics
 from src.engine.physics.physics import Object
 from src.engine.physics.physics import DynamicObject
 
-
+defMaxPow = 80
 class Ball(DynamicObject):
-    def __init__(self, sprite, scale, x, y, name="undefinedBall", mass = 10):
+    def __init__(self, sprite, scale, x, y, name="undefinedBall", mass = 10, maxpower = defMaxPow):
         DynamicObject.__init__(self, sprite, scale, x, y, name, mass)
         self.power = 0
         self.angle = 0
+        self.maxpower = maxpower
 
     def update(self, airRes=physics.airRes, minMom=physics.minMom, maxMom=None):
         self.takeInputs(pygame.key.get_pressed())
@@ -21,6 +22,11 @@ class Ball(DynamicObject):
         obj2.frict = obj2.frict/2
         DynamicObject.slide(self,obj2)
         obj2.frict = obj2.frict*2
+
+    def prime(self):
+        self.power = self.maxpower
+        self.angle = 0.7854
+        print("\rprimed!              ", end = "")
 
     def takeInputs(self, key):
         if key[pygame.K_u]:
@@ -35,8 +41,7 @@ class Ball(DynamicObject):
             sys.stdout.flush()
         if key[pygame.K_i]:
             self.power += .2
-            if self.power > 40:
-                self.power = 40
+            self.power = min(self.power, self.maxpower)
             print("\rpower = " + str(self.power), end = "")
             sys.stdout.flush()
 

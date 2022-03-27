@@ -4,8 +4,9 @@ import src.engine.scenecreator.tile as tile
 import src.engine.player.playerController as player
 import src.engine.collision as collision
 import src.engine.physics.physics as physics
-from src.engine.physics.physics import Object, DynamicObject, RectObject
+from src.engine.physics.physics import Object, DynamicObject, RectObject, DynamicRect
 from src.engine.physics.spritegen import *
+import src.engine.physics.spritegen as spritegen
 import src.engine.physics.terrain as terrain
 import src.minigame.physicsTest.ball as ball
 import pygame
@@ -13,20 +14,26 @@ import time
 import math # for dev values
 from functools import partial
 
+def removeObj(objects, object):
+    if isinstance(object, DynamicObject): object.halt()
+    if object in objects: objects.remove(object)
 
 def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
 
-    cocoX = 25; cocoY = 185
-    coco = ball.Ball(grab_sprite("data/assets/sprites/bluebox.png"), scale, cocoX, cocoY, name="coco")
+    objects = []
+    cocoX = 25; cocoY = 20
+    coco = ball.Ball(generate_circle(20,1), scale, cocoX, cocoY, name="coco", mass = 4, maxpower = 80)
     lemonX = 100; lemonY = 50
-    lemon = DynamicObject(generate_ellipse(45,65), scale*1, lemonX,lemonY, name="lemon")
-    triY = 80; triX = 80
-    triangle = terrain.from_polygon([[20,380],[20+triX,380],[20,380-triY]], scale, color = (0,255,0,255), name="triangle")
-    box = RectObject((380,50), scale, 40,380, name="box")
-    objects = [coco, lemon, box, triangle]
+    lemon = DynamicRect(generate_ellipse(45,65,1), scale*1, lemonX,lemonY, name="lemon")
+    triY = 30; triX = 55
+    triangle = terrain.from_polygon(points=[[20,345],[20+triX,311],[20,311-triY]], scale = scale, color = (0,255,0,255), name="triangle")
 
-    objects.append(RectObject((100,100), scale, 300,100))
+    canvasObj = RectObject((100,100), scale, 300,50, name = "canvas")
+    objects.append(canvasObj)
+    # objects.append(lemon)
+    objects.append(triangle)
+    objects.append(coco)
 
     print("######")
     for object in objects:
@@ -41,6 +48,10 @@ def startGame(mainWindow, scale, framerate):
 
     gravity = 1.5
     isLoud = False
+
+    # canvasObj.animation = animate_movement(canvasObj.sprite, generate_circle(10,1), (15,15), (60,60), 5)
+
+
     while(isRunning):
         clock.tick(framerate)
         mainWindow.fill((0,0,0))
@@ -70,9 +81,9 @@ def startGame(mainWindow, scale, framerate):
 
         if key[pygame.K_f]:
             coco.x = cocoX; coco.y = cocoY
-            coco.momX = 0; coco.momY = 0
+            coco.halt()
             lemon.x = lemonX; lemon.y = lemonY
-            lemon.momX = 0; lemon.momY = 0
+            lemon.halt()
         if key[pygame.K_g]:
             if key[pygame.K_LSHIFT]:
                 gravity -= .5
@@ -92,31 +103,24 @@ def startGame(mainWindow, scale, framerate):
             print("gravity = {:.3f}".format(gravity))
             time.sleep(.3)
         if key[pygame.K_h]:
-            if(isLoud):
-                isLoud = False
-                print("QUIET")
-            else:
-                isLoud = True
-                print("LOUD")
-            time.sleep(.3)
+            print("DRAWING THE THING! ANIMATED, I MEAN!")
+            for frame in myAnim.frames:
+                canvasObj.sprite = frame
+                canvasObj.draw(mainWindow)
+                pygame.display.update()
+                print("---")
+                time.sleep(0.5)
         if key[pygame.K_n]:
             print("gravity = 0")
             gravity = 0
             time.sleep(.3)
-        #     coco.momX = 0
-        #     coco.momY = 0
-        #     time.sleep(.3)
 
 
 
-        if key[pygame.K_UP]:
-            lemon.momY -= 2
-        if key[pygame.K_DOWN]:
-            lemon.momY += 2
-        if key[pygame.K_LEFT]:
-            lemon.momX -= 2
-        if key[pygame.K_RIGHT]:
-            lemon.momX += 2
+        if key[pygame.K_UP]: lemon.momY -= .8
+        if key[pygame.K_DOWN]: lemon.momY += .8
+        if key[pygame.K_LEFT]: lemon.momX -= .8
+        if key[pygame.K_RIGHT]: lemon.momX += .8
 
         if key[pygame.K_b]:
             print("\n######################################")
@@ -126,15 +130,13 @@ def startGame(mainWindow, scale, framerate):
             time.sleep(0.3)
 
         for object in objects: # Physics, movement
-            if isinstance(object, physics.DynamicObject):
+            if isinstance(object, physics.Dynamic):
                 if object is coco:
                     coco.momY += gravity #gravity
                 if (object is coco) and key[pygame.K_c]:
-                    coco.momX = 0
-                    coco.momY = 0
+                    coco.halt()
                 if (object is lemon) and key[pygame.K_v]:
-                    lemon.momX = 0
-                    lemon.momY = 0
+                    lemon.halt()
                 object.update(maxMom = 150)
                 # if(isLoud and (object is coco)): print(coco)
                 if ((abs(object.dX) >= 1) or (abs(object.dY) >= 1)):
@@ -153,13 +155,20 @@ def startGame(mainWindow, scale, framerate):
         pygame.display.update()
 
 
-def test1a(x,y,z):
-    print("input = {},{},{}".format(x,y,z))
 
 
 def main():
-    myList = [1,2,3]
-    test1a(*myList)
+    # canvas = pygame.Surface((15,5), flags=pygame.SRCALPHA)
+    # box = generate_rectangle(5,5, scale = 1)
+    # canvas.blit(box,(5,0))
+    # array = pygame.PixelArray(canvas)
+    # row = [col[0] for col in array]
+    # row = skew_line(row, 14)
+    # for col in range(len(array)):
+    #     array[col][0] = row[col]
+    # print(array)
+
+    pass
 
 if(__name__ == "__main__"):
     main()
