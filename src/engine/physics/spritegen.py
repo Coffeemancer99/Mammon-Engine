@@ -1,80 +1,80 @@
 import pygame
 from collections.abc import Iterable
 
-# class Animation:
-#     def __init__(self, frames, framerate = 60):
-#         self.tick = 0
-#         self.currentFrame = 0
-#         self.frames = frames
-#         self.framerate = framerate
-#     def update(self, mySprite):
-#         self.tick += 1
-#         if self.tick == self.framerate: # next frame
-#             self.tick = 0
-#             self.currentFrame = (self.currentFrame + 1)%(len(self.frames))
-#             mySprite.blit(self.frames[self.currentFrame], (0,0))
-# def animate_movement(template, object, p1, p2, frames):
-#     (x1, y1) = p1; (x2, y2) = p2
-#     dX = int((x2 - x1)/frames); dY = int((y2 - y1)/frames)
-#     if isinstance(template, Iterable):  # can pass sprite object or arguments for generate_rectangle
-#         template = generate_rectangle(*template)
-#     toReturn = []
-#     print("Animating from p1 {} to p2 {}".format(p1, p2))
-#     for i in range(frames+1):
-#         print("object pos = {}".format((x1 + dX*i, y1 + dY*i)))
-#         toReturn.append(pygame.Surface((template.get_width(), template.get_height())))
-#         toReturn[i].blit(template, (0,0))
-#         toReturn[i].blit(object,(x1 + dX*i, y1 + dY*i))
-#     return Animation(toReturn)
+class Animation:
+    def __init__(self, frames, framerate = 45):
+        self.tick = 0
+        self.currentFrame = 0
+        self.frames = frames
+        self.framerate =  framerate # number of in-game frames to wait before advancing a frame
+    def update(self, mySprite):
+        self.tick += 1
+        if self.tick == self.framerate: # next frame
+            self.tick = 0
+            self.currentFrame = (self.currentFrame + 1)%(len(self.frames))
+            mySprite.blit(self.frames[self.currentFrame], (0,0))
+def animate_movement(canvas, object, p1, p2, frames):
+    (x1, y1) = p1; (x2, y2) = p2
+    dX = int((x2 - x1)/frames); dY = int((y2 - y1)/frames) # distance traveled in a frame
+    if isinstance(canvas, Iterable):  # can pass sprite object or arguments for generate_rectangle
+        canvas = generate_rectangle(*canvas)
+    toReturn = []
+    print("Animating from p1 {} to p2 {}".format(p1, p2))
+    for i in range(frames+1):
+        print("object pos = {}".format((x1 + dX*i, y1 + dY*i)))
+        toReturn.append(pygame.Surface((canvas.get_width(), canvas.get_height())))
+        toReturn[i].blit(canvas, (0,0))
+        toReturn[i].blit(object,(x1 + dX*i, y1 + dY*i))
+    return Animation(toReturn)
 
-# def skew_line(line, m): # m = end length
-#     print("line going to width {} from:\n{}".format(m,line))
-#     n = 0 # n = start length, not counting empty pixels
-#     for pixel in line:
-#         if pixel: n += 1
-#     r = m/n # each pixel in line gets stretched to r pixels, on average
-#     empty = len(line) - m # amount of empty space left after skewing
-#     assert r > 1
-#     toReturn = [0]*(int(empty/2)); empty -= int(empty/2)
-#     print("toReturn = ", toReturn)
-#     print("m = {}, n = {}, r = {}, empty: {}, {}".format(m,n,r, empty, int(empty/2)))
-#     score = 0
-#     numAdded = 0
-#     for pixel in line:
-#         if not pixel: continue
-#         score += r
-#         while score >= 1:
-#             score -= 1
-#             toReturn.append(pixel)
-#             numAdded += 1
-#     if(score > 0):
-#         score = 0
-#         toReturn.append(toReturn[-1])
-#     if(empty):
-#         for i in range(empty):
-#             toReturn.append(0)
-#     print("m = {}, n = {}, r = {}, score: {}".format(m,n,r, score))
-#     print("toReturn = ", toReturn)
-#
-#     return toReturn
-#
-# def skew_image(image, scale): # returns
-#     # TODO: rotate image before and after
-#     height = image.get_height()
-#     width = image.get_width()
-#     array = pygame.PixelArray(image)
-#     for i in len(array):
-#         row = [col[i] for col in array]
-#
-#     row = [col[0] for col in array]
-#     numPixels = 0
-#     for pixel in row:
-#         if not pixel: continue
-#         numPixels += 1
-#
-#
-#     array.close
-#     return toReturn
+def skew_line(line, m): # m = end length
+    print("line going to width {} from:\n{}".format(m,line))
+    n = 0 # n = start length, not counting empty pixels
+    for pixel in line:
+        if pixel: n += 1
+    r = m/n # each pixel in line gets stretched to r pixels, on average
+    empty = len(line) - m # amount of empty space left after skewing
+    assert r > 1
+    toReturn = [0]*(int(empty/2)); empty -= int(empty/2)
+    print("toReturn = ", toReturn)
+    print("m = {}, n = {}, r = {}, empty: {}, {}".format(m,n,r, empty, int(empty/2)))
+    score = 0
+    numAdded = 0
+    for pixel in line:
+        if not pixel: continue
+        score += r
+        while score >= 1:
+            score -= 1
+            toReturn.append(pixel)
+            numAdded += 1
+    if(score > 0):
+        score = 0
+        toReturn.append(toReturn[-1])
+    if(empty):
+        for i in range(empty):
+            toReturn.append(0)
+    print("m = {}, n = {}, r = {}, score: {}".format(m,n,r, score))
+    print("toReturn = ", toReturn)
+
+    return toReturn
+
+def skew_image(image, scale): # returns
+    # TODO: rotate image before and after
+    height = image.get_height()
+    width = image.get_width()
+    array = pygame.PixelArray(image)
+    for i in len(array):
+        row = [col[i] for col in array]
+
+    row = [col[0] for col in array]
+    numPixels = 0
+    for pixel in row:
+        if not pixel: continue
+        numPixels += 1
+
+
+    array.close
+    return toReturn
 
 
 def grab_sprite(address, scale):
