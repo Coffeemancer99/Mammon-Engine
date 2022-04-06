@@ -5,6 +5,12 @@ class timer():
         self.stopped = 0
         self.framerate = framerate
 
+    def resume(self):
+        self.stopped=False
+
+    def halt(self):
+        self.stopped=True
+
     def isFinished(self):
         if(self.currTime<=0):
             return 1 #If return 1 the game is over
@@ -20,3 +26,6 @@ class timer():
 
     def secondsToFrames(self, seconds, framerate):
         return seconds*framerate
+
+    def getTime(self):
+        return self.currTime

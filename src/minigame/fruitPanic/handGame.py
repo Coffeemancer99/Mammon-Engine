@@ -32,10 +32,13 @@ def drawCross(mainWindow, scale):
     pygame.draw.line(mainWindow, (255, 255, 255), (0, windowY/2), (windowX, windowY/2), lineWidth)
 
 #Checks if a player is in bounds, similar to the tilemap collision code except this is restricted to x movement
+#Returns true if they are in range, false otherwise
 def checkBound(player, boundaries, scale):
     for currTile in boundaries:
         if currTile.rectCol.colliderect(player.rect.x + player.dX, player.rect.y, player.width, player.height):
             player.dX = 0
+            return False
+    return True
 
 def checkFruit(players, fruits):
     windowX, windowY = pygame.display.get_surface().get_size()
