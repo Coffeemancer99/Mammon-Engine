@@ -1,7 +1,4 @@
 import pygame
-from src.game.boardGame2.board import Board
-from src.game.boardGame2.tile import Tile
-from src.game.boardGame2.player import Player
 
 '''
 Created by: Andrew Bunn

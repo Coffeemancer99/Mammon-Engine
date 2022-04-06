@@ -6,14 +6,14 @@ from src.game.boardGame2.boardRenderer import BoardRenderer
 from src.game.boardGame2.board import Board
 from src.game.boardGame2.tile import Tile
 from src.game.boardGame2.spriteLoader import SpriteLoader
-from src.game.boardGame2.player import Player
+from src.game.boardGame.boardPlayers import BoardPlayer
 
 
 class TestBoardRenderer(unittest.TestCase):
 
     def testPaintEx(self):
         #make a player
-        player1 = Player()
+        player1 = BoardPlayer(1)
 
         startTile = Tile()
         startTile.x = 64

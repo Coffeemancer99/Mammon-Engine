@@ -6,10 +6,11 @@ Holds tiles and players
 '''
 
 class Board:
-    tiles = []
-    players = []
+
 
     def __init__(self):
+        self.tiles = []
+        self.players = []
         self.startTile = None
 
 
@@ -86,6 +87,7 @@ class Board:
         if foundTile:
             foundTile.players.remove(player)
             nextTile.players.append(player)
+
 
 
     def getStartTile(self):

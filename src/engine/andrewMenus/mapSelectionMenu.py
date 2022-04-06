@@ -11,8 +11,6 @@ Menu to choose what game board to play on
 
 def launchMapMenu(mainWindow, framerate, scale):
     """
-    NEED TO REFACTOR LIKE OTHER MENUS, DON'T WANT TO BREAK ANYTHING
-    RIGHT NOW
     :param mainWindow: window to display in
     :param framerate: refresh rate for the display
     :param scale: what to scale the window and all items inside by (factor)

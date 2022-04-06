@@ -9,15 +9,7 @@ Class defining what a tile is
 class Tile:
 
     # leave out of constructor for now
-    x = None
-    y = None
-    width = None
-    height = None
-    prevTiles = []
-    nextTiles = []
-    players = []
-    image = None
-    typeOfTile = ""
+
 
 #  Works with nothing or can work as a
 #  Copy Constructor for making new tiles quicker
@@ -34,6 +26,17 @@ class Tile:
         :param image: tile image
         :param typeOfTile: tile type (string)
         """
+        self.x = None
+        self.y = None
+        self.width = None
+        self.height = None
+        self.prevTiles = []
+        self.nextTiles = []
+        self.players = []
+        self.image = None
+        self.typeOfTile = ""
+
+
         if tile is not None:
             self.x = tile.x
             self.y = tile.y
@@ -47,3 +50,28 @@ class Tile:
             for player in tile.players:
                 self.players.append(player)
             self.image = tile.image
+            self.typeOfTile = tile.typeOfTile
+
+
+    def addNextTile(self, tileToAdd):
+        self.nextTiles.append(tileToAdd)
+
+
+    def addPrevTile(self, tileToAdd):
+        self.prevTiles.append(tileToAdd)
+
+
+    def addMultNextTiles(self, tilesToAdd):
+        self.nextTiles.extend(tilesToAdd)
+
+
+    def addMultPrevTiles(self, tilesToAdd):
+        self.prevTiles.extend(tilesToAdd)
+
+
+    def getNextTiles(self):
+        return self.nextTiles
+
+
+    def getPrevTiles(self):
+        return self.prevTiles
