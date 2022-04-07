@@ -5,6 +5,7 @@ from src.minigame.physicsTest import physicstest
 from src.engine.button import Button
 from src.minigame.teamMasher import masher
 from src.engine.andrewMenus.menu import Menu
+from src.minigame.cannonPanic import cannonPanicScene
 
 
 '''
@@ -42,6 +43,9 @@ def createAllGameMenuButtons(mainWindow, framerate, scale):
     def onClickRando3Button():
         return masher.startGame(mainWindow, scale, framerate)
 
+    def onClickRando4Button():
+        return cannonPanicScene.startGame(mainWindow, scale, framerate)
+
     def onClickBackButton():
         return minigameTypeMenu.launchMinigameMenu(mainWindow, framerate, scale)
 
@@ -55,7 +59,7 @@ def createAllGameMenuButtons(mainWindow, framerate, scale):
                        "data/assets/sprites/rando2Button.png", mainWindow)
     newRando3 = Button(16, 96, 232, 64, scale, onClickRando3Button,
                        "data/assets/sprites/rando3Button.png", mainWindow)
-    newRando4 = Button(264, 96, 232, 64, scale, onClickRandoButtonUnassigned,
+    newRando4 = Button(264, 96, 232, 64, scale, onClickRando4Button,
                        "data/assets/sprites/rando4Button.png", mainWindow)
     newRando4.dummy = True  # Assign dummy to true if button returns nothing/has
                             # no functionality yet

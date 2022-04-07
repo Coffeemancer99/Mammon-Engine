@@ -55,6 +55,9 @@ class Ball(DynamicObject):
         if key[pygame.K_o]:
             self.launch()
 
+    def fall(self, gravity):
+        self.momY += gravity  # gravity
+
     def launch(self):
         if(self.power == 0):
             return

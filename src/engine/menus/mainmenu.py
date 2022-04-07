@@ -5,15 +5,16 @@ import src.engine.menus.settings as settings
 import src.minigame.fruitPanic.handGame as handGame
 import src.minigame.physicsTest.physicstest as physicstest
 import src.engine.andrewMenus.mapSelectionMenu as boardMenu
+import src.engine.andrewMenus.minigameTypeMenu as minigameTypeMenu
 from src.engine.physics.spritegen import *
 
 def launch(width, height, framerate, scale):
     clock = pygame.time.Clock()  # Clock used for frame rate
     mainWindow = pygame.display.set_mode((width, height)) #The main window display
     #Button images
-    newGameImg = grab_sprite("data/assets/sprites/newgame.png", 2*scale)
-    settingsImg = grab_sprite("data/assets/sprites/settings.png", 2*scale)
-    minigames = grab_sprite("data/assets/sprites/minigames.png", 2*scale)
+    newGameImg = grab_sprite("data/assets/sprites/newgame.png", scale)
+    settingsImg = grab_sprite("data/assets/sprites/settings.png", scale)
+    minigames = grab_sprite("data/assets/sprites/minigames.png", scale)
 
     #TODO: Replace with functional operators later, use relative size of window instead of hardcoded values
     #Paint them on screen

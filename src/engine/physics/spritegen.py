@@ -79,7 +79,7 @@ def skew_image(image, scale): # returns
 
 def grab_sprite(address, scale):
     sprite = pygame.image.load(address)
-    pygame.transform.scale(sprite, ((sprite.get_width()) *scale/2, (sprite.get_height()) *scale/2), sprite)
+    sprite = pygame.transform.scale(sprite, ((sprite.get_width()) *scale, (sprite.get_height()) *scale))
     # scales the sprites. Halving the sprite size is inherited from somewhere else
     return sprite
 
