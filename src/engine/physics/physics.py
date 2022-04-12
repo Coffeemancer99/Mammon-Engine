@@ -25,8 +25,10 @@ class Object:
 
         self.sprite = pygame.transform.scale(sprite, ((sprite.get_width()) * scale, (sprite.get_height()) * scale)) #inherited code
         self.scale = scale
+
         self.x = x * scale # (x,y) refers to top-left position of object
         self.y = y * scale
+        self.rect = self.sprite.get_rect(center=self.sprite.get_rect(center=(x, y)).center)
         self.mask = pygame.mask.from_surface(self.sprite)
         self.name = name # development value for debug statements
         self.frict = frict
@@ -80,6 +82,8 @@ class Dynamic():
         if self.momY == 0: self.dY = 0
         else: self.dY += self.scale*self.momY/self.mass
 
+
+
     def slide(self, obj2):
         print("'{}' sliding on '{}'! frict = {}".format(self.name,obj2.name, obj2.frict))
         self.momX = self.momX*(1-obj2.frict)
@@ -121,17 +125,23 @@ class DynamicRect(Dynamic, RectObject):
 
 def velHandler(mover, objects):
     assert isinstance(mover, Dynamic)
+    agents = []
+    didImpact = False
     for object in objects:
         if mover is object:
             continue
         if isinstance(mover, RectObject):
-            velChecker2(mover,object)
+            didImpact = velChecker2(mover,object)
         else:
-            velChecker(mover,object)
+            didImpact = velChecker(mover,object)
+        if(didImpact):
+            agents.append(object)
+            didImpact=False
     mover.x += int(mover.dX)
     mover.y += int(mover.dY)
     mover.dX = mover.dX - int(mover.dX)
     mover.dY = mover.dY - int(mover.dY)
+    return agents
 
 def velChecker(obj1, obj2):
 
@@ -214,6 +224,7 @@ def velChecker(obj1, obj2):
 
         if impacted:
             obj1.impact(obj2, sign)
+        return impacted
 
 def velChecker2(obj1, obj2):
     if not (isinstance(obj1, RectObject) and isinstance(obj2, RectObject)): return
@@ -248,6 +259,7 @@ def velChecker2(obj1, obj2):
 
     if (not (bX and bY)) or (not (obj1.dX or obj1.dY)): return
     # bX/bY value of 0 means collision is impossible, return. If obj1 is no longer moving return.
+
     if(bX < bY):
         obj1.momX = 0
         if(obj1.dX > 0):
@@ -267,7 +279,7 @@ def velChecker2(obj1, obj2):
     # print("finished! dX = {}\t\tdY = {}\n".format(obj1.dX, obj1.dY))
     assert not obj1.mask.overlap(obj2.mask, (obj2.x - (obj1.x + int(obj1.dX)), obj2.y - (obj1.y + int(obj1.dY))))
     assert not (abs(obj1.dX) > 50 or abs(obj1.dY) > 50)
-    return
+    return True
 
 
 
