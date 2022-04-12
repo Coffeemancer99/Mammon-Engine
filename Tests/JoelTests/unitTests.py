@@ -128,7 +128,7 @@ class JoelTest(unittest.TestCase):
         player3 = BoardPlayer(3)
         player4 = BoardPlayer(4)
         listOfBoardPlayers = [player1, player2, player3, player4]
-        rollingDiceAnnimation(1, 60, listOfBoardPlayers)
+        rollingDiceAnnimation(mainWindow, 1, 60, listOfBoardPlayers)
         check = True
         for i in range(len(listOfBoardPlayers)):
             if listOfBoardPlayers[i].getBlit1() != True and listOfBoardPlayers[i].getBlit2() != True:

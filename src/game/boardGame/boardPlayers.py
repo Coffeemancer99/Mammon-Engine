@@ -12,7 +12,7 @@ class BoardPlayer(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         # Need to add pieces for the players
         self.prevPosition = 0
-        self.currentPosition = None
+        self.currentPosition = 0
         self.placementInGame = 0
         self.money = 10
         self.lostTurn = False
@@ -21,6 +21,7 @@ class BoardPlayer(pygame.sprite.Sprite):
         self.diceOnePlacement = 0
         self.diceTwoPlacement = 0
         self.blit = None
+        self.startCountDown = 4
 
     # Do some magical operator overload magic
     def __lt__(self, other):
@@ -28,6 +29,9 @@ class BoardPlayer(pygame.sprite.Sprite):
 
     def setInventory(self, inventory):
         self.inventory.append(inventory)
+
+    def setStartCountDown(self, startCountDown): # Make this -
+        self.startCountDown += startCountDown
 
     def setBlit1(self, blit):
         self.blit = blit
@@ -97,3 +101,14 @@ class BoardPlayer(pygame.sprite.Sprite):
 
     def getDiceTwoPlacement(self):
         return self.diceTwoPlacement
+
+    def getStartCountDown(self):
+        return self.startCountDown
+
+    def resetStartCountDown(self):
+        self.startCountDown = 4
+
+    def clearBadInventory(self):
+        for i in range(len(self.inventory)):
+            if "B-" in self.inventory[i]:
+                self.inventory.pop(i)

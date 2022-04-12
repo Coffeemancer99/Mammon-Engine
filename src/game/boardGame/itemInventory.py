@@ -16,7 +16,7 @@ class ItemType(Enum):
 
 
 def initGoodItems():
-    goodItems = [Item("G-pickPlayerToLoseMG", False, None, 40), Item("G-thirdDice", False, None, 15),
+    goodItems = [Item("G-destroyAllBadItems", False, None, 40), Item("G-thirdDice", False, None, 15),
                  Item("G-speedBoostMG", False, None, 10), (Item("G-gainMoneyRandom", False, None, 30)),
                  Item("G-teleportClose", False, None, 25), Item("G-sabotageDice", False, None, 15),
                  Item("G-stealItem", False, None, 40), Item("G-opponentLoseTurn", False, None, 50)]
@@ -87,17 +87,21 @@ class ItemFunctionalityBad:
 
     # Need to refactor later as I am breaking open closed :(
     def getFunctionality(self, name, player):
-        if name == "B-moveOneSpotLess":
+        if name == "B-moveOneSpotLess": # You have to move one spot less
             pass
-        elif name == "B-invertedControlMG":
+        elif name == "B-invertedControlMG": # Your controls will be inverted
             pass
-        elif name == "B-changeSpots":
+        elif name == "B-changeSpots": # A player you pick changes a spot with you
             pass
         elif name == "B-loseMoneyRandom":
-            pass
+            money = random.choice(range(0, 51))
+            if player.getMoney() < money:
+                player.money = 0
+            else:
+                player.setMoney(-money)
         elif name == "B-loseTurn":
             player.setLostTurn()  # Need to reset this lost turn later
-        elif name == "B-oneDice":
+        elif name == "B-oneDice": # You only get oneDice roll
             pass
         elif name == "B-moveToPrevSpot":
             pass
@@ -107,24 +111,30 @@ class ItemFunctionalityGood:
     def __init__(self, name=""):
         self.name = name
 
-    # Need to refactor later as I am breaking open closed :(
-    def getFunctionality(self, name, player):
-        if name == "G-pickPlayerToLoseMG":
-            pass
-        elif name == "G-thirdDice":
-            pass
-        elif name == "G-speedBoostM":
+    def getFunctionality(self, name, player, index=None, player2=None):
+        if name == "G-thirdDice":
+            diceRoll = random.choice(range(1, 6 + 1)) + random.choice(range(1, 6 + 1)) + random.choice(range(1, 6 + 1))
+            return diceRoll
+        elif name == "G-destroyAllBadItems":
+            player.clearBadInventory()
+        elif name == "G-speedBoostMG":
             pass
         elif name == "G-gainMoneyRandom":
-            pass
+            money = random.choice(range(0, 101))
+            player.setMoney(money) # Now need to display the money
         elif name == "G-teleportClose":
             player.setLostTurn()  # Need to reset this lost turn later
-        elif name == "G-sabotageDice":
+        elif name == "G-sabotageDice": # Player 2 here represents in the person we are hurting, player 1 can pick what dice to throw out
+            # Need to make a screen that makes player 1 pick what dice player 2 can destroy
             pass
-        elif name == "G-stealItem":
-            pass
+        elif name == "G-stealItem": # Player 1 takes player 2's item using index
+            # Need to make a screen that steals an item from player 3
+            if player.getInventoryLength >= 4:
+                print("Cant steal item as you have the max inventory size")
+            item = player2.getInventoryItem(index)
+            player.setInventory(item)
         elif name == "G-opponentLoseTurn":
-            pass
+            player.setLostTurn()
 
 
 class BarterItem(Item):

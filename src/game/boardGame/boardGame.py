@@ -9,7 +9,7 @@ from src.game.boardGame2.boardRenderer import BoardRenderer
 from src.game.boardGame2.spriteLoader import SpriteLoader
 
 """
-    475 total
+    575 total
     File authored by Joel Tanig
     273 lines
 """
@@ -42,8 +42,6 @@ def getTypeOfTile(currentTile, player, mainWindow, scale, framerate):
         pass
 
 
-# TODO: Start here
-# TODO: Remodel to MVC later, fix pixel math, and make new images
 # This function is the "store" that will be in the game and I am using dice.png as placeholder
 # images for now 
 def storeScreen(mainWindow, scale, framerate, currentPlayer):
@@ -96,7 +94,7 @@ def storeScreen(mainWindow, scale, framerate, currentPlayer):
                         print("Bought Good item 3")
                         transaction = store.buyItem(currentPlayer, 2)
                     elif (click[1] > 304 * scale) and (click[1] <= 328 * scale):
-                        print("Bad item 1")
+                        print("Good item 4")
                         transaction = store.buyItem(currentPlayer, 3)
                     if transaction:
                         currentPlayer.getInventory()
@@ -115,7 +113,7 @@ def storeScreen(mainWindow, scale, framerate, currentPlayer):
 """
 
 
-def rollingDiceAnnimation(scale, framerate, listOfPlayers):
+def rollingDiceAnnimation(mainWindow, scale, framerate, listOfPlayers):
     # Note that scale is one for now
     # Set up all the buttons
     dice1 = SpriteLoader().loadImage("die1.png")
@@ -313,7 +311,6 @@ def setPlacementsForBoardPlayers(listOfPlayers, listOfPlacements, listOfDice):  
 
 
 def goesFirstScreen(mainWindow, scale, frameRate, listOfPlayers, board):
-    clock = pygame.time.Clock()  # Clock used for frame rate
     # First start the game by rolling dice, this will contain no duplicates
     listOfPlacements = [0, 0, 0, 0]
     listOfDice = [6, 6, 6, 6]
@@ -323,7 +320,7 @@ def goesFirstScreen(mainWindow, scale, frameRate, listOfPlayers, board):
     for i in range(len(listOfPlayers)):
         print(f"The order of the players are {listOfPlayers[i].getPlayerID()}")
 
-    rollingDiceAnnimation(scale, frameRate, listOfPlayers)
+    rollingDiceAnnimation(mainWindow, scale, frameRate, listOfPlayers)
 
 
 """
@@ -335,16 +332,11 @@ def goesFirstScreen(mainWindow, scale, frameRate, listOfPlayers, board):
 """
 
 
-# TODO: Refactor this later
 def getPlayerTurn(player, board):
     # We are going to assume 2 dice rolls for now
     diceRoll = rollOfDice(6)
     # @Need someone to animate this dice roll stuff
     return diceRoll  # 147
-    # @Need to get andrew's graph working so i can even do this check with the tiles
-    # Second check, from the method, do what the tile says and set params from the player class
-    # Repeat until all players have gone and done a turn so we can do the mini game
-
 
 """
     The function is what starts the BoardGame and is the runner for the main game and the mini-games
@@ -358,12 +350,15 @@ def getPlayerTurn(player, board):
 """
 
 
-def startGame(mainWindow, scale, framerate, board):
+def startGame(width, height, scale, framerate, board):
+
+    mainWindow = pygame.display.set_mode((width*scale, height*scale)) #The main window display
+
     currentState = States.FIRSTITERATION
     currentPlayer = 0
     playerMovement = 0
     numOfSpots = 0
-    playerSelectFork = 0
+    playerSelectFork = 0 # TODO: change to 1 or 0 for a different path
     clock = pygame.time.Clock()
     renderer = BoardRenderer(board)
     # init the players
@@ -376,7 +371,6 @@ def startGame(mainWindow, scale, framerate, board):
     playerTwo.image = SpriteLoader().loadImage("testPlayer2.png")
     playerThree.image = SpriteLoader().loadImage("testPlayer3.png")
     playerFour.image = SpriteLoader().loadImage("testPlayer4.png")
-    # TODO: NEED TO GET THE TILE MAP FROM ANDREW
 
     listOfPlayers = [playerOne, playerTwo, playerThree, playerFour]
     startTile = board.getStartTile()
@@ -384,6 +378,9 @@ def startGame(mainWindow, scale, framerate, board):
         startTile.players.append(listOfPlayers[i])
 
     isRunning = True
+    goingBackToStart = False
+
+    TESTSTORE = True
     # storeScreen(mainWindow, scale, framerate, listOfPlayers[currentPlayer])
     while isRunning:  # 170
         clock.tick(framerate)
@@ -391,6 +388,7 @@ def startGame(mainWindow, scale, framerate, board):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning = False
+            # TODO: Need to make a button and a screen that shows if the player is going to do something with their inventory
             if key[pygame.K_SPACE]:
                 if currentState == States.FIRSTITERATION:
                     # This is to activate the screen on who goes first
@@ -400,74 +398,103 @@ def startGame(mainWindow, scale, framerate, board):
                     time.sleep(2)
                     continue
                 # Game starts here
-                # for each player in listOfPlayers, make them do a move by rolling dice and going to a tile
-                if currentState == States.PLAYERMOVE:
-                    # If the player lost their turn, skip
-                    if listOfPlayers[currentPlayer].getLostTurn():
-                        # Set it to false
-                        listOfPlayers[currentPlayer].setLostTurn()
-                        currentPlayer += 1
-                    playerMovement = getPlayerTurn(listOfPlayers[currentPlayer], board)
-                    print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} rolled a {playerMovement}")
-                    currentState = States.ANNIMATING
-                if currentState == States.ANNIMATING:
-                    while True:  # 190
-                        nextTiles = board.getPotentialMoves(listOfPlayers[currentPlayer])
-                        # If I see a fork in the road, then we need to pick which path to go to next
-                        if len(nextTiles) > 1:
-                            # TODO: Need to make the selection screen for multiple paths
-                            if playerSelectFork == 0:
-                                board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])
-                            elif playerSelectFork == 1:
-                                board.movePlayer(nextTiles[1], listOfPlayers[currentPlayer])
-                            elif playerSelectFork == 2:
-                                board.movePlayer(nextTiles[2], listOfPlayers[currentPlayer])
-                        else:
-                            # If we have no fork in the road, then we just go straight
-                            board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])  # 200
+                # For each player in listOfPlayers, make them do a move by rolling dice and going to a tile
 
-                        numOfSpots += 1
-                        if numOfSpots == playerMovement:
-                            # If we reach here, that means that we are done animating
-                            numOfSpots = 0
-                            # We set the player's position to where they are now within the tile after all the
-                            # potential paths they went
-                            aPlayer = listOfPlayers[currentPlayer]
-                            listOfPlayers[currentPlayer].setCurrentPosition(board.getCurrentTile(aPlayer))
-                            getTypeOfTile(board.getCurrentTile(aPlayer), listOfPlayers[currentPlayer], mainWindow,
-                                          framerate, scale)
-                            # Must be the length of players -1
-                            if currentPlayer == 3:
-                                currentState = States.STARTMINIGAME
-                                break
+                # TODO: START HEREHEHEHHEHEHEE  Need to make a inventory screen here
+
+                if[pygame.K_SPACE]: # End turn and move the character
+                    if currentState == States.PLAYERMOVE:
+                        # If the player lost their turn, skip
+                        if listOfPlayers[currentPlayer].getLostTurn():
+                            # Set it to false
+                            listOfPlayers[currentPlayer].setLostTurn()
+                            currentPlayer += 1
+                        # Get the player movement here
+                        playerMovement = getPlayerTurn(listOfPlayers[currentPlayer], board)
+                        # Save the last move the player did
+                        listOfPlayers[currentPlayer].setPrevPosition(listOfPlayers[currentPlayer].getCurrentPosition())
+                        listOfPlayers[currentPlayer].setCurrentPosition(playerMovement)
+                        print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} rolled a {playerMovement}")
+                        # If we see a bad item in our inventory, we have to decrement the setStartCountDown
+                        for i in range(len(listOfPlayers[currentPlayer].getInventory())):
+                            singleStringInList = listOfPlayers[currentPlayer].getInventory()[i]
+                            if "B-" in singleStringInList:
+                                listOfPlayers[currentPlayer].setStartCountDown(-1)
+                        # If the player did not use a bad item in 4 turns. They have to go back to the beginning
+                        if TESTSTORE: # This is for testing the Bad inventory, uncomment to test
+                            listOfPlayers[currentPlayer].setMoney(1000)
+                            listOfPlayers[currentPlayer].setInventory("B-invertedControlMG")
+                            #storeScreen(mainWindow, 1, 60, listOfPlayers[currentPlayer])
+                            TESTSTORE = False
+                        print(listOfPlayers[currentPlayer].getStartCountDown())
+                        if listOfPlayers[currentPlayer].getStartCountDown() <= 0:
+                            listOfPlayers[currentPlayer].setPrevPosition(0)
+                            listOfPlayers[currentPlayer].setCurrentPosition(0)
+                            listOfPlayers[currentPlayer].resetStartCountDown()
+                            goingBackToStart = True
+                            listOfPlayers[currentPlayer].clearBadInventory()
+                            # TODO: MAKE A SCREEN TOO THAT SAY WHAT IS HAPPENING
+                        currentState = States.ANNIMATING
+                    if currentState == States.ANNIMATING:
+                        while True:  # 190
+                            nextTiles = board.getPotentialMoves(listOfPlayers[currentPlayer])
+                            # If I see a fork in the road, then we need to pick which path to go to next
+                            if not goingBackToStart:
+                                if len(nextTiles) > 1:
+                                    # TODO: Need to make the selection screen for multiple paths
+                                    if playerSelectFork == 0:
+                                        board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])
+                                    elif playerSelectFork == 1 and playerSelectFork >= len(nextTiles):
+                                        board.movePlayer(nextTiles[1], listOfPlayers[currentPlayer])
+                                    elif playerSelectFork == 2 and playerSelectFork >= len(nextTiles):
+                                        board.movePlayer(nextTiles[2], listOfPlayers[currentPlayer])
+                                else:
+                                    # If we have no fork in the road, then we just go straight
+                                    board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])  # 200
                             else:
-                                currentPlayer += 1
-                                currentState = States.PLAYERMOVE
-                                break  # 213
+                                # TODO: Ask Andrew if animations are supported using a prevTile Function, gunna just skip
+                                #  the animation for now and go back to the beginning
+                                board.movePlayer(board.getStartTile(), listOfPlayers[currentPlayer])
+                                renderer.render()
+                                time.sleep(0.25)  # Don't take out the sleep!
+                                # Must be the length of players -1
+                                if currentPlayer == 3:
+                                    currentState = States.STARTMINIGAME
+                                    break
+                                else:
+                                    currentPlayer += 1
+                                    currentState = States.PLAYERMOVE
+                                    break  # 213
+                            numOfSpots += 1
+                            if numOfSpots == playerMovement and not goingBackToStart:
+                                # If we reach here, that means that we are done animating
+                                numOfSpots = 0
+                                # We set the player's position to where they are now within the tile after all the
+                                # potential paths they went
+                                aPlayer = listOfPlayers[currentPlayer]
+                                listOfPlayers[currentPlayer].setCurrentPosition(board.getCurrentTile(aPlayer))
+                                getTypeOfTile(board.getCurrentTile(aPlayer), listOfPlayers[currentPlayer], mainWindow,
+                                              framerate, scale)
+                                # Must be the length of players -1
+                                if currentPlayer == 3:
+                                    currentState = States.STARTMINIGAME
+                                    break
+                                else:
+                                    currentPlayer += 1
+                                    currentState = States.PLAYERMOVE
+                                    break  # 213
+                            renderer.render()
+                            time.sleep(0.25)  # Don't take out the sleep!
+                    # Once all the players are done here, we start a random mini-game
+                    if currentState == States.STARTMINIGAME:
                         renderer.render()
                         time.sleep(0.25)  # Don't take out the sleep!
-                # Once all the players are done here, we start a random mini-game
-                if currentState == States.STARTMINIGAME:
-                    currentPlayer = 0
-                    result = True
-                    while(result):  #Keep trying to launch minigames until it works.
-                        result = runMinigame(mainWindow, scale, framerate, listOfPlayers)
-                        if(result): #Something went wrong
-                            print("ERROR! minigameManager.py Failed to launch minigame! Attempting to respin...")
-                    currentState = States.PLAYERMOVE
-            renderer.render()  # 225
-
-    #########################################################################################
-    # playerOne = BoardPlayer(1)
-    # playerTwo = BoardPlayer(2)
-    # playerThree = BoardPlayer(3)
-    # playerFour = BoardPlayer(4)
-    # listOfPlayers = [playerOne, playerTwo, playerThree, playerFour]
-    # listOfPlacements = [0, 0, 0, 0]
-    # listOfDice = [6, 6, 6, 6]
-    # setPlacementsForBoardPlayers(listOfPlayers, listOfPlacements, listOfDice)
-    # listOfPlayers.sort()
-    # for i in range(len(listOfPlayers)):
-    #     print(listOfPlayers[i].getPlayerID())
-
-    ##############################################################################################
+                        currentPlayer = 0
+                        result = True
+                        while result:  #Keep trying to launch minigames until it works.
+                            result = runMinigame(mainWindow, scale, framerate, listOfPlayers)
+                            if result: #Something went wrong
+                                print("ERROR! minigameManager.py Failed to launch minigame! Attempting to respin...")
+                        currentState = States.PLAYERMOVE
+                goingBackToStart = False
+                renderer.render()  # 225

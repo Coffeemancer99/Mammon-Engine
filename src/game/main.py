@@ -11,12 +11,12 @@ from src.game.boardGame2.firstBoard import FirstBoard
 def main():
     pygame.init()
     framerate = 60
-    firstBoard = FirstBoard(scale=1)
+    scale = 2  # Sets the scale of ALL png's
+    firstBoard = FirstBoard(scale=2)
     board = firstBoard.testFirstBoard()
-    scale = 1  # Sets the scale of ALL png's
     pygame.display.set_caption("Mammon-Engine")
     mainWindow = pygame.display.set_mode((512, 448)) # The main window display
-    startGame(mainWindow,scale,framerate,board)
+    startGame(mainWindow.get_width(), mainWindow.get_height(), scale,framerate,board)
     # w, h = pygame.display.get_surface().get_size()
 
 

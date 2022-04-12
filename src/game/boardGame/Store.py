@@ -17,7 +17,7 @@ class Store:
         storeInventory.append(random.choice(self.listOfGoodItems))
         storeInventory.append(random.choice(self.listOfGoodItems))
         storeInventory.append(random.choice(self.listOfGoodItems))
-        storeInventory.append(random.choice(self.listOfBadItems))
+        storeInventory.append(random.choice(self.listOfGoodItems))
         self.storeInventory = storeInventory
 
         # Need to make a screen that picks items and for each "iteration" increase or deprecate the index
