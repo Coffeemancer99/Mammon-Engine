@@ -20,7 +20,7 @@ class CannonPlayer(ball.Ball):
         self.ready = True
 
     def generateBall(self):
-        cocoSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/coconut.png", scaleFancy)
+        cocoSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/coconut.png", scaleFancy*self.scale)
         yPos = self.y
         xPos = self.x
         mathyPos=(self.sprite.get_width()/2) * math.sin(self.angle+0.785398)

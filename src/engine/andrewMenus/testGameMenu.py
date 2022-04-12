@@ -23,7 +23,7 @@ def launchTestMinigame(mainWindow, framerate, scale):
     gameMenuButtons = createAllGameMenuButtons(mainWindow, framerate, scale)
 
     testGameMenu = Menu("Test Games", gameMenuButtons)
-    testGameMenu.launch(mainWindow, framerate, scale)
+    testGameMenu.launch(mainWindow, framerate)
 
 
 def createAllGameMenuButtons(mainWindow, framerate, scale):

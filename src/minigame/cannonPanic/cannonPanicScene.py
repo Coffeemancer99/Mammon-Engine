@@ -62,14 +62,28 @@ def startGame(mainWindow, scale, framerate):
                 object.rect = object.sprite.get_rect(center=object.sprite.get_rect(center=(object.x, object.y)).center)
                 # if(isLoud and (object is cannon)): print(cannon)
                 if ((abs(object.dX) >= 1) or (abs(object.dY) >= 1)):
-
                     didImpact = physics.velHandler(object, objects)
 
+                    if (isinstance(object, player.playerController)):
+                        continue
+
+
+
                     if(didImpact!=[]):
-                        didImpact.append(object)
-                        print(f"Agents {didImpact}")
                         for agents in didImpact:
-                            removeObj(objects, agents)
+                            if (isinstance(agents, player.playerController)):
+
+                                agents.loseHealth()
+                                if (agents.isDead()):
+                                    print(f"\nAnd the player health iiiiiiiiiiiiiis{agents.health}\n")
+                                    removeObj(objects, agents)
+                        removeObj(objects, object)
+                       # object.loseHealth()
+                       # print("SHOULD BE RIGHT AFTER ")
+
+                       # print(f"Agents {didImpact}")
+                        # for agents in didImpact:
+                        #     removeObj(objects, agents)
                         # print("DID IMPACT %d" %didImpact)
                         # removeObj(objects, object)
                         cannon.ready = True

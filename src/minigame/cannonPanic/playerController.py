@@ -6,6 +6,7 @@ import src.engine.physics.physics as physics
 
 scaleFancy = 0.05
 defMaxPow = 80
+_maxHealth = 5
 class playerController(ball.Ball):
     def __init__(self, sprite, scale, x, y,  up, down, left, right, launch, primedBall, lifetime, timerEnabled, name="undefinedBall", mass = 10, maxpower = defMaxPow):
         ball.Ball.__init__(self, sprite, scale, x, y, lifetime, timerEnabled, name="undefinedBall", mass=10, maxpower=defMaxPow)
@@ -15,6 +16,7 @@ class playerController(ball.Ball):
         self.left = left
         self.launchKey = launch
         self.isLaunched = False
+        self.health = _maxHealth
 
     def takeInputs(self, objects):
         key = pygame.key.get_pressed()
@@ -35,4 +37,15 @@ class playerController(ball.Ball):
             self.momX += 2
             if key[pygame.K_LSHIFT]:
                 self.momX += 4
+
+    def loseHealth(self):
+        if(self.health>0):
+            self.health -= 1
+
+    def gainHealth(self):
+        if(self.health<_maxHealth):
+            self.gainHealth += 1
+
+    def isDead(self):
+        return(self.health<=0)
 
