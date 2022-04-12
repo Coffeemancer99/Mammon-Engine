@@ -9,7 +9,7 @@ import pygame
 from math import pi
 from collections.abc import Iterable
 from src.engine.physics.spritegen import *
-
+import logging
 import math
 import sympy
 import functools
@@ -22,7 +22,6 @@ minMom = 0.005
 
 class Object:
     def __init__(self, sprite, scale, x, y, name = "undefined", frict = frictS, animation = None):
-
         self.sprite = pygame.transform.scale(sprite, ((sprite.get_width()) * scale, (sprite.get_height()) * scale)) #inherited code
         self.scale = scale
 
@@ -64,6 +63,7 @@ class Dynamic():
         self.name = name
 
     def update(self, airRes = airRes, minMom = minMom, maxMom = None):
+        assert(isinstance(self, DynamicObject) or isinstance(self, DynamicRect)) # can't have object of type Dynamic
         if not maxMom: maxMom = 10*self.mass
         sign = [0,0]
         sign[0] = 1-2*(self.momX < 0)
@@ -76,7 +76,7 @@ class Dynamic():
         self.momY = self.momY*airRes
         if abs(self.momY/self.mass) < minMom: self.momY = 0
 
-        # fractional dXY values will accumulate allowing e.g. moving 1px every other frame
+        # fractional dXY values will accumulate allowing i.e. moving 1px every other frame
         if self.momX == 0: self.dX = 0
         else: self.dX += self.scale*self.momX/self.mass
         if self.momY == 0: self.dY = 0
@@ -85,7 +85,7 @@ class Dynamic():
 
 
     def slide(self, obj2):
-        print("'{}' sliding on '{}'! frict = {}".format(self.name,obj2.name, obj2.frict))
+        logging.debug("'{}' sliding on '{}'! frict = {}".format(self.name,obj2.name, obj2.frict))
         self.momX = self.momX*(1-obj2.frict)
         self.momY = self.momY*(1-obj2.frict)
 
@@ -103,15 +103,14 @@ class DynamicObject(Dynamic,Object):
 
 
     def impact(self, obj2, sign):
-        print("\nIMPACT:")
-        print(self)
+        logging.debug("IMPACT: %s", repr(self))
         overlap = self.mask.overlap(obj2.mask, (obj2.x-(self.x + int(self.dX) - sign[0]), obj2.y - (self.y + int(self.dY) - sign[1])))
         if not overlap:
             overlap = (-1,-1)
-            print("[no overlap?]", end =  " ")
+            logging.debug("[no overlap?]")
         else:
-            print("[overlap = {}]".format(overlap), end = " ")
-        print("'{}' hit '{}' at position ({},{})!".format(self.name, obj2.name, overlap[0] + self.x + int(self.dX) - sign[0], overlap[1] + self.y + int(self.dY)-sign[1]))
+            logging.debug("[overlap = {}]".format(overlap))
+        logging.debug("'{}' hit '{}' at position ({},{})!".format(self.name, obj2.name, overlap[0] + self.x + int(self.dX) - sign[0], overlap[1] + self.y + int(self.dY)-sign[1]))
 
     def __repr__(self):
         return f'DynamicObject "{self.name}", (x,y) = ("{self.x}","{self.y}"), (dX,dY) = ("{self.dX}","{self.dY}"), (momX, momY) = ("{self.momX}","{self.momY}"), (width, height) = "{self.sprite.get_size()}"'
@@ -230,7 +229,7 @@ def velChecker(obj1, obj2):
             return True
         return True
 
-def velChecker2(obj1, obj2):
+def velChecker2(obj1, obj2): # Optimized collision checking for two RectObjects
     if not (isinstance(obj1, RectObject) and isinstance(obj2, RectObject)): return
     bX = 1; bY = 1 # bX and bY stand for how 'bad' of an x or y position obj1 is trying to occupy.
 
@@ -281,7 +280,7 @@ def velChecker2(obj1, obj2):
             # print("dYb: {} = {} - {}".format(obj1.dY, obj2.y + obj2.height, obj1.y))
     # print("finished! dX = {}\t\tdY = {}\n".format(obj1.dX, obj1.dY))
     assert not obj1.mask.overlap(obj2.mask, (obj2.x - (obj1.x + int(obj1.dX)), obj2.y - (obj1.y + int(obj1.dY))))
-    assert not (abs(obj1.dX) > 50 or abs(obj1.dY) > 50)
+    assert not (abs(obj1.dX) > 50 or abs(obj1.dY) > 50) # glitched movement
     return True
 
 

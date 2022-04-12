@@ -4,6 +4,7 @@ import src.engine.menus.testgame as testgame
 import src.engine.menus.settings as settings
 import src.minigame.fruitPanic.handGame as handGame
 import src.minigame.physicsTest.physicstest as physicstest
+import src.minigame.exampleGame.myLevel as myLevel
 import src.engine.andrewMenus.mapSelectionMenu as boardMenu
 import src.engine.andrewMenus.minigameTypeMenu as minigameTypeMenu
 from src.engine.physics.spritegen import *

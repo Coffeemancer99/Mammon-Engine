@@ -1,6 +1,6 @@
 import pygame
 from collections.abc import Iterable
-
+import math
 class Animation:
     def __init__(self, frames, framerate = 45):
         self.tick = 0
@@ -27,7 +27,7 @@ def animate_movement(canvas, object, p1, p2, frames):
         toReturn[i].blit(object,(x1 + dX*i, y1 + dY*i))
     return Animation(toReturn)
 
-def skew_line(line, m): # m = end length
+def skew_line(line, m): # WORK IN PROGRESS m = end length
     print("line going to width {} from:\n{}".format(m,line))
     n = 0 # n = start length, not counting empty pixels
     for pixel in line:
@@ -58,7 +58,7 @@ def skew_line(line, m): # m = end length
 
     return toReturn
 
-def skew_image(image, scale): # returns
+def skew_image(image, scale): # WORK IN PROGRESS
     # TODO: rotate image before and after
     height = image.get_height()
     width = image.get_width()
@@ -78,29 +78,34 @@ def skew_image(image, scale): # returns
 
 
 def grab_sprite(address, scale):
+    scale = math.sqrt(scale) / 2
+    print("grab: ", scale)
     sprite = pygame.image.load(address)
-    sprite = pygame.transform.scale(sprite, ((sprite.get_width()) *scale, (sprite.get_height()) *scale))
-    # scales the sprites. Halving the sprite size is inherited from somewhere else
+    sprite = pygame.transform.scale(sprite, (int((sprite.get_width()) *scale), int((sprite.get_height()) *scale)))
     return sprite
+    # scales the sprites. Halving the sprite size is inherited from somewhere else
 
 def generate_polygon(points, scale, color = (0,255,0,255), size = None):
-    print(size)
+    scale = math.sqrt(scale)
+    print("poly: ", scale)
     if not size: # size = size of box encapsulating points
         xValues = [point[0] for point in points]
         yValues = [point[1] for point in points]
         size = (max(xValues) - min(xValues), max(yValues) - min(yValues))
     sprite = pygame.Surface(size, flags=pygame.SRCALPHA)
     pygame.draw.polygon(sprite, color, points)
-    pygame.transform.scale(sprite, ((sprite.get_width()) *scale, (sprite.get_height()) *scale), sprite)
+    sprite = pygame.transform.scale(sprite, (int((sprite.get_width()) *scale), int((sprite.get_height()) *scale)))
     return sprite
 
 def generate_circle(radius, scale, color = (255,0,0,255)):
     return generate_ellipse(2*radius,2*radius, scale, color)
 
 def generate_ellipse(width, height, scale, color = (255,255,0,255)):
+    scale = math.sqrt(scale)
+    print("ellipse: ", scale)
     sprite = pygame.Surface((width, height), flags = pygame.SRCALPHA)
     pygame.draw.ellipse(sprite,color,pygame.Rect((0,0),(width,height)))
-    pygame.transform.scale(sprite, ((sprite.get_width()) *scale, (sprite.get_height()) *scale), sprite)
+    sprite = pygame.transform.scale(sprite, (int((sprite.get_width()) *scale), int((sprite.get_height()) *scale)))
     return sprite
 
 def generate_rectangle(width, height, scale, color = (0,255,255)):

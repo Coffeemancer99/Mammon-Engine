@@ -5,7 +5,7 @@ import src.engine.physics.physics as physics
 from src.engine.physics.physics import Object
 from src.engine.physics.physics import DynamicObject
 
-defMaxPow = 80
+defMaxPow = 80 # default max power
 class Ball(DynamicObject):
     def __init__(self, sprite, scale, x, y, name="undefinedBall", mass = 10, maxpower = defMaxPow):
         DynamicObject.__init__(self, sprite, scale, x, y, name, mass)
@@ -14,7 +14,8 @@ class Ball(DynamicObject):
         self.maxpower = maxpower
 
     def update(self, airRes=physics.airRes, minMom=physics.minMom, maxMom=None):
-        self.takeInputs(pygame.key.get_pressed())
+        try: self.takeInputs(pygame.key.get_pressed())
+        except: pass # pygame not initialized, ignore it
         DynamicObject.update(self, airRes, minMom, maxMom)
 
     def slide(self, obj2):
