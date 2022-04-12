@@ -6,6 +6,7 @@ from src.engine.physics.physics import Object, DynamicObject, RectObject, Dynami
 import src.engine.physics.spritegen as spritegen
 import src.engine.physics.physics as physics
 import src.minigame.cannonPanic.playerController as player
+import src.minigame.cannonPanic.cannonball as cannonball
 
 #Daniels code
 def removeObj(objects, object):
