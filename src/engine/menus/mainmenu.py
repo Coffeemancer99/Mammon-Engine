@@ -48,7 +48,3 @@ def launch(width, height, framerate, scale):
                     # return physicstest.startGame(mainWindow, scale, framerate)
                     # return handGame.startGame(mainWindow, scale, framerate)
 
-
-
-
-

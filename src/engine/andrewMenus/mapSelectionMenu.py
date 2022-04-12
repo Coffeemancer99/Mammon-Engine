@@ -69,7 +69,9 @@ def launchMapMenu(mainWindow, framerate, scale):
     # mapSelectionMenu.launch(mainWindow, framerate, scale)
 
     clock = pygame.time.Clock()
-    width, height = pygame.display.get_surface().get_size()
+    # width, height = pygame.display.get_surface().get_size()
+    width = mainWindow.get_width()
+    height = mainWindow.get_height()
 
     # menu buttons for now
     mapPrevImg = pygame.image.load("data/assets/sprites/mapPreview.png")

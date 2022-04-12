@@ -358,7 +358,7 @@ def startGame(mainWindow, scale, framerate, board):
     numOfSpots = 0
     playerSelectFork = 0 # TODO: change to 1 or 0 for a different path
     clock = pygame.time.Clock()
-    renderer = BoardRenderer(board, mainWindow)
+    renderer = BoardRenderer(board, mainWindow, scale)
     # init the players
     playerOne = BoardPlayer(1)
     playerTwo = BoardPlayer(2)

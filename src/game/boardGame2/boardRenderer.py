@@ -5,11 +5,12 @@ Created by: Andrew Bunn
 Class for rendering the game board, all it's tiles, and players
 '''
 
-class BoardRenderer:
-    width = 512
-    height = 448
 
-    def __init__(self, board, window):
+class BoardRenderer:
+    # width = 512
+    # height = 448
+
+    def __init__(self, board, window, scale):
         """
         :param board: the board to render
         """
@@ -17,17 +18,20 @@ class BoardRenderer:
         pygame.init()
         backgroundColor = (255, 255, 255)
         self.window = window
+        self.scale = scale
         self.window.fill(backgroundColor)
         pygame.display.update()
-
 
     def renderTile(self, tile):
         """
         renders the tile to the screen at its current position
         :param tile:
         """
-        self.window.blit(tile.image, (tile.x, tile.y))
-
+        img = tile.image
+        img = pygame.transform.scale(img,
+                                     ((img.get_width()) * self.scale,
+                                      (img.get_height()) * self.scale))
+        self.window.blit(img, (tile.x, tile.y))
 
     def renderPlayer(self, player, tile):
         """
@@ -35,8 +39,11 @@ class BoardRenderer:
         :param player: player to render
         :param tile: tile to render player on
         """
-        self.window.blit(player.image, (tile.x, tile.y))
-
+        img = player.image
+        img = pygame.transform.scale(img,
+                                     ((img.get_width()) * self.scale,
+                                      (img.get_height()) * self.scale))
+        self.window.blit(img, (tile.x, tile.y))
 
     def render(self):
         """
@@ -53,5 +60,3 @@ class BoardRenderer:
                 self.renderPlayer(player, tile)
 
         pygame.display.update()
-
-

@@ -1,3 +1,5 @@
+import pygame.transform
+
 from src.game.boardGame2.board import Board
 from src.game.boardGame2.tile import Tile
 from src.game.boardGame2.spriteLoader import SpriteLoader
@@ -26,191 +28,206 @@ class FirstBoard:
         :return: returns the instantiated board filled with tiles
         """
 
+        blueTile = SpriteLoader().loadImage("blueTile.png")
+        redTile = SpriteLoader().loadImage("redTile.png")
+
         startTile = Tile()
-        startTile.x = 0
-        startTile.y = 416
-        startTile.width = 32
-        startTile.height = 32
-        startTile.image = SpriteLoader().loadImage("blueTile.png")
+        startTile.x = 0 * self.scale
+        startTile.y = 416 * self.scale
+        startTile.width = 32 * self.scale
+        startTile.height = 32 * self.scale
+        startTile.image = blueTile
+        # startTile.image = pygame.transform.scale(blueTile,
+        #                                          ((blueTile.get_width()) * self.scale,
+        #                                           (blueTile.get_height()) * self.scale))
         startTile.typeOfTile = "Regular"
 
         tile2 = Tile(startTile)
-        tile2.x += 32
-        tile2.y -= 32
-        tile2.image = SpriteLoader().loadImage("blueTile.png")
+        tile2.x += 32 * self.scale
+        tile2.y -= 32 * self.scale
+        startTile.image = blueTile
+        # tile2.image = pygame.transform.scale(blueTile,
+        #                                          ((blueTile.get_width()) * self.scale,
+        #                                           (blueTile.get_height()) * self.scale))
         tile2.typeOfTile = "Regular"
 
         tile3 = Tile(tile2)
-        tile3.x += 32
-        tile3.y -= 32
+        tile3.x += 32 * self.scale
+        tile3.y -= 32 * self.scale
         tile3.typeOfTile = "Regular"
 
         tile4 = Tile(tile3)
-        tile4.x += 32
-        tile4.y -= 32
+        tile4.x += 32 * self.scale
+        tile4.y -= 32 * self.scale
         tile4.typeOfTile = "Regular"
 
         # Split low right
         tile5 = Tile(tile4)
-        tile5.x += 32
-        tile5.y += 32
+        tile5.x += 32 * self.scale
+        tile5.y += 32 * self.scale
         tile5.typeOfTile = "Regular"
 
         # Split high
         tile6 = Tile(tile4)
-        tile6.x -= 32
-        tile6.y -= 32
+        tile6.x -= 32 * self.scale
+        tile6.y -= 32 * self.scale
         tile6.typeOfTile = "Regular"
 
         # starting from 5 loop
         tile7 = Tile(tile5)
-        tile7.x += 32
-        tile7.y += 32
+        tile7.x += 32 * self.scale
+        tile7.y += 32 * self.scale
         tile7.typeOfTile = "Regular"
 
         tile8 = Tile(tile7)
-        tile8.x += 32
+        tile8.x += 32 * self.scale
         tile8.typeOfTile = "Bad"
 
         tile9 = Tile(tile8)
-        tile9.x += 32
+        tile9.x += 32 * self.scale
         tile9.typeOfTile = "Regular"
 
         tile10 = Tile(tile9)
-        tile10.x += 32
+        tile10.x += 32 * self.scale
         tile10.typeOfTile = "Regular"
 
         tile11 = Tile(tile10)
-        tile11.x += 32
-        tile11.y -= 32
+        tile11.x += 32 * self.scale
+        tile11.y -= 32 * self.scale
         tile11.typeOfTile = "Bad"
 
         tile12 = Tile(tile11)
-        tile12.x += 32
-        tile12.y -= 32
+        tile12.x += 32 * self.scale
+        tile12.y -= 32 * self.scale
         tile12.typeOfTile = "Regular"
 
         tile13 = Tile(tile12)
-        tile13.x -= 32
-        tile13.y -= 32
+        tile13.x -= 32 * self.scale
+        tile13.y -= 32 * self.scale
         tile13.typeOfTile = "Regular"
 
         tile14 = Tile(tile13)
-        tile14.x -= 32
-        tile14.y -= 32
+        tile14.x -= 32 * self.scale
+        tile14.y -= 32 * self.scale
         tile14.typeOfTile = "Regular"
 
         tile15 = Tile(tile14)
-        tile15.x += 32
-        tile15.y -= 32
+        tile15.x += 32 * self.scale
+        tile15.y -= 32 * self.scale
         tile15.typeOfTile = "Regular"
 
         tile16 = Tile(tile15)
-        tile16.x += 32
+        tile16.x += 32 * self.scale
         tile16.typeOfTile = "Regular"
 
         tile17 = Tile(tile16)
-        tile17.x += 32
+        tile17.x += 32 * self.scale
         tile17.typeOfTile = "Regular"
 
         tile18 = Tile(tile17)
-        tile18.x += 32
+        tile18.x += 32 * self.scale
         tile18.typeOfTile = "Regular"
 
         tile19 = Tile(tile18)
-        tile19.x += 32
-        tile19.y -= 32
+        tile19.x += 32 * self.scale
+        tile19.y -= 32 * self.scale
         tile19.typeOfTile = "Regular"
 
         tile20 = Tile(tile19)
-        tile20.x -= 32
-        tile20.y -= 32
+        tile20.x -= 32 * self.scale
+        tile20.y -= 32 * self.scale
         tile20.typeOfTile = "Bad"
 
         tile21 = Tile(tile20)
-        tile21.y -= 32
+        tile21.y -= 32 * self.scale
         tile21.typeOfTile = "Regular"
 
         tile22 = Tile(tile21)
-        tile22.x -= 32
-        tile22.y -= 32
+        tile22.x -= 32 * self.scale
+        tile22.y -= 32 * self.scale
         tile22.typeOfTile = "Regular"
 
         tile23 = Tile(tile22)
-        tile23.y -= 32
+        tile23.y -= 32 * self.scale
         tile23.typeOfTile = "Regular"
 
         tile24 = Tile(tile23)
-        tile24.x -= 32
-        tile24.y -= 32
+        tile24.x -= 32 * self.scale
+        tile24.y -= 32 * self.scale
         tile24.typeOfTile = "Dual"
 
         tile25 = Tile(tile24)
-        tile25.x -= 32
-        tile25.y += 32
+        tile25.x -= 32 * self.scale
+        tile25.y += 32 * self.scale
         tile25.typeOfTile = "Regular"
 
         tile26 = Tile(tile25)
-        tile26.y += 32
+        tile26.y += 32 * self.scale
         tile26.typeOfTile = "Regular"
 
         tile27 = Tile(tile26)
-        tile27.x -= 32
-        tile27.y += 32
+        tile27.x -= 32 * self.scale
+        tile27.y += 32 * self.scale
         tile27.typeOfTile = "Regular"
 
         tile28 = Tile(tile27)
-        tile28.x -= 32
-        tile28.y += 32
+        tile28.x -= 32 * self.scale
+        tile28.y += 32 * self.scale
         tile28.typeOfTile = "Bad"
 
         tile29 = Tile(tile28)
-        tile29.x -= 32
+        tile29.x -= 32 * self.scale
         tile29.typeOfTile = "Regular"
 
         tile30 = Tile(tile29)
-        tile30.x -= 32
+        tile30.x -= 32 * self.scale
         tile30.typeOfTile = "Store"
 
         tile31 = Tile(tile30)
-        tile31.x -= 32
+        tile31.x -= 32 * self.scale
         tile31.typeOfTile = "Regular"
 
         tile32 = Tile(tile31)
-        tile32.x -= 32
-        tile32.y += 32
+        tile32.x -= 32 * self.scale
+        tile32.y += 32 * self.scale
         tile32.typeOfTile = "Regular"
 
         tile33 = Tile(tile32)
-        tile33.x -= 32
-        tile33.y += 32
+        tile33.x -= 32 * self.scale
+        tile33.y += 32 * self.scale
         tile33.typeOfTile = "Regular"
 
         tile34 = Tile(tile33)
-        tile34.y += 32
+        tile34.y += 32 * self.scale
         tile34.typeOfTile = "Dual"
 
         tile35 = Tile(tile4)
-        tile35.x += 32
-        tile35.y -= 32
+        tile35.x += 32 * self.scale
+        tile35.y -= 32 * self.scale
         tile35.typeOfTile = "Store"
 
         tile36 = Tile(tile35)
-        tile36.x += 32
-        tile36.y -= 32
+        tile36.x += 32 * self.scale
+        tile36.y -= 32 * self.scale
         tile36.typeOfTile = "Regular"
 
         tile37 = Tile(tile36)
-        tile37.x += 32
+        tile37.x += 32 * self.scale
         tile37.typeOfTile = "Regular"
 
         tile38 = Tile(tile37)
-        tile38.x += 32
+        tile38.x += 32 * self.scale
         tile38.typeOfTile = "Regular"
 
         # make split path tiles red for now
-        tile4.image = SpriteLoader().loadImage("redTile.png")
-        tile14.image = SpriteLoader().loadImage("redTile.png")
+        # tile4.image = pygame.transform.scale(redTile,
+        #                                          ((redTile.get_width()) * self.scale,
+        #                                           (redTile.get_height()) * self.scale))
+        # tile14.image = pygame.transform.scale(redTile,
+        #                                          ((redTile.get_width()) * self.scale,
+        #                                           (redTile.get_height()) * self.scale))
+        tile4.image = redTile
+        tile14.image = redTile
 
         # Create the path
         startTile.addNextTile(tile2)
