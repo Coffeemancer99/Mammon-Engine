@@ -122,7 +122,7 @@ def rollingDiceAnnimation(mainWindow, scale, framerate, listOfPlayers):
     dice4 = SpriteLoader().loadImage("die4.png")
     dice5 = SpriteLoader().loadImage("die5.png")
     dice6 = SpriteLoader().loadImage("die6.png")
-    diceWindow = pygame.display.set_mode((512, 448))  # 27
+    diceWindow = mainWindow
     # Set up the scaling
 
     dice1 = pygame.transform.scale(dice1, ((dice1.get_width()) * scale, (dice1.get_height()) * scale))
@@ -350,9 +350,7 @@ def getPlayerTurn(player, board):
 """
 
 
-def startGame(width, height, scale, framerate, board):
-
-    mainWindow = pygame.display.set_mode((width*scale, height*scale)) #The main window display
+def startGame(mainWindow, scale, framerate, board):
 
     currentState = States.FIRSTITERATION
     currentPlayer = 0
@@ -360,7 +358,7 @@ def startGame(width, height, scale, framerate, board):
     numOfSpots = 0
     playerSelectFork = 0 # TODO: change to 1 or 0 for a different path
     clock = pygame.time.Clock()
-    renderer = BoardRenderer(board)
+    renderer = BoardRenderer(board, mainWindow)
     # init the players
     playerOne = BoardPlayer(1)
     playerTwo = BoardPlayer(2)

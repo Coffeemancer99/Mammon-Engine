@@ -16,7 +16,7 @@ def main():
     board = firstBoard.testFirstBoard()
     pygame.display.set_caption("Mammon-Engine")
     mainWindow = pygame.display.set_mode((512, 448)) # The main window display
-    startGame(mainWindow.get_width(), mainWindow.get_height(), scale,framerate,board)
+    startGame(mainWindow, scale, framerate, board)
     # w, h = pygame.display.get_surface().get_size()
 
 

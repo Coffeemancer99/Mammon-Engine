@@ -416,7 +416,7 @@ class JoelTest(unittest.TestCase):
         firstBoard = FirstBoard(scale=1)
         board = firstBoard.testFirstBoard()
         self.assertIsNotNone(board)
-        startGame(mainWindow, 1, 60, board)
+        startGame(1, 60, board, )
         playerMovement = 4
         board.movePlayer(playerMovement, playerOne)
         self.assertEqual(getTypeOfTile(playerMovement, playerOne, mainWindow, 1, 60), "Bad")
@@ -451,7 +451,7 @@ class JoelTest(unittest.TestCase):
         mainWindow = pygame.display.set_mode((512, 448))
         firstBoard = FirstBoard(scale=1)
         board = firstBoard.testFirstBoard()
-        startGame(mainWindow, 1, 60, board)
+        startGame(1, 60, board, )
         playerMovement = 3
         board.movePlayer(playerMovement, playerOne)
         self.assertEqual(getTypeOfTile(playerMovement, playerOne, mainWindow, 1, 60), "Store")
@@ -461,7 +461,7 @@ class JoelTest(unittest.TestCase):
         mainWindow = pygame.display.set_mode((512, 448))
         firstBoard = FirstBoard(scale=1)
         board = firstBoard.testFirstBoard()
-        startGame(mainWindow, 1, 60, board)
+        startGame(1, 60, board, )
         playerMovement = 1
         board.movePlayer(playerMovement, playerOne)
         self.assertEqual(getTypeOfTile(playerMovement, playerOne, mainWindow, 1, 60), "Store")
@@ -471,7 +471,7 @@ class JoelTest(unittest.TestCase):
         mainWindow = pygame.display.set_mode((512, 448))
         firstBoard = FirstBoard(scale=1)
         board = firstBoard.testFirstBoard()
-        startGame(mainWindow, 1, 60, board)
+        startGame(1, 60, board, )
         playerMovement = 6
         board.movePlayer(playerMovement, playerOne)
         self.assertEqual(getTypeOfTile(playerMovement, playerOne, mainWindow, 1, 60), "Gate")
@@ -481,7 +481,7 @@ class JoelTest(unittest.TestCase):
         mainWindow = pygame.display.set_mode((512, 448))
         firstBoard = FirstBoard(scale=1)
         board = firstBoard.testFirstBoard()
-        startGame(mainWindow, 1, 60, board)
+        startGame(1, 60, board, )
         playerMovement = 2
         board.movePlayer(playerMovement, playerOne)
         self.assertEqual(getTypeOfTile(playerMovement, playerOne, mainWindow, 1, 60), "Dual")

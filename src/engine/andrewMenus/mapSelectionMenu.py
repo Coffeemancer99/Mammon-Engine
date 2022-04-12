@@ -151,7 +151,7 @@ def launchMapMenu(mainWindow, framerate, scale):
                         if (currentMap == "FirstBoard"):
                             print("PLAY FIRST BOARD")
                             firstBoard = FirstBoard(scale=scale).testFirstBoard()  # ==== CONTROLLER ====
-                            return boardGame.startGame(width, height, scale, framerate, firstBoard)
+                            return boardGame.startGame(mainWindow,scale,framerate, firstBoard)
                         elif (currentMap == "DNE"):
                             print("Invalid Map Selection")
                 # check if back button

@@ -20,7 +20,7 @@ def launchMinigameMenu(mainWindow, framerate, scale):
     minigameMenuButtons = createAllMinigameButtons(mainWindow, framerate, scale)
 
     minigameMenu = Menu("Minigame Types", minigameMenuButtons)
-    minigameMenu.launch(mainWindow, framerate, scale)
+    minigameMenu.launch(mainWindow, framerate)
 
 
 

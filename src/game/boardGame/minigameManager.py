@@ -319,7 +319,7 @@ def runMinigame(mainWindow, scale, framerate, players, spinnerSpeed=spinnerSpeed
             sys.path.pop()
             # delete the path to the game folder so we don't bloat sys.path or accidentally call another minigame
             try:
-                result = launch.startGame()                 # try and run the startGame() function
+                result = launch.startGame(mainWindow,scale, framerate)  # try and run the startGame() function
             except:
                 print("ERROR minigameManager.py, running startGame function failed! Does ", selectedGame, " have a function called 'startGame()'?")
                 del sys.modules['launch']  # some early black magic

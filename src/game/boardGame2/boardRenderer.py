@@ -9,14 +9,14 @@ class BoardRenderer:
     width = 512
     height = 448
 
-    def __init__(self, board):
+    def __init__(self, board, window):
         """
         :param board: the board to render
         """
         self.board = board
         pygame.init()
         backgroundColor = (255, 255, 255)
-        self.window = pygame.display.set_mode((self.width, self.height))
+        self.window = window
         self.window.fill(backgroundColor)
         pygame.display.update()
 
