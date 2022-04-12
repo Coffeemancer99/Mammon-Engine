@@ -2,25 +2,30 @@ import src.minigame.physicsTest.ball as ball
 import pygame
 import math
 import sys
+import src.minigame.cannonPanic.cannonball as cannonball
+from src.minigame.timer.timer import timer as timer
 
 from src.engine.physics import spritegen
 scaleFancy = 0.05
 defMaxPow = 80
 class CannonPlayer(ball.Ball):
     def __init__(self, sprite, scale, x, y,  up, down, left, right, launch, primedBall, lifetime, timerEnabled, name="undefinedBall", mass = 10, maxpower = defMaxPow):
-        ball.Ball.__init__(self, sprite, scale, x, y, lifetime, timerEnabled, name="undefinedBall", mass = 10, maxpower = defMaxPow)
+        ball.Ball.__init__(self, sprite, scale, x, y, name="undefinedBall", mass = 10, maxpower = defMaxPow)
         self.up = up
         self.down = down
         self.right = right
         self.left = left
         self.launchKey = launch
         self.isLaunched = False
-
+        self.alive = True
         self.primedBall = primedBall
         self.ready = True
+        self.lifetime = lifetime
+        self.durTimer = timer(3, 60)
+        self.timerEnabled = timerEnabled
 
     def generateBall(self):
-        cocoSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/coconut.png", scaleFancy)
+        cocoSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/coconut.png", scaleFancy*self.scale)
         yPos = self.y
         xPos = self.x
         mathyPos=(self.sprite.get_width()/2) * math.sin(self.angle+0.785398)
@@ -37,7 +42,7 @@ class CannonPlayer(ball.Ball):
         # xPos+=self.x + +self.sprite.get_width()+cocoSprite.get_width()*4
         print("\nCannon pos is %f %f \n" %(self.x, self.y))
         print("\nBall pos is %f %f\n" %(xPos, yPos))
-        coco = ball.Ball(cocoSprite, 1, xPos, yPos, 3, True, name="coco", mass=4, maxpower=80)
+        coco = cannonball.CannonBall(cocoSprite, 1, xPos, yPos, 3, True, name="coco", mass=4, maxpower=80)
         return coco
 
     def reloadCannonball(self, ball):
@@ -86,3 +91,7 @@ class CannonPlayer(ball.Ball):
                 #self.primedBall=None
                # self.launch()
 
+    def timeUntilDeletion(self):
+        self.durTimer.decrement()
+        if (self.timerEnabled and self.durTimer.isFinished()):
+            self.alive = False

@@ -101,6 +101,7 @@ class DynamicObject(Dynamic,Object):
         Dynamic.__init__(self,mass, name)
 
 
+
     def impact(self, obj2, sign):
         print("\nIMPACT:")
         print(self)
@@ -143,6 +144,7 @@ def velHandler(mover, objects):
     mover.dY = mover.dY - int(mover.dY)
     return agents
 
+
 def velChecker(obj1, obj2):
 
     assert not(obj1.mask.overlap(obj2.mask,(obj2.x - obj1.x, obj2.y - obj1.y) )) # Assert: are the objects already overlapping?
@@ -169,6 +171,7 @@ def velChecker(obj1, obj2):
         else: sign[1] = -1
 
         impacted = False
+        mayHapsImpacted = False
 
 
         for weight in [[1,0],[0,1]]: # first dX is handled, then dY
@@ -224,7 +227,8 @@ def velChecker(obj1, obj2):
 
         if impacted:
             obj1.impact(obj2, sign)
-        return impacted
+            return True
+        return True
 
 def velChecker2(obj1, obj2):
     if not (isinstance(obj1, RectObject) and isinstance(obj2, RectObject)): return
@@ -257,9 +261,8 @@ def velChecker2(obj1, obj2):
     if bXflag and (obj1.y == (obj2.y + obj2.height)) and (obj1.dY < 0): obj1.dY = 0; obj1.momY = 0; bY = 0 # obj1 directly below obj2
     if bXflag and ((obj1.y + obj1.height) == obj2.y) and (obj1.dY > 0): obj1.dY = 0; obj1.momY = 0; bY = 0 # obj1 directly above obj2
 
-    if (not (bX and bY)) or (not (obj1.dX or obj1.dY)): return
+    if (not (bX and bY)) or (not (obj1.dX or obj1.dY)): return True
     # bX/bY value of 0 means collision is impossible, return. If obj1 is no longer moving return.
-
     if(bX < bY):
         obj1.momX = 0
         if(obj1.dX > 0):
