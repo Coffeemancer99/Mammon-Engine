@@ -6,19 +6,19 @@ Created by: Andrew Bunn
 Generic menu class for creating menus filled with buttons
 '''
 
+
 class Menu:
 
-
-    def __init__(self, title, buttons):
+    def __init__(self, title, buttons, scaleFactors=None):
         """
         :param title: menu's title
         :param buttons: all the buttons for the menu
         """
         self.title = title
         self.buttons = buttons
+        self.scaleFactors = scaleFactors
 
-
-    def launch(self, mainWindow, framerate, scale):
+    def launch(self, mainWindow, framerate):
         """
         launches a menu and handles clicks
         :param mainWindow: the window to display the menu in

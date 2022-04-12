@@ -413,7 +413,7 @@ class JoelTest(unittest.TestCase):
     def test_movementOfPlayer(self):
         playerOne = BoardPlayer(1)
         mainWindow = pygame.display.set_mode((512, 448))
-        firstBoard = FirstBoard()
+        firstBoard = FirstBoard(scale=1)
         board = firstBoard.testFirstBoard()
         self.assertIsNotNone(board)
         startGame(mainWindow, 1, 60, board)
@@ -449,7 +449,7 @@ class JoelTest(unittest.TestCase):
     def test_typeOfTileSTORE(self):
         playerOne = BoardPlayer(1)
         mainWindow = pygame.display.set_mode((512, 448))
-        firstBoard = FirstBoard()
+        firstBoard = FirstBoard(scale=1)
         board = firstBoard.testFirstBoard()
         startGame(mainWindow, 1, 60, board)
         playerMovement = 3
@@ -459,7 +459,7 @@ class JoelTest(unittest.TestCase):
     def test_typeOfTileREGULAR(self):
         playerOne = BoardPlayer(1)
         mainWindow = pygame.display.set_mode((512, 448))
-        firstBoard = FirstBoard()
+        firstBoard = FirstBoard(scale=1)
         board = firstBoard.testFirstBoard()
         startGame(mainWindow, 1, 60, board)
         playerMovement = 1
@@ -469,7 +469,7 @@ class JoelTest(unittest.TestCase):
     def test_typeOfTileGate(self):
         playerOne = BoardPlayer(1)
         mainWindow = pygame.display.set_mode((512, 448))
-        firstBoard = FirstBoard()
+        firstBoard = FirstBoard(scale=1)
         board = firstBoard.testFirstBoard()
         startGame(mainWindow, 1, 60, board)
         playerMovement = 6
@@ -479,7 +479,7 @@ class JoelTest(unittest.TestCase):
     def test_typeOfTileDual(self):
         playerOne = BoardPlayer(1)
         mainWindow = pygame.display.set_mode((512, 448))
-        firstBoard = FirstBoard()
+        firstBoard = FirstBoard(scale=1)
         board = firstBoard.testFirstBoard()
         startGame(mainWindow, 1, 60, board)
         playerMovement = 2

@@ -1,11 +1,12 @@
 import pygame
 
-
 '''
 Created by: Andrew Bunn
 SpriteLoader class is here just so I do not have to specify a path 
 every time i want to load an image at this level in the file system
 '''
+
+
 class SpriteLoader:
     def __init__(self):
         pass

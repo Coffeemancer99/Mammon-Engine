@@ -56,7 +56,7 @@ class TestBoardGame(unittest.TestCase):
         #   Board - Andrew's
         #   Tile - Andrew's
 
-        firstBoard = FirstBoard()
+        firstBoard = FirstBoard(scale=1)
         gameBoard = firstBoard.testFirstBoard()
         tileCount = len(gameBoard.tiles)
         self.assertEqual(tileCount, 38, "Expected 38 tiles in firstBoard")
