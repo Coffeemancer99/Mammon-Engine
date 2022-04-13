@@ -13,12 +13,21 @@ DO NOT EXTEND FROM DYNAMIC- use DynamicObject or DynamicRect instead
 RectObject and DynamicRect are for rectangular objects, allowing certain optimizations. They are not necessary to use.
 """
 
+
+
 class Ball(DynamicObject):
     # if you want to extend from someone else's object class, replace DynamicObject with the name of the other class
-    def __init__(self, sprite, scale, x, y, name="undefinedBall", mass = 10, launchKey = pygame.K_l):
-        DynamicObject.__init__(self, sprite, scale, x, y, name, mass)
-        self.launchKey = launchKey
+    def __init__(self, sprite, scale, x, y, objects, name="undefinedBall", mass = 10):
+        DynamicObject.__init__(self, sprite, scale, x, y, objects, name, mass)
         self.points = 0
+        self.controls = {
+            'up': pygame.K_w,
+            'down': pygame.K_s,
+            'left': pygame.K_a,
+            'right': pygame.K_d,
+            'space': pygame.K_SPACE,
+            'action': pygame.K_u
+        }
 
     def update(self, airRes=physics.airRes, minMom=physics.minMom, maxMom=None): # retrieves default values from physics module
         try: self.takeInputs(pygame.key.get_pressed())
@@ -26,18 +35,28 @@ class Ball(DynamicObject):
         DynamicObject.update(self, airRes, minMom, maxMom)
 
     def takeInputs(self, key):
+        if key[self.controls['up']]:
+            self.momY -= 3
+        if key[self.controls['down']]:
+            self.momY += 3
+        if key[self.controls['left']]:
+            self.momX -= 3
+        if key[self.controls['right']]:
+            self.momX += 3
+        if key[self.controls['space']]:
+            if physics.grounded(self, self.objects):
+                self.momY -= 10
+                print("JUMP")
         if key[pygame.K_p]:
             print(self.name + " points = " + str(self.points))
         if key[pygame.K_o]:
             print("incrementing points")
             self.points += 1
-        if key[self.launchKey]:
-            self.launch()
 
     def launch(self):
         print("LAUNCHED")
 
-    def impact(self, obj2, sign): # is called when this Ball *impacts* obj2- haven't finished testing it tho - Daniel
+    def impact(self, obj2, sign): # is called when this Ball *impacts* obj2- unreliable triggering at low velocity- Daniel
         DynamicObject.impact(self, obj2, sign)
         if isinstance(obj2, Crate):
             self.points += obj2.value
@@ -45,14 +64,19 @@ class Ball(DynamicObject):
 
 
 class Crate(RectObject):
-    def __init__(self,sprite, scale, x, y, value, name = "undefinedCrate"):
-        RectObject.__init__(self, sprite,scale, x, y, name)
+    def __init__(self,sprite, scale, x, y, objects, value, name = "undefinedCrate"):
+        RectObject.__init__(self, sprite, scale, x, y, objects, name)
 
         self.value = value
 
     def explode(self):
-        if(self.value):
-            print("BOOOM")
-            self.value = 0
-        # I will soon implement an object removing itself so this can work better- Daniel
+        print("BOOOM")
+        self.value = 0
+        i = 0
+        for object in self.objects:
+            if object is self:
+                self.objects.pop(i)
+                break
+            i += 1
+
 

@@ -79,7 +79,6 @@ def skew_image(image, scale): # WORK IN PROGRESS
 
 def grab_sprite(address, scale):
     scale = math.sqrt(scale) / 2
-    print("grab: ", scale)
     sprite = pygame.image.load(address)
     sprite = pygame.transform.scale(sprite, (int((sprite.get_width()) *scale), int((sprite.get_height()) *scale)))
     return sprite
@@ -87,7 +86,6 @@ def grab_sprite(address, scale):
 
 def generate_polygon(points, scale, color = (0,255,0,255), size = None):
     scale = math.sqrt(scale)
-    print("poly: ", scale)
     if not size: # size = size of box encapsulating points
         xValues = [point[0] for point in points]
         yValues = [point[1] for point in points]
@@ -102,7 +100,6 @@ def generate_circle(radius, scale, color = (255,0,0,255)):
 
 def generate_ellipse(width, height, scale, color = (255,255,0,255)):
     scale = math.sqrt(scale)
-    print("ellipse: ", scale)
     sprite = pygame.Surface((width, height), flags = pygame.SRCALPHA)
     pygame.draw.ellipse(sprite,color,pygame.Rect((0,0),(width,height)))
     sprite = pygame.transform.scale(sprite, (int((sprite.get_width()) *scale), int((sprite.get_height()) *scale)))

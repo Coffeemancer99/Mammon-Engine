@@ -21,13 +21,12 @@ frictD = 0.85
 minMom = 0.005
 
 class Object:
-    def __init__(self, sprite, scale, x, y, name = "undefined", frict = frictS, animation = None):
+    def __init__(self, sprite, scale, x, y, objects, name = "undefined", frict = frictS, animation = None):
         self.sprite = pygame.transform.scale(sprite, ((sprite.get_width()) * scale, (sprite.get_height()) * scale)) #inherited code
         self.scale = scale
-
+        self.objects = objects
         self.x = x * scale # (x,y) refers to top-left position of object
         self.y = y * scale
-        self.rect = self.sprite.get_rect(center=self.sprite.get_rect(center=(x, y)).center)
         self.mask = pygame.mask.from_surface(self.sprite)
         self.name = name # development value for debug statements
         self.frict = frict
@@ -42,10 +41,10 @@ class Object:
         return f'Object "{self.name}", (x,y) = ("{self.x}","{self.y}"), (width, height) = "{self.sprite.get_size()}"'
 
 class RectObject(Object):
-    def __init__(self, sprite, scale, x, y, name = "undefinedRect", frict = frictS):
+    def __init__(self, sprite, scale, x, y, objects, name = "undefinedRect", frict = frictS, color = (0,255,255)):
         if isinstance(sprite, Iterable): # can pass sprite object or arguments for generate_rectangle
-            sprite = generate_rectangle(*sprite, scale)
-        Object.__init__(self, sprite, scale, x, y, name, frict)
+            sprite = generate_rectangle(*sprite, scale, color = color)
+        Object.__init__(self, sprite, scale, x, y, objects, name, frict)
         self.mask.fill()
         self.width = sprite.get_width()
         self.height = sprite.get_height()
@@ -96,8 +95,8 @@ class Dynamic():
         return toReturn
 
 class DynamicObject(Dynamic,Object):
-    def __init__(self, sprite, scale, x, y, name = "Dynamic", mass = 10, frict = frictD):
-        Object.__init__(self, sprite, scale, x, y, name, frict)
+    def __init__(self, sprite, scale, x, y, objects, name = "Dynamic", mass = 10, frict = frictD):
+        Object.__init__(self, sprite, scale, x, y, objects, name, frict)
         Dynamic.__init__(self,mass, name)
 
 
@@ -116,8 +115,8 @@ class DynamicObject(Dynamic,Object):
         return f'DynamicObject "{self.name}", (x,y) = ("{self.x}","{self.y}"), (dX,dY) = ("{self.dX}","{self.dY}"), (momX, momY) = ("{self.momX}","{self.momY}"), (width, height) = "{self.sprite.get_size()}"'
 
 class DynamicRect(Dynamic, RectObject):
-    def __init__(self, sprite, scale, x, y, name = "DynamicRect", mass = 10, frict = frictD):
-        RectObject.__init__(self,sprite, scale, x, y, name, frict)
+    def __init__(self, sprite, scale, x, y, objects, name = "DynamicRect", mass = 10, frict = frictD):
+        RectObject.__init__(self,sprite, scale, x, y, objects, name, frict)
         Dynamic.__init__(self, mass, name)
 
     def __repr__(self):

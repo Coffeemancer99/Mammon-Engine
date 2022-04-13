@@ -12,18 +12,7 @@ def removeObj(objects, object):
 
 def startGame(mainWindow, scale, framerate):
     def takeInputs(key): # inputs not associated with an object
-        nonlocal myBall, gravity # myBall and gravity belong to startGame
-        if key[pygame.K_w]:
-            myBall.momY -= 3
-        if key[pygame.K_s]:
-            myBall.momY += 3
-        if key[pygame.K_a]:
-            myBall.momX -= 2
-        if key[pygame.K_d]:
-            myBall.momX += 2
-        if key[pygame.K_SPACE]:
-            if physics.grounded(myBall, objects, onlyStatics=True):
-                myBall.momY -= 50
+        nonlocal gravity # gravity belongs to startGame
 
         if key[pygame.K_g]:
             gravity -= .1
@@ -43,23 +32,32 @@ def startGame(mainWindow, scale, framerate):
             print("gravity = 0")
             gravity = 0
             time.sleep(.3)
-    def addCrate(x, y, value = 10, scale = scale):
+
+    objects = []
+
+    def addCrate(x, y, value = 10, scale = scale): # the code for adding objects is kind of messy, so this
+        # can be preferable.
         nonlocal objects
         sprite = grab_sprite("data/assets/sprites/bluebox.png", scale)
-        objects.append(myObjects.Crate(sprite,scale, x, y - sprite.get_height(), value))
+        objects.append(myObjects.Crate(sprite,scale, x, y - sprite.get_height(), objects, value))
+    def addBall(sprite, x, y, scale = scale, name = "undefinedBall", mass = 10):
+        nonlocal objects
+        objects.append(myObjects.Ball(sprite, scale, x, y, objects, name, mass))
+    def addRect(position, dimensions, frict = physics.frictS, color = (180,180,180), scale = scale):
+        nonlocal objects
+        objects.append(RectObject(dimensions, scale, position[0], position[1], objects, frict, color = color))
 
     clock = pygame.time.Clock()  # Clock used for frame rate
 
-    objects = []
-    myBall = myObjects.Ball(generate_circle(20,scale), scale, 25, 20, name="myBall", mass = 4)
-    triangle = terrain.from_polygon([[20,345],[50,310],[20,280]], scale, color = (0,255,0,255), name="triangle")
-
+    triangle = terrain.from_polygon([[20,345],[50,310],[20,280]], scale, objects, color = (0,255,0,255), name="triangle")
     objects.append(triangle)
-    objects.append(myBall)
 
-    objects.append(RectObject((500,50), scale, 100,400, frict = .1))
-    objects.append(RectObject((50, 200), scale, 300, 50))
+    addRect((100,400), (500, 50))
+    addRect((300,50),(50,200))
+
     addCrate(420, 400) # y-position is for bottom of crate rather than top
+
+    addBall(generate_circle(20,scale), 25, 20)
     isRunning=True
 
 

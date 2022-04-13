@@ -7,8 +7,8 @@ from src.engine.physics.spritegen import *
 import math
 
 class Terrain(physics.Object):
-    def __init__(self, sprite, scale, x, y, name = "undefinedTerrain", frict = 0.7, edges = None, normalFuns = None):
-        physics.Object.__init__(self, sprite, scale, x, y, name, frict)
+    def __init__(self, sprite, scale, x, y, objects, name = "undefinedTerrain", frict = 0.7, edges = None, normalFuns = None):
+        physics.Object.__init__(self, sprite, scale, x, y, objects, name, frict)
         self.edges = edges
         self.normalFuns = normalFuns
 
@@ -37,7 +37,7 @@ def is_between(point1, point2, testPoint):
 
     return((floor == y3) or (floor +1 == y3) or (floor - 1 == y3))
 
-def from_polygon(points, scale, color = (0,255,0,255), name = "undefinedPolygon", frict = 0.7):
+def from_polygon(points, scale, objects, color = (0,255,0,255), name = "undefinedPolygon", frict = 0.7):
     xValues = [point[0] for point in points]
     yValues = [point[1] for point in points]
     minX = min(xValues); maxX = max(xValues)
@@ -59,5 +59,5 @@ def from_polygon(points, scale, color = (0,255,0,255), name = "undefinedPolygon"
     #     print("for {} and {}, points_between = {}".format(points[i], points[(i+1)%len(points)], list(filter((partial(is_between, points[i], points[(i+1)%len(points)])), outline))))
     # print("")
 
-    return Terrain(sprite, scale, minX, minY, name, frict, edges)
+    return Terrain(sprite, scale, minX, minY, objects, name, frict, edges)
 
