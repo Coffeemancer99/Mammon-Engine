@@ -7,14 +7,9 @@ import pygame
 import time
 
 class swimmerPlayer(DynamicObject):
-    def __init__(self, sprite, scale, x, y, objects, up, down, left, right, name="undefinedBall", mass = 10):
+    def __init__(self, sprite, scale, x, y, objects, playerAControls, playerBControls, name="undefinedBall", mass = 10):
         DynamicObject.__init__(self, sprite, scale, x, y, objects, name, mass)
-        playerAControls = {
-            "up" : up,
-            "down" : down,
-            "left" : left,
-            "right" : right
-        }
-        playerBControls = {
-
-        }
+        #Player A controls the left/right movement
+        #Player B controls the jump/float movement
+        self.playerAControls = playerAControls
+        self.playerBControls = playerBControls

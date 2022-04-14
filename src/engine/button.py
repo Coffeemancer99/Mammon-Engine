@@ -42,7 +42,7 @@ class Button:
         """
         if self.wasClicked(click):
             if listOfButtons is not None:
-                return self.onClick(listOfButtons)
+                return self.onClick()
             else:
                 return self.onClick()
 
