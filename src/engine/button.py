@@ -41,7 +41,7 @@ class Button:
         :return: returns onClick(), typically launches a menu, minigame, or game
         """
         if self.wasClicked(click):
-            if listOfButtons is not None:
+            if len(listOfButtons) != 0:
                 return self.onClick()
             else:
                 return self.onClick()

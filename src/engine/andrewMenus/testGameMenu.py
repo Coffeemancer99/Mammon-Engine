@@ -34,25 +34,25 @@ def createAllGameMenuButtons(mainWindow, framerate, scale):
     :param scale: what to scale the display by
     :return: returns all the game menu buttons in a tuple
     """
-    def onClickRando1Button():
+    def onClickRando1Button(listOfButtons=None):
         return handGame.startGame(mainWindow, scale, framerate)
 
-    def onClickRando2Button():
+    def onClickRando2Button(listOfButtons=None):
         return physicstest.startGame(mainWindow, scale, framerate)
 
-    def onClickRando3Button():
+    def onClickRando3Button(listOfButtons=None):
         return masher.startGame(mainWindow, scale, framerate)
 
-    def onClickRando4Button():
+    def onClickRando4Button(listOfButtons=None):
         return cannonPanicScene.startGame(mainWindow, scale, framerate)
 
-    def onClickRando5Button():
+    def onClickRando5Button(listOfButtons=None):
         return myLevel.startGame(mainWindow, scale, framerate)
 
-    def onClickRando6Button():
+    def onClickRando6Button(listOfButtons=None):
         return teamSwimmer.startGame(mainWindow, scale, framerate)
 
-    def onClickBackButton():
+    def onClickBackButton(listOfButtons=None):
         return minigameTypeMenu.launchMinigameMenu(mainWindow, framerate, scale)
 
     def onClickRandoButtonUnassigned():

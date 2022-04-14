@@ -42,7 +42,7 @@ def createAllMapSelectionButtons(mainWindow, framerate, scale, mapSelectionImage
                 firstBoard = FirstBoard(scale).testFirstBoard()
                 return boardGame.startGame(mainWindow, scale, framerate, firstBoard)
             else:
-                # TODO cannot set dummy after click happened with current setup...
+                # cannot set dummy after click happened with current setup...
                 # acceptButton.dummy = True
                 print("Nothing Happen")
 

@@ -62,7 +62,10 @@ class Menu:
                             print("Click Det in Menu")
                             if not button.dummy:
                                 # return whatever is defined to do onClick
-                                return button.handleClick(click, listOfButtons)
+                                if len(listOfButtons) == 0:
+                                    return button.handleClick(click)
+                                else:
+                                    return button.handleClick(click, listOfButtons)
                             else:
-                                button.handleClick(click)
+                                button.handleClick(click, listOfButtons)
                             break
