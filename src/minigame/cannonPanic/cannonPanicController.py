@@ -33,8 +33,8 @@ class CannonPlayer(ball.Ball):
 
         # yPos -= mathyPos
         # xPos += mathxPos
-        xPos += cocoSprite.get_width()
-        yPos -=  cocoSprite.get_height()
+        xPos += cocoSprite.get_width()+32
+  #      yPos -=  cocoSprite.get_height()
 
 
 
@@ -84,8 +84,9 @@ class CannonPlayer(ball.Ball):
                 self.reloadCannonball(self.generateBall())
                 # self.isLaunched = True
                 self.ready = False
-                self.primedBall.power = self.power
-                self.primedBall.angle = self.angle+0.985398
+                self.primedBall.power = self.power * self.scale
+                self.primedBall.angle = self.angle
+                #+0.985398
                 self.primedBall.launch()
 
                 #self.primedBall=None

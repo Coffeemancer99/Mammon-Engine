@@ -6,8 +6,8 @@ from src.engine.button import Button
 from src.minigame.teamMasher import masher
 from src.engine.andrewMenus.menu import Menu
 from src.minigame.cannonPanic import cannonPanicScene
-
-
+import src.minigame.exampleGame.myLevel as myLevel
+import src.minigame.teamSwimmer.teamSwimmer as teamSwimmer
 '''
 Created by Andrew Bunn
 Menu for testing minigames, not the final products. Mainly for experimenting
@@ -46,6 +46,12 @@ def createAllGameMenuButtons(mainWindow, framerate, scale):
     def onClickRando4Button():
         return cannonPanicScene.startGame(mainWindow, scale, framerate)
 
+    def onClickRando5Button():
+        return myLevel.startGame(mainWindow, scale, framerate)
+
+    def onClickRando6Button():
+        return teamSwimmer.startGame(mainWindow, scale, framerate)
+
     def onClickBackButton():
         return minigameTypeMenu.launchMinigameMenu(mainWindow, framerate, scale)
 
@@ -63,10 +69,10 @@ def createAllGameMenuButtons(mainWindow, framerate, scale):
                        "data/assets/sprites/rando4Button.png", mainWindow)
     newRando4.dummy = True  # Assign dummy to true if button returns nothing/has
                             # no functionality yet
-    newRando5 = Button(16, 176, 232, 64, scale, onClickRandoButtonUnassigned,
+    newRando5 = Button(16, 176, 232, 64, scale, onClickRando5Button,
                        "data/assets/sprites/rando5Button.png", mainWindow)
     newRando5.dummy = True
-    newRando6 = Button(264, 176, 232, 64, scale, onClickRandoButtonUnassigned,
+    newRando6 = Button(264, 176, 232, 64, scale, onClickRando6Button,
                        "data/assets/sprites/rando6Button.png", mainWindow)
     newRando6.dummy = True
     newBackButton = Button(4, 412, 96, 32, scale, onClickBackButton,

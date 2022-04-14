@@ -13,6 +13,7 @@ def launch(width, height, framerate, scale):
     clock = pygame.time.Clock()  # Clock used for frame rate
     mainWindow = pygame.display.set_mode((width, height)) #The main window display
     #Button images
+
     newGameImg = grab_sprite("data/assets/sprites/newgame.png", scale)
     settingsImg = grab_sprite("data/assets/sprites/settings.png", scale)
     minigames = grab_sprite("data/assets/sprites/minigames.png", scale)

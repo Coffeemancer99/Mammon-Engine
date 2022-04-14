@@ -17,9 +17,7 @@ class CannonBall(ball.Ball):
         self.alive = True
         self.timerEnabled = timerEnabled
 
-    def fall(self, gravity):
 
-        self.momY += gravity  # gravity
 
     def launch(self):
         if(self.power == 0):
@@ -32,9 +30,9 @@ class CannonBall(ball.Ball):
         print("")
 
 
-        self.momX += self.power*math.cos(self.angle)
-        self.momY -= self.power*math.sin(self.angle)
-        self.power = 0
+        self.momX += self.power*math.cos(self.angle)*2*self.scale
+        self.momY -= self.power*math.sin(self.angle)*2*self.scale
+        self.power = 30
         #self.angle = 0
 
     def timeUntilDeletion(self):

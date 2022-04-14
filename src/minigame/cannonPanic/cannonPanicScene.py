@@ -7,6 +7,26 @@ import src.engine.physics.spritegen as spritegen
 import src.engine.physics.physics as physics
 import src.minigame.cannonPanic.playerController as player
 import src.minigame.cannonPanic.cannonball as cannonball
+import src.engine.scenecreator.tile as tile
+import src.engine.scenecreator.drawTileMap as tilemap
+def getGameMap():
+    L=[
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+    ]
+    return L
 
 #Daniels code
 def removeObj(objects, object):
@@ -19,30 +39,32 @@ def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
     windowX, windowY = pygame.display.get_surface().get_size()
     isRunning = True
-    gravity = 1.0
-    cannonX = 25
-    cannonY = 200
-    scaleFancy = 0.05
+    gravity = 2.0 * scale
+    cannonX = 120
+    cannonY = 260
+    scaleFancy = 0.05 * scale
     cannonSprite = pygame.image.load("data/assets/sprites/goodSprites/Canon.png")
     pirateMan = spritegen.grab_sprite("data/assets/sprites/goodSprites/pirateDude.png", scaleFancy)
+    ship = spritegen.grab_sprite("data/assets/sprites/ship.png", scale)
 
     cannonSprite = pygame.transform.scale(cannonSprite, ((cannonSprite.get_width()) * scaleFancy, (cannonSprite.get_height()) * scaleFancy))
     cannon = cannonPlayer.CannonPlayer(cannonSprite, scale, cannonX, cannonY, pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE, None,
                                      0, False, name="cannon", mass=4, maxpower=80)
 
-    pirateMan = player.playerController(pirateMan, scale, 200, 200, pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE, None,
+    pirateMan = player.playerController(pirateMan, scale, 400, 200, pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE, None,
                                      0, False, name="cannon", mass=4, maxpower=80)
 
     objects = [cannon, pirateMan]
     for objectz in objects:  # rendering
         objectz.draw(mainWindow)
+
     while(isRunning):
         clock.tick(framerate)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning=False
         mainWindow.fill((0, 0, 0))
-
+        mainWindow.blit(ship, (0, 0))
 
 
 
@@ -76,7 +98,7 @@ def startGame(mainWindow, scale, framerate):
 
                                 agents.loseHealth()
                                 if (agents.isDead()):
-                                    print(f"\nAnd the player health iiiiiiiiiiiiiis{agents.health}\n")
+                                    #print(f"\nAnd the player health iiiiiiiiiiiiiis{agents.health}\n")
                                     removeObj(objects, agents)
                         removeObj(objects, object)
                        # object.loseHealth()
@@ -94,7 +116,11 @@ def startGame(mainWindow, scale, framerate):
         for objectz in objects:
             newSprite = pygame.transform.rotate(objectz.sprite, objectz.angle*180/math.pi)
 
+         #   objectz.rect = newSprite.get_rect()
             mainWindow.blit(newSprite, (objectz.rect.x, objectz.rect.y))
+            if(isinstance(objectz, cannonPlayer.CannonPlayer)):
+                pass
+                #print("CANNON PLAYER X IS %d and Y is %d" %(objectz.x, objectz.y))
             if not objectz.alive:
                 removeObj(objects, objectz)
                 cannon.ready = True
