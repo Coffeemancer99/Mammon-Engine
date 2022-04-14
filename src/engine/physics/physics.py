@@ -22,7 +22,8 @@ minMom = 0.005
 
 class Object:
     def __init__(self, sprite, scale, x, y, objects, name = "undefined", frict = frictS, animation = None):
-        self.sprite = pygame.transform.scale(sprite, ((sprite.get_width()) * scale, (sprite.get_height()) * scale)) #inherited code
+        print("Initializing object ", name, ": \n\tscale = ", scale, "\n\tx = ", x* scale, "\n\ty = ", y*scale)
+        self.sprite = sprite
         self.scale = scale
         self.objects = objects
         self.x = x * scale # (x,y) refers to top-left position of object

@@ -39,7 +39,7 @@ def startGame(mainWindow, scale, framerate):
         # can be preferable.
         nonlocal objects
         sprite = grab_sprite("data/assets/sprites/bluebox.png", scale)
-        objects.append(myObjects.Crate(sprite,scale, x, y - sprite.get_height(), objects, value))
+        objects.append(myObjects.Crate(sprite,scale, x, y - sprite.get_height()/scale, objects, value))
     def addBall(sprite, x, y, scale = scale, name = "undefinedBall", mass = 10):
         nonlocal objects
         objects.append(myObjects.Ball(sprite, scale, x, y, objects, name, mass))
