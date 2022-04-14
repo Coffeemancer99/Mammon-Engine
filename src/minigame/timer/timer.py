@@ -11,6 +11,9 @@ class timer():
     def halt(self):
         self.stopped=True
 
+    def resetTime(self, seconds, framerate):
+        self.currTime = seconds*framerate
+
     def isFinished(self):
         if(self.currTime<=0):
             return 1 #If return 1 the game is over
