@@ -11,6 +11,7 @@ If an object is moving, it will have the class Dynamic
 If it is static, it will not have the class Dynamic
 DO NOT EXTEND FROM DYNAMIC- use DynamicObject or DynamicRect instead
 RectObject and DynamicRect are for rectangular objects, allowing certain optimizations. They are not necessary to use.
+Terrain is an unfinished Object class which supports edges, to be used in calculating normal forces.
 """
 
 
