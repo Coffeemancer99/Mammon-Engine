@@ -1,6 +1,7 @@
 # This stores a pool of items and return one item from a list that will be put into item array of the boardPlayer
 import random
 from enum import Enum, auto
+import numpy
 
 """
     File authored by Joel Tanig
@@ -16,10 +17,10 @@ class ItemType(Enum):
 
 
 def initGoodItems():
-    goodItems = [Item("G-destroyAllBadItems", False, None, 40), Item("G-thirdDice", False, None, 15),
-                 Item("G-speedBoostMG", False, None, 10), (Item("G-gainMoneyRandom", False, None, 30)),
-                 Item("G-teleportClose", False, None, 25), Item("G-sabotageDice", False, None, 15),
-                 Item("G-stealItem", False, None, 40), Item("G-opponentLoseTurn", False, None, 50)]
+    goodItems = [Item("G-destroyAllBadItems", False, 0.05, 40), Item("G-thirdDice", False, 0.13, 15),
+                 Item("G-speedBoostMG", False, 0.18, 10), (Item("G-gainMoneyRandom", False, 0.25, 30)),
+                 Item("G-teleportClose", False, 0.05, 25), Item("G-sabotageDice", False, 0.10, 15),
+                 Item("G-stealItem", False, 0.16, 40), Item("G-opponentLoseTurn", False, 0.08, 50)]
     return goodItems
 
     # Make a init good function and a init bad function.
@@ -28,9 +29,9 @@ def initGoodItems():
 
 
 def initBadItems():
-    badItems = [Item("B-moveOneSpotLess", True, None, 15), Item("B-invertedControlMG", True, None, 40),
-                Item("B-changeSpots", True, None, 40), Item("B-loseMoneyRandom", True, None, 30),
-                Item("B-loseTurn", True, None, 40), Item("B-oneDice", True, None, 20)]
+    badItems = [Item("B-moveOneSpotLess", True, 0.19, 15), Item("B-invertedControlMG", True, 0.19, 40),
+                Item("B-changeSpots", True, 0.16, 40), Item("B-loseMoneyRandom", True, 0.16, 30),
+                Item("B-loseTurn", True, 0.16, 40), Item("B-oneDice", True, 0.14, 20)]
     return badItems  # 12
 
 
@@ -60,24 +61,30 @@ class ItemHandler:
         self.isMammonInPlay = isMammonInPlay
         self.listOfGoodItems = initGoodItems()
         self.listOfBadItems = initBadItems()
-        # Need to do logic for 33, 66 percent logic and insert it into the player class of its list
 
     def getItemRegTileBlock(self):
+        # This can be a good item 66 percent of the time and a bad item 44 percent of the time
         picked = random.choice(range(0, 100))
         if picked < 33:
             print("bad")
-            badItem = random.choice(self.listOfBadItems)
+            weights = list((map(lambda x: x.rarity, self.listOfBadItems)))
+            print(f"And the weights are...... {weights}")
+            badItem = random.choices(self.listOfBadItems, weights)[0]
             return badItem
         else:
             print("good")
-            goodItem = random.choice(self.listOfGoodItems)
+            weights = list((map(lambda x: x.rarity, self.listOfGoodItems)))
+            print(f"And the weights are...... {weights}")
+            goodItem = random.choices(self.listOfGoodItems, weights)[0]
             return goodItem
 
     def getBadItem(self):
-        return random.choice(self.listOfBadItems)
+        weights = list((map(lambda x: x.rarity, self.listOfBadItems)))
+        return random.choices(self.listOfBadItems, weights)[0]
 
     def getGoodItem(self):
-        return random.choice(self.listOfGoodItems)  # 41
+        weights = list((map(lambda x: x.rarity, self.listOfGoodItems)))
+        return random.choices(self.listOfGoodItems, weights)[0]  # 41
 
 
 # This class will handle all the functionality, put this is a separate file
@@ -102,6 +109,8 @@ class ItemFunctionalityBad:
         elif name == "B-loseTurn":
             player.setLostTurn()  # Need to reset this lost turn later
         elif name == "B-oneDice": # You only get oneDice roll
+            diceRoll = random.choice(range(1, 6 + 1))
+            return diceRoll
             pass
         elif name == "B-moveToPrevSpot":
             pass

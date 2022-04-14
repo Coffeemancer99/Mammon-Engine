@@ -88,7 +88,8 @@ for items, events, multiple pathways, and toggling pathways on and off.
         -Make sure that player class can effectively use the node functions correctly
 '''
 import pygame.sprite
-import src.game.boardGame.itemInventory as itemInventory
+from src.game.boardGame import itemInventory
+
 
 class Node:
     # Initialize Node
@@ -136,8 +137,9 @@ class Node:
 
     # The "giveItem" function will call itemInventory.py's "getItemRegTileBLock" and return that item
     def giveItem(self):
-        item = itemInventory.ItemHandler.getItemRegTileBlock(itemInventory.ItemHandler)
-        # Ignore the expected type issue, it is a PyCharm Error
+        itemHandler = itemInventory.ItemHandler(False)
+        item = itemHandler.getItemRegTileBlock()
+
         # Do some checking for the item? Maybe certain items can trigger events when received?
         # Trigger animation or something?
         return item

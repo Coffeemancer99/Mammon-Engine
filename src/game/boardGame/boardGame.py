@@ -1,9 +1,13 @@
 import pygame
 import time
 import random
+
+from src.game.boardGame import itemInventory
 from src.game.boardGame.Store import Store
 from src.game.boardGame.boardPlayers import BoardPlayer
 from enum import Enum, auto
+
+from src.game.boardGame.itemInventory import ItemHandler
 from src.game.boardGame.minigameManager import runMinigame
 from src.game.boardGame2.boardRenderer import BoardRenderer
 from src.game.boardGame2.spriteLoader import SpriteLoader
@@ -30,16 +34,22 @@ class DiceStates(Enum):
 def getTypeOfTile(currentTile, player, mainWindow, scale, framerate):
     if currentTile.typeOfTile == "Regular":
         # If it is a regular tile, we just need to give them 5 coins
+        print(f"The type of tile is {currentTile.typeOfTile}")
         player.setMoney(5)
+        print(f"Player {player.getPlayerID()} now has {player.getMoney()} money")
     elif currentTile.typeOfTile == "Dual":
-        pass
+        print(f"The type of tile is {currentTile.typeOfTile}")
     elif currentTile.typeOfTile == "Store":
+        print(f"The type of tile is {currentTile.typeOfTile}")
         return storeScreen(mainWindow, scale, framerate, player)
     elif currentTile.typeOfTile == "Bad":
+        print(f"The type of tile is {currentTile.typeOfTile}")
         amountLost = rollOfDice(6)
+        print(f"The amount loss in this bad tile is {amountLost}")
+        print(f"Player {player.getPlayerID()} now has {player.getMoney()} money")
         player.setMoney(amountLost)
     elif currentTile.typeOfTile == "Gate":
-        pass
+        print(f"The type of tile is {currentTile.typeOfTile}")
 
 
 # This function is the "store" that will be in the game and I am using dice.png as placeholder
@@ -351,7 +361,6 @@ def getPlayerTurn(player, board):
 
 
 def startGame(mainWindow, scale, framerate, board):
-
     currentState = States.FIRSTITERATION
     currentPlayer = 0
     playerMovement = 0
@@ -400,7 +409,7 @@ def startGame(mainWindow, scale, framerate, board):
 
                 # TODO: START HEREHEHEHHEHEHEE  Need to make a inventory screen here
 
-                if[pygame.K_SPACE]: # End turn and move the character
+                if key[pygame.K_SPACE]: # End turn and move the character
                     if currentState == States.PLAYERMOVE:
                         # If the player lost their turn, skip
                         if listOfPlayers[currentPlayer].getLostTurn():
@@ -419,11 +428,14 @@ def startGame(mainWindow, scale, framerate, board):
                             if "B-" in singleStringInList:
                                 listOfPlayers[currentPlayer].setStartCountDown(-1)
                         # If the player did not use a bad item in 4 turns. They have to go back to the beginning
-                        if TESTSTORE: # This is for testing the Bad inventory, uncomment to test
-                            listOfPlayers[currentPlayer].setMoney(1000)
-                            listOfPlayers[currentPlayer].setInventory("B-invertedControlMG")
-                            #storeScreen(mainWindow, 1, 60, listOfPlayers[currentPlayer])
-                            TESTSTORE = False
+                        # if TESTSTORE: # This is for testing the Bad inventory, uncomment to test
+                        #     listOfPlayers[currentPlayer].setMoney(1000)
+                        #     # listOfPlayers[currentPlayer].setInventory("B-invertedControlMG")
+                        #     # #storeScreen(mainWindow, 1, 60, listOfPlayers[currentPlayer])
+                        #     itemHandler = ItemHandler(False)
+                        #     item = itemHandler.getItemRegTileBlock()
+                        #     print(f"And the fucking item isssssssssssssssss {item.getName()}")
+                        #     TESTSTORE = False
                         print(listOfPlayers[currentPlayer].getStartCountDown())
                         if listOfPlayers[currentPlayer].getStartCountDown() <= 0:
                             listOfPlayers[currentPlayer].setPrevPosition(0)
