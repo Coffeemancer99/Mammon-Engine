@@ -9,13 +9,14 @@ Generic menu class for creating menus filled with buttons
 
 class Menu:
 
-    def __init__(self, title, buttons, scaleFactors=None):
+    def __init__(self, title, buttons, images=None, scaleFactors=None):
         """
         :param title: menu's title
         :param buttons: all the buttons for the menu
         """
         self.title = title
         self.buttons = buttons
+        self.images = images
         self.scaleFactors = scaleFactors
 
     def launch(self, mainWindow, framerate):
@@ -28,6 +29,7 @@ class Menu:
                  launch a menu, minigame, or game
         """
         clock = pygame.time.Clock()
+        listOfButtons = []
 
         # Paint screen background grey
         mainWindow.fill((55, 55, 55))
@@ -35,10 +37,16 @@ class Menu:
         for button in self.buttons:
             button.renderButton()
 
+        if self.images is not None:
+            for image in self.images:
+                if image.displayNow:
+                    image.renderImage()
+
         pygame.display.update()
         isRunning = True
 
-        while (isRunning):
+        while isRunning:
+
             clock.tick(framerate)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -49,10 +57,12 @@ class Menu:
                     click = pygame.mouse.get_pos()
 
                     for button in self.buttons:
-                        if button.wasClicked(click) == True:
-                            if button.dummy == False:
+                        if button.wasClicked(click):
+                            listOfButtons.append(button)
+                            print("Click Det in Menu")
+                            if not button.dummy:
                                 # return whatever is defined to do onClick
-                                return button.handleClick(click)
+                                return button.handleClick(click, listOfButtons)
                             else:
                                 button.handleClick(click)
                             break

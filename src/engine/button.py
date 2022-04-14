@@ -7,7 +7,7 @@ Used to make a button
 '''
 class Button:
 
-    def __init__(self, x, y, width, height, scale, onClick, imagePath, window):
+    def __init__(self, x, y, width, height, scale, onClick, imagePath, window, name=None):
         """
         :param x: x position of button
         :param y: y position of button
@@ -27,20 +27,24 @@ class Button:
         self.onClick = onClick
         self.imagePath = imagePath  # string
         self.window = window
+        self.name = name
 
         # dummy set true when buttons have no functionality
         self.dummy = False
 
 
 
-    def handleClick(self, click):
+    def handleClick(self, click, listOfButtons=None):
         """
         handles what to do when a click is detected
         :param click: location of click in the window (x,y)
         :return: returns onClick(), typically launches a menu, minigame, or game
         """
-        if(self.wasClicked(click)):
-            return self.onClick()
+        if self.wasClicked(click):
+            if listOfButtons is not None:
+                return self.onClick(listOfButtons)
+            else:
+                return self.onClick()
 
 
 
@@ -64,8 +68,8 @@ class Button:
         :return: return true if the button was clicked within it's bounds
                  else return false
         """
-        if((click[0] > self.x * self.scale) and (click[0] <= (self.x + self.width) * self.scale)):  # x
-            if ((click[1] > self.y * self.scale) and (click[1] <= (self.y + self.height) * self.scale)):  # y
+        if (click[0] > self.x * self.scale) and (click[0] <= (self.x + self.width) * self.scale):  # x
+            if (click[1] > self.y * self.scale) and (click[1] <= (self.y + self.height) * self.scale):  # y
                 return True
         return False
 
