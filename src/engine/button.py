@@ -42,7 +42,7 @@ class Button:
         """
         if self.wasClicked(click):
             if len(listOfButtons) != 0:
-                return self.onClick()
+                return self.onClick(listOfButtons)
             else:
                 return self.onClick()
 

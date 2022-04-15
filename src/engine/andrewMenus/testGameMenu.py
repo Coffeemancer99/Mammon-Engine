@@ -8,10 +8,12 @@ from src.engine.andrewMenus.menu import Menu
 from src.minigame.cannonPanic import cannonPanicScene
 import src.minigame.exampleGame.myLevel as myLevel
 import src.minigame.teamSwimmer.teamSwimmer as teamSwimmer
+
 '''
 Created by Andrew Bunn
 Menu for testing minigames, not the final products. Mainly for experimenting
 '''
+
 
 def launchTestMinigame(mainWindow, framerate, scale):
     """
@@ -34,6 +36,7 @@ def createAllGameMenuButtons(mainWindow, framerate, scale):
     :param scale: what to scale the display by
     :return: returns all the game menu buttons in a tuple
     """
+
     def onClickRando1Button(listOfButtons=None):
         return handGame.startGame(mainWindow, scale, framerate)
 
@@ -67,8 +70,7 @@ def createAllGameMenuButtons(mainWindow, framerate, scale):
                        "data/assets/sprites/rando3Button.png", mainWindow)
     newRando4 = Button(264, 96, 232, 64, scale, onClickRando4Button,
                        "data/assets/sprites/rando4Button.png", mainWindow)
-    newRando4.dummy = True  # Assign dummy to true if button returns nothing/has
-                            # no functionality yet
+    newRando4.dummy = True  # Assign dummy to true if button returns nothing/has no functionality yet
     newRando5 = Button(16, 176, 232, 64, scale, onClickRando5Button,
                        "data/assets/sprites/rando5Button.png", mainWindow)
     newRando5.dummy = True
