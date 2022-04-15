@@ -16,8 +16,8 @@ def startGame(mainWindow, scale, framerate):
     windowX, windowY = pygame.display.get_surface().get_size()
     isRunning = True
     gravity = 2.0 * scale
-    scaleFancy = 0.0375 * scale
 
+    scaleFancy = 0.0375 * scale
     subSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/barrelSub.png", scaleFancy)
 
     bg1 = spritegen.grab_sprite("data/assets/sprites/layers/layer1.png", scale)

@@ -18,6 +18,7 @@ class swimmerPlayer(DynamicObject):
         self.right = playerAControls["right"]
         self.up = playerBControls["up"]
         self.timer = timer(0.5, framerate)
+        self.paralyzed = False
 
     def floatSub(self, buttons):
         noMatch = True
