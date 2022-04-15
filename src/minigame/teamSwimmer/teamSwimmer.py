@@ -20,14 +20,13 @@ def removeObj(objects, object):
         objects.remove(object)
 
 """
-    This function spawns a coin in a random position. If the spawned coin location occupies the same
+    spawnCoin: This function spawns a coin in a random position. If the spawned coin location occupies the same
     space as an item already in the scene, it will assign a new position to that coin. There is also the chance
     this falling item may be a bad item(skull) which will cause the player to lose three points instead of gaining 1.
     Parameters:
         :param objects: The list of objects in the scene
         :param scale: The scale of the window
         :param bad: An optional parameter that determines if the parameter is a bad item or now  
-
 """
 def spawnCoin(objects, scale, bad=False):
 
@@ -57,6 +56,22 @@ def spawnCoin(objects, scale, bad=False):
 
     objects.append(coin)
 
+"""
+    TeamSwimmer: This game is a 2v2 minigame where players assume the role of a barrel-submarine to grab coins which
+    are mysteriously falling into the ocean. Controls are split between each team member, such that one person
+    controls the steering (left and right movement) and the other player controls the depth (up and down). Coins 
+    get the team 1 point, skulls make the team lose 3 points and immobile for 1.5 seconds. Whoever collects the most
+    points within 60 seconds wins the minigame and is awarded back in the board game state. 
+     
+    startGame: This function loads all initial assets and sets up the physics properties for each team. The controls
+    are also defined at the beginning here which splits it between each team member. The main game loop is the 
+    middle ground for connecting the rendering and game logic together. Rendering, physics handling, and player input 
+    are all handled at a farme-by-frame basis.
+    Parameters: 
+        :param mainWindow: The main window that the user sees (pygame object)
+        :param scale: The scale of the assets, default is 1 but can be scaled further
+        :param framerate: The framerate that the game runs in, the default is 60.    
+"""
 def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
     windowX, windowY = pygame.display.get_surface().get_size()
