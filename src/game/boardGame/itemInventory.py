@@ -51,8 +51,15 @@ class Item:
     def getName(self):
         return self.name
 
+    def isBad(self):
+        return self.isbad
+
     def getPrice(self):
         return self.price
+
+
+
+
 
 
 class ItemHandler:

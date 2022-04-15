@@ -7,7 +7,7 @@ from src.game.boardGame.Store import Store
 from src.game.boardGame.boardPlayers import BoardPlayer
 from enum import Enum, auto
 
-from src.game.boardGame.itemInventory import ItemHandler
+from src.game.boardGame.itemInventory import ItemHandler, ItemFunctionalityBad, ItemFunctionalityGood
 from src.game.boardGame.minigameManager import runMinigame
 from src.game.boardGame2.boardRenderer import BoardRenderer
 from src.game.boardGame2.spriteLoader import SpriteLoader
@@ -51,6 +51,85 @@ def getTypeOfTile(currentTile, player, mainWindow, scale, framerate):
     elif currentTile.typeOfTile == "Gate":
         print(f"The type of tile is {currentTile.typeOfTile}")
 
+
+
+
+def inventoryScreen(mainWindow, scale, framerate, currentPlayer):
+    clock = pygame.time.Clock()
+    transaction = False
+    getItemBadFunctionality = ItemFunctionalityBad()
+    getItemGoodFunctionality = ItemFunctionalityGood()
+    # We will let die4.png represent empty inventory spots
+    listOfItemImages = ["die4.png","die4.png","die4.png","die4.png"]
+    # TODO: Need to figure out how to get each inventory item and blit different images with them
+    for i in range(currentPlayer.getInventoryLength()):
+        ## TODO: WILL JUST BLIT DICE1.PNG FOR NOW
+        listOfItemImages[i] = "die1.png"
+
+    inventoryItemOne = SpriteLoader().loadImage(listOfItemImages[0])
+    inventoryItemTwo = SpriteLoader().loadImage(listOfItemImages[1])
+    inventoryItemThree = SpriteLoader().loadImage(listOfItemImages[2])
+    inventoryItemFour = SpriteLoader().loadImage(listOfItemImages[3])
+
+    inventoryItemOne = pygame.transform.scale(inventoryItemOne,
+                                              ((inventoryItemOne.get_width()) * scale, (inventoryItemOne.get_height())*scale))
+    inventoryItemTwo = pygame.transform.scale(inventoryItemTwo,
+                                              ((inventoryItemTwo.get_width()) * scale, (inventoryItemTwo.get_height())*scale))
+    inventoryItemThree = pygame.transform.scale(inventoryItemThree,
+                                              ((inventoryItemThree.get_width()) * scale,
+                                               (inventoryItemThree.get_height()) * scale))
+    inventoryItemFour = pygame.transform.scale(inventoryItemFour,
+                                              ((inventoryItemFour.get_width()) * scale,
+                                               (inventoryItemFour.get_height()) * scale))
+
+    mainWindow.fill((55, 55, 55))
+    # Put buttons here
+    mainWindow.blit(inventoryItemOne, (32 * scale, 32 * scale))
+    mainWindow.blit(inventoryItemTwo, (32 * scale, 112 * scale))
+    mainWindow.blit(inventoryItemThree, (32 * scale, 208 * scale))
+    mainWindow.blit(inventoryItemFour, (412 * scale, 356 * scale))
+
+
+    isRunning = True
+    while isRunning:
+        pygame.display.update()
+        clock.tick(framerate)  # 39
+        key = pygame.key.get_pressed()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                isRunning = False
+            if event.type == pygame.MOUSEBUTTONUP:
+                click = pygame.mouse.get_pos()
+                print(click)
+                # Buying logic
+                if (click[0] > 32 * scale) and (click[0] <= 488 * scale):  # x
+                    if (click[1] > 24 * scale) and (click[1] <= 60 * scale):  # y
+                        print(f"Using {currentPlayer.getInventoryItem(0).getName()} item")
+                        if currentPlayer.getInventoryItem(0).isBad():
+                            getItemBadFunctionality.getFunctionality(currentPlayer.getInventoryItem(0).getName(),currentPlayer)
+                        else:
+                            getItemGoodFunctionality.getFunctionality(currentPlayer.getInventoryItem(0).getName(),currentPlayer)
+                    elif (click[1] > 112 * scale) and (click[1] <= 176 * scale):
+                        print(f"Using {currentPlayer.getInventoryItem(1).isBad()} item")
+                        if currentPlayer.getInventoryItem(1).isBad():
+                            getItemBadFunctionality.getFunctionality(currentPlayer.getInventoryItem(1).getName(),currentPlayer)
+                        else:
+                            getItemGoodFunctionality.getFunctionality(currentPlayer.getInventoryItem(1).getName(),currentPlayer)
+                    elif (click[1] > 208 * scale) and (click[1] <= 252 * scale):
+                        print(f"Using {currentPlayer.getInventoryItem(2).getName()} item")
+                        if currentPlayer.getInventoryItem(2).isBad():
+                            getItemBadFunctionality.getFunctionality(currentPlayer.getInventoryItem(2).getName(),currentPlayer)
+                        else:
+                            getItemGoodFunctionality.getFunctionality(currentPlayer.getInventoryItem(2).getName(),currentPlayer)
+                    elif (click[1] > 304 * scale) and (click[1] <= 328 * scale):
+                        print(f"Using {currentPlayer.getInventoryItem(3).getName()} item")
+                        if currentPlayer.getInventoryItem(3).isBad():
+                            getItemBadFunctionality.getFunctionality(currentPlayer.getInventoryItem(3).getName(),currentPlayer)
+                        else:
+                            getItemGoodFunctionality.getFunctionality(currentPlayer.getInventoryItem(3).getName(),currentPlayer)
+                    if transaction:
+                        currentPlayer.getInventory()
+                        isRunning = False
 
 # This function is the "store" that will be in the game and I am using dice.png as placeholder
 # images for now 
@@ -109,7 +188,7 @@ def storeScreen(mainWindow, scale, framerate, currentPlayer):
                     if transaction:
                         currentPlayer.getInventory()
                         isRunning = False
-                # TODO: Need to do selling logic
+
                 if (click[0] > 4 * scale) and (click[0] <= 100 * scale):  # x
                     if (click[1] > 412 * scale) and (click[1] <= 444 * scale):  # y
                         print("Sold item")
@@ -401,13 +480,18 @@ def startGame(mainWindow, scale, framerate, board):
                     # This is to activate the screen on who goes first
                     currentState = States.PLAYERMOVE
                     goesFirstScreen(mainWindow, scale, framerate, listOfPlayers, board)
-                    # storeScreen(mainWindow, scale, framerate, listOfPlayers[currentPlayer])
+                    #storeScreen(mainWindow, scale, framerate, listOfPlayers[currentPlayer])
                     time.sleep(2)
                     continue
                 # Game starts here
                 # For each player in listOfPlayers, make them do a move by rolling dice and going to a tile
 
-                # TODO: START HEREHEHEHHEHEHEE  Need to make a inventory screen here
+                # TODO: START HEREHEHEHHEHEHEE Need to make a inventory screen here
+                # if key[pygame.K_i]:
+                #     if currentState == States.PLAYERMOVE:
+                #         inventoryScreen(mainWindow,scale,framerate,listOfPlayers[currentPlayer])
+                #         time.sleep(1)
+                #         continue
 
                 if key[pygame.K_SPACE]: # End turn and move the character
                     if currentState == States.PLAYERMOVE:
