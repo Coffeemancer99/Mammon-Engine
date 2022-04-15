@@ -133,6 +133,7 @@ def velHandler(mover, objects):
         if isinstance(mover, RectObject):
             didImpact = velChecker2(mover,object)
         else:
+
             didImpact = velChecker(mover,object)
         if(didImpact):
             agents.append(object)

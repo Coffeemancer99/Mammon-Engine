@@ -10,6 +10,52 @@ import src.minigame.cannonPanic.cannonball as cannonball
 import src.engine.scenecreator.tile as tile
 import src.engine.scenecreator.drawTileMap as tilemap
 from src.minigame.teamSwimmer import swimmerPlayer as swimmerPlayer
+from src.minigame.teamSwimmer import seaItem as seaItem
+import random
+from src.minigame.timer.timer import timer as timer
+#Daniels code
+def removeObj(objects, object):
+    if isinstance(object, DynamicObject): object.halt()
+    if object in objects:
+        objects.remove(object)
+
+"""
+    This function spawns a coin in a random position. If the spawned coin location occupies the same
+    space as an item already in the scene, it will assign a new position to that coin. There is also the chance
+    this falling item may be a bad item(skull) which will cause the player to lose three points instead of gaining 1.
+    Parameters:
+        :param objects: The list of objects in the scene
+        :param scale: The scale of the window
+        :param bad: An optional parameter that determines if the parameter is a bad item or now  
+
+"""
+def spawnCoin(objects, scale, bad=False):
+
+    windowX, windowY = pygame.display.get_surface().get_size()
+    scaleFancy = 0.05* scale
+    coinSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/coinS.png", scaleFancy)
+    skullSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/skull.png", scaleFancy)
+    isValidDrop = True
+    xPos = 0
+    coin = None
+    if(bad):
+        coin = seaItem.seaItem(skullSprite, scale, xPos, 0, objects)
+        coin.isBad = True
+        coin.cost = -3
+    else:
+        coin = seaItem.seaItem(coinSprite, scale, xPos, 0, objects)
+        coin.cost = 1
+    while(isValidDrop):
+        xPos = random.randint(coinSprite.get_width(), windowX)-coinSprite.get_width()
+        coin.x = xPos
+        agentEnable = False
+        for agents in objects:
+            if ((coin.mask.overlap(agents.mask,(agents.x - coin.x, agents.y - coin.y)))):
+               agentEnable = True
+        if not agentEnable:
+            isValidDrop = False
+
+    objects.append(coin)
 
 def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
@@ -53,8 +99,9 @@ def startGame(mainWindow, scale, framerate):
         "up": pygame.K_UP
     }
     objects = []
-    team1Sub = swimmerPlayer.swimmerPlayer(subSprite, scale, team1X, team1Y, objects, team1AControls, team1BControls)
-    team2Sub = swimmerPlayer.swimmerPlayer(subSprite, scale, team2X, team2Y, objects, team2AControls, team2BControls)
+    maxHeight = windowY/8
+    team1Sub = swimmerPlayer.swimmerPlayer(subSprite, scale, team1X, team1Y, objects, team1AControls, team1BControls, maxHeight)
+    team2Sub = swimmerPlayer.swimmerPlayer(subSprite, scale, team2X, team2Y, objects, team2AControls, team2BControls, maxHeight)
 
     vert1 = DynamicObject(vertSprite, scale, -1, 0, objects)
     vert2 = DynamicObject(vertSprite, scale, windowX, 0, objects)
@@ -66,6 +113,9 @@ def startGame(mainWindow, scale, framerate):
     objects.append(vert2)
     objects.append(hor1)
     objects.append(hor2)
+
+    goldTimer = timer(3, framerate)
+
     while(isRunning):
         clock.tick(framerate)
         primedInputs = []
@@ -83,10 +133,35 @@ def startGame(mainWindow, scale, framerate):
         for objectz in objects:
             mainWindow.blit(objectz.sprite, (objectz.x, objectz.y))
         mainWindow.blit(bg2, (0, 0))
+
+        goldTimer.decrement()
+        if(goldTimer.isFinished()):
+            val = random.randint(0,50)%8
+            val = (val<=1)
+            goldTimer = timer(random.randint(0,3), framerate)
+            spawnCoin(objects, scale, val)
         for objectz in objects:
+            if(isinstance(objectz, physics.Dynamic)):
+                objectz.update(maxMom=15)
             if(isinstance(objectz, swimmerPlayer.swimmerPlayer)):
-                objectz.update(maxMom = 150)
                 objectz.floatSub(primedInputs)
-                if ((abs(objectz.dX) >= 1) or (abs(objectz.dY) >= 1)):
-                    physics.velHandler(objectz, objects)
+            if (isinstance(objectz, seaItem.seaItem)):
+                objectz.fall()
+            if ((abs(objectz.dX) >= 1) or (abs(objectz.dY) >= 1)):
+                collisions = physics.velHandler(objectz, objects)
+                if(collisions!=[]):
+                    if (isinstance(objectz, seaItem.seaItem)):
+                        for agents in collisions:
+                            if(isinstance(agents, swimmerPlayer.swimmerPlayer)):
+                                agents.changeScore(objectz.cost)
+                                print("agents score %s" %agents.score)
+                                break #only want one agent getting the loot
+                        removeObj(objects, objectz)
+                    if (isinstance(objectz, swimmerPlayer.swimmerPlayer)):
+                        for agents in collisions:
+                            if(isinstance(agents, seaItem.seaItem)):
+                                objectz.changeScore(agents.cost)
+                                if(agents.isBad):
+                                    objectz.paralyzed=True
+                                removeObj(objects, agents)
         pygame.display.update()
