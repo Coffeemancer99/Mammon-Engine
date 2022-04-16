@@ -22,6 +22,13 @@ class BoardPlayer(pygame.sprite.Sprite):
         self.diceTwoPlacement = 0
         self.blit = None
         self.startCountDown = 4
+        self.speedBoost = False
+        self.oneDiceRollBad = False
+        self.oneDiceRollGood = False
+        self.thirdDiceRoll = False
+        self.itemIndex = 0
+        self.moveOneSpotLess = False
+        self.invertedControls = False
 
     # Do some magical operator overload magic
     def __lt__(self, other):
@@ -35,6 +42,9 @@ class BoardPlayer(pygame.sprite.Sprite):
 
     def setBlit1(self, blit):
         self.blit = blit
+
+    def setItemIndex(self, index):
+        self.itemIndex = index
 
     def setBlit2(self, blit):
         self.blit = blit
@@ -62,6 +72,9 @@ class BoardPlayer(pygame.sprite.Sprite):
 
     def setPrevPosition(self, prevPosition):
         self.prevPosition = prevPosition
+
+    def setInvertedControls(self, flag):
+        self.invertedControls = flag
 
     def getBlit1(self):
         return self.blit
@@ -105,10 +118,48 @@ class BoardPlayer(pygame.sprite.Sprite):
     def getStartCountDown(self):
         return self.startCountDown
 
+    def getItemIndex(self):
+        return self.itemIndex
+
+    def getOneDicerollBad(self):
+        return self.oneDiceRollBad
+
+    def getOneDiceRollGood(self):
+        return self.oneDiceRollGood
+
+    def getMoveOneSpotLess(self):
+        return self.moveOneSpotLess
+
+    def getInvertedControls(self):
+        return self.invertedControls
+
     def resetStartCountDown(self):
         self.startCountDown = 4
 
+    def toggleSpeedBoost(self):
+        self.speedBoost = not self.speedBoost
+        return self.speedBoost
+
+    def toggleSetOneDicerollBad(self):
+        self.oneDiceRollBad = not self.oneDiceRollBad
+        return self.oneDiceRollBad
+
+    def toggleSetOneDicerollGood(self):
+        self.oneDiceRollGood = not self.oneDiceRollGood
+        return self.oneDiceRollGood
+
+    def toggleSetThirdDiceroll(self):
+        self.thirdDiceRoll = not self.thirdDiceRoll
+        return self.thirdDiceRoll
+
+    def toggleMoveOneSpotLess(self):
+        self.moveOneSpotLess = not self.moveOneSpotLess
+        return not self.moveOneSpotLess
+
     def clearBadInventory(self):
+        # for i in range(len(self.inventory)):
+        #     if "B-" in self.inventory[i]:
+        #         self.inventory.pop(i)
         for i in range(len(self.inventory)):
-            if "B-" in self.inventory[i]:
+            if self.getInventoryItem(i).isBad():
                 self.inventory.pop(i)

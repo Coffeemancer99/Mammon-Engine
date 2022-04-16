@@ -3,6 +3,7 @@ import time
 import random
 
 from src.game.boardGame import itemInventory
+from src.game.boardGame.Items import InvertedControlsItem
 from src.game.boardGame.Store import Store
 from src.game.boardGame.boardPlayers import BoardPlayer
 from enum import Enum, auto
@@ -507,15 +508,16 @@ def startGame(mainWindow, scale, framerate, board):
                         listOfPlayers[currentPlayer].setCurrentPosition(playerMovement)
                         print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} rolled a {playerMovement}")
                         # If we see a bad item in our inventory, we have to decrement the setStartCountDown
-                        for i in range(len(listOfPlayers[currentPlayer].getInventory())):
-                            singleStringInList = listOfPlayers[currentPlayer].getInventory()[i]
-                            if "B-" in singleStringInList:
+                        inventory = listOfPlayers[currentPlayer].getInventory()
+                        for i in range(len(inventory)):
+                            if inventory[i].isBad():
                                 listOfPlayers[currentPlayer].setStartCountDown(-1)
+                                break
                         # If the player did not use a bad item in 4 turns. They have to go back to the beginning
                         # if TESTSTORE: # This is for testing the Bad inventory, uncomment to test
                         #     listOfPlayers[currentPlayer].setMoney(1000)
-                        #     # listOfPlayers[currentPlayer].setInventory("B-invertedControlMG")
-                        #     # #storeScreen(mainWindow, 1, 60, listOfPlayers[currentPlayer])
+                        #     listOfPlayers[currentPlayer].setInventory(InvertedControlsItem())
+                        #     #storeScreen(mainWindow, 1, 60, listOfPlayers[currentPlayer])
                         #     itemHandler = ItemHandler(False)
                         #     item = itemHandler.getItemRegTileBlock()
                         #     print(f"And the fucking item isssssssssssssssss {item.getName()}")
