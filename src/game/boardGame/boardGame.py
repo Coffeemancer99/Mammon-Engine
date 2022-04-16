@@ -12,6 +12,7 @@ from src.game.boardGame.itemInventory import ItemHandler, ItemFunctionalityBad, 
 from src.game.boardGame.minigameManager import runMinigame
 from src.game.boardGame2.boardRenderer import BoardRenderer
 from src.game.boardGame2.spriteLoader import SpriteLoader
+from src.minigame.teamSwimmer import teamSwimmer
 
 """
     575 total
@@ -552,7 +553,7 @@ def startGame(mainWindow, scale, framerate, board):
                                 #  the animation for now and go back to the beginning
                                 board.movePlayer(board.getStartTile(), listOfPlayers[currentPlayer])
                                 renderer.render()
-                                time.sleep(0.25)  # Don't take out the sleep!
+                                time.sleep(1)  # Don't take out the sleep!
                                 # Must be the length of players -1
                                 if currentPlayer == 3:
                                     currentState = States.STARTMINIGAME
@@ -580,17 +581,24 @@ def startGame(mainWindow, scale, framerate, board):
                                     currentState = States.PLAYERMOVE
                                     break  # 213
                             renderer.render()
-                            time.sleep(0.25)  # Don't take out the sleep!
+                            time.sleep(1)  # Don't take out the sleep!
                     # Once all the players are done here, we start a random mini-game
                     if currentState == States.STARTMINIGAME:
                         renderer.render()
-                        time.sleep(0.25)  # Don't take out the sleep!
+                        time.sleep(1)  # Don't take out the sleep!
                         currentPlayer = 0
                         result = True
                         while result:  #Keep trying to launch minigames until it works.
                             result = runMinigame(mainWindow, scale, framerate, listOfPlayers)
                             if result: #Something went wrong
-                                print("ERROR! minigameManager.py Failed to launch minigame! Attempting to respin...")
+                                miniGameObject = teamSwimmer.startGame(mainWindow, scale, framerate)
+                                for i in range(len(listOfPlayers)):
+                                    print(f"Player {listOfPlayers[i].getPlayerID()} money WAS {listOfPlayers[i].getMoney()}")
+                                    listOfPlayers[i].setMoney(miniGameObject.earnings[i])
+                                    print(f"Player {listOfPlayers[i].getPlayerID()} earnings was {miniGameObject.earnings[i]}")
+                                    print(f"Player {listOfPlayers[i].getPlayerID()} money IS NOW {listOfPlayers[i].getMoney()}")
+                                #print("ERROR! minigameManager.py Failed to launch minigame! Attempting to respin...")
+                                result = False
                         currentState = States.PLAYERMOVE
                 goingBackToStart = False
                 renderer.render()  # 225
