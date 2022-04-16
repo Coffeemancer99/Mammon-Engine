@@ -208,10 +208,12 @@ def startGame(mainWindow, scale, framerate):
                 collisions = physics.velHandler(objectz, objects)
                 if(collisions!=[]):
                     if (isinstance(objectz, seaItem.seaItem)):
+                        foundAgent = False
                         for agents in collisions:
                             if(isinstance(agents, swimmerPlayer.swimmerPlayer)):
                                 agents.changeScore(objectz.cost)
                                 objectz.damagedSound(agents.consec)
+                                foundAgent = True
                                 if(objectz.isBad):
                                     agents.paralyzed=True
                                     agents.consec=0
@@ -219,7 +221,8 @@ def startGame(mainWindow, scale, framerate):
                                     agents.consec+=1
                                 print("agents score %s" %agents.score)
                                 break #only want one agent getting the loot
-                        removeObj(objects, objectz)
+                        if(foundAgent):
+                            removeObj(objects, objectz)
                     if (isinstance(objectz, swimmerPlayer.swimmerPlayer)):
                         for agents in collisions:
                             if(isinstance(agents, seaItem.seaItem)):
@@ -249,6 +252,9 @@ def startGame(mainWindow, scale, framerate):
     while(not endGameTimer.isFinished()):
         clock.tick(framerate)
         endGameTimer.decrement()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                isRunning=False
 
         pygame.display.update()
     sound1.fadeout(3000)

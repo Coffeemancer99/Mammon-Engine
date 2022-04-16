@@ -79,6 +79,7 @@ def startGame(mainWindow, scale, framerate, gameStats):
                 if event.type == pygame.KEYDOWN:
                     ost.fadeout(3000)
                     print(event)
+                    return gameStats
 
         if (coinDropTimer.isFinished() and winnings>0):
             winnings-=1
