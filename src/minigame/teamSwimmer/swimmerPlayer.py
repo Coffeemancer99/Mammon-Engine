@@ -40,7 +40,7 @@ class swimmerPlayer(DynamicObject):
 
     def takeInputs(self, objects):
         if(self.paralyzedTimer.isFinished()):
-            self.paralyzedTimer = timer(2, framerate)
+            self.paralyzedTimer = timer(1.5, framerate)
             self.paralyzed=False
         elif self.paralyzed:
             self.paralyzedTimer.decrement()

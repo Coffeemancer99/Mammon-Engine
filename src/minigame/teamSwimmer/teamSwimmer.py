@@ -38,8 +38,8 @@ def spawnCoin(objects, scale, bad=False):
     xPos = 0
     coin = None
     if(bad):
-        coin = seaItem.seaItem(skullSprite, scale, xPos, 0, objects)
-        coin.isBad = True
+        coin = seaItem.seaItem(skullSprite, scale, xPos, 0, objects, bad)
+
         coin.cost = -3
     else:
         coin = seaItem.seaItem(coinSprite, scale, xPos, 0, objects)
@@ -74,24 +74,21 @@ def spawnCoin(objects, scale, bad=False):
 """
 def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
-    windowX, windowY = pygame.display.get_surface().get_size()
-    isRunning = True
+    windowX, windowY = pygame.display.get_surface().get_size() #Dimensions of window
+    isRunning = True #Determines if the main game loop is running
     gravity = 2.0 * scale
-
-    scaleFancy = 0.0375 * scale
+    scaleFancy = 0.0375 * scale #A smaller scale for the giant fancy sprites
+    #Load game assets and set up starting posiitons
     subSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/barrelSub.png", scaleFancy)
-
     bg1 = spritegen.grab_sprite("data/assets/sprites/layers/layer1.png", scale)
     bg2 = spritegen.grab_sprite("data/assets/sprites/layers/layer2.png", scale)
     bg = [bg1, bg2]
-
     vertSprite = spritegen.grab_sprite("data/assets/sprites/barVert.png", scale)
     horSprite = spritegen.grab_sprite("data/assets/sprites/horVert.png", scale)
-    team1X = 50
-    team1Y = 50
-    team2X = 200
-    team2Y = 50
-
+    team1X = subSprite.get_width()
+    team1Y = windowY - windowY/2
+    team2X = windowX - subSprite.get_width()*2
+    team2Y = windowY - windowY/2
     #The controls for team 1
     #This is the player who moves the sub left and right
     team1AControls = {
@@ -122,15 +119,33 @@ def startGame(mainWindow, scale, framerate):
     vert2 = DynamicObject(vertSprite, scale, windowX, 0, objects)
     hor1 = DynamicObject(horSprite, scale, 0, -1, objects)
     hor2 = DynamicObject(horSprite, scale, 0, windowY, objects)
-    objects.append(team1Sub)
-    objects.append(team2Sub)
-    objects.append(vert1)
-    objects.append(vert2)
-    objects.append(hor1)
-    objects.append(hor2)
+    pygame.mixer.init()
+    bloopSound = "data/assets/sounds/sfx.mp3"
 
+    sound1 = pygame.mixer.Sound(bloopSound)
+    theSound=pygame.mixer.music.load(bloopSound) #Load the bloop sound
+    sound1.set_volume(100000000)
+    sound1.play(loops=-1)
+    # pygame.mixer.music.play(loops=-1) #Loop forever
+    pygame.event.wait()
+
+
+    objects.extend((team1Sub, team2Sub, vert1, vert2, hor1, hor2))
+    #Extend is a function that lets you append multiple things at once
+    #Old garbage code:
+        # objects.append(team1Sub)
+        # objects.append(team2Sub)
+        # objects.append(vert1)
+        # objects.append(vert2)
+        # objects.append(hor1)
+        # objects.append(hor2)
+    timers = []
     goldTimer = timer(3, framerate)
-
+    timers.append(goldTimer)
+    EXTRA_GOLD = False
+    if(EXTRA_GOLD):
+        goldTimer2 = timer(3, framerate)
+        timers.append(goldTimer2)
     while(isRunning):
         clock.tick(framerate)
         primedInputs = []
@@ -140,28 +155,27 @@ def startGame(mainWindow, scale, framerate):
             #Get every time the button is held up (Prevent holding down the button)_
             if event.type == pygame.KEYUP:
                 primedInputs.append(event)
-        #if(len(primedInputs)>0):
-            #print(primedInputs[0].key)
 
-        mainWindow.fill((0, 0, 0))
-        mainWindow.blit(bg1, (0,0))
-        for objectz in objects:
-            mainWindow.blit(objectz.sprite, (objectz.x, objectz.y))
-        mainWindow.blit(bg2, (0, 0))
 
-        goldTimer.decrement()
-        if(goldTimer.isFinished()):
-            val = random.randint(0,50)%8
-            val = (val<=1)
-            goldTimer = timer(random.randint(0,3), framerate)
-            spawnCoin(objects, scale, val)
+
+        for i in range(len(timers)):
+            timers[i].decrement()
+            if(timers[i].isFinished()):
+                val = random.randint(0,50)%8
+                val = (val<=1)
+                timers[i] = timer(random.randint(0,3), framerate)
+                spawnCoin(objects, scale, val)
+
         for objectz in objects:
             if(isinstance(objectz, physics.Dynamic)):
                 objectz.update(maxMom=15)
+
             if(isinstance(objectz, swimmerPlayer.swimmerPlayer)):
                 objectz.floatSub(primedInputs)
+
             if (isinstance(objectz, seaItem.seaItem)):
                 objectz.fall()
+
             if ((abs(objectz.dX) >= 1) or (abs(objectz.dY) >= 1)):
                 collisions = physics.velHandler(objectz, objects)
                 if(collisions!=[]):
@@ -169,6 +183,9 @@ def startGame(mainWindow, scale, framerate):
                         for agents in collisions:
                             if(isinstance(agents, swimmerPlayer.swimmerPlayer)):
                                 agents.changeScore(objectz.cost)
+                                if(objectz.isBad):
+                                    agents.paralyzed=True
+                                objectz.damagedSound()
                                 print("agents score %s" %agents.score)
                                 break #only want one agent getting the loot
                         removeObj(objects, objectz)
@@ -178,5 +195,12 @@ def startGame(mainWindow, scale, framerate):
                                 objectz.changeScore(agents.cost)
                                 if(agents.isBad):
                                     objectz.paralyzed=True
+                                agents.damagedSound()
+
                                 removeObj(objects, agents)
+        mainWindow.fill((0, 0, 0))
+        mainWindow.blit(bg1, (0,0))
+        for objectz in objects:
+            mainWindow.blit(objectz.sprite, (objectz.x, objectz.y))
+        mainWindow.blit(bg2, (0, 0))
         pygame.display.update()
