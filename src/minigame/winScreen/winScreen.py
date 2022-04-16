@@ -25,13 +25,13 @@ def removeObj(objects, object):
 
 def spawnCoin(objects, scale, xPos):
 
-    scaleFancy = 0.05* scale
+    scaleFancy = 0.075* scale
     coinSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/coinS.png", scaleFancy)
 
 
 
 
-    coin = seaItem.seaItem(coinSprite, scale, xPos, 0, objects, 2)
+    coin = seaItem.seaItem(coinSprite, scale, xPos, 0, objects, 20)
 
 
 
@@ -39,7 +39,7 @@ def spawnCoin(objects, scale, xPos):
 
 
 
-def startGame(mainWindow, scale, framerate, winningPlayers, winnings=10):
+def startGame(mainWindow, scale, framerate, gameStats):
     clock = pygame.time.Clock()  # Clock used for frame rate
     windowX, windowY = pygame.display.get_surface().get_size()
     isRunning = True
@@ -66,20 +66,33 @@ def startGame(mainWindow, scale, framerate, winningPlayers, winnings=10):
     ost = pygame.mixer.Sound(seq)
     ost.play(loops=-1)
     players=[pirate1, pirate2, pirate3, pirate4]
-    for winningPlayer in winningPlayers:
-        dropLoc = players[winningPlayer].x
-        spawnCoin(objects, scale, dropLoc)
-
+    coinDropDelay = 0.25
+    coinDropTimer = timer(8, framerate)
+    winnings = max(gameStats.earnings)
     while(isRunning):
         clock.tick(framerate)
+        coinDropTimer.decrement()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning=False
-        mainWindow.fill((0, 0, 0))
-        mainWindow.blit(seats, (0, 0))
-        mainWindow.blit(stage, (0, 0))
-        for objectz in objects:  # rendering
-            objectz.draw(mainWindow)
+            if winnings <= 0:
+                if event.type == pygame.KEYDOWN:
+                    ost.fadeout(3000)
+                    print(event)
+
+        if (coinDropTimer.isFinished() and winnings>0):
+            winnings-=1
+            locations = []
+            for i in range(len(gameStats.totalPlayers)):
+                if(gameStats.totalPlayers[i]):
+                    dropLoc = players[i].x
+                    locations.append(dropLoc)
+            for dropLoc in locations:
+                spawnCoin(objects, scale, dropLoc)
+            coinDropTimer = timer(coinDropDelay, framerate)
+
+
+
         for objectz in objects:  # rendering
 
 
@@ -90,7 +103,13 @@ def startGame(mainWindow, scale, framerate, winningPlayers, winnings=10):
             if ((abs(objectz.dX) >= 1) or (abs(objectz.dY) >= 1)):
                 collisions = physics.velHandler(objectz, objects)
                 if(isinstance(objectz, seaItem.seaItem) and collisions!=[]):
-
+                    objectz.damagedSound(0)
                     removeObj(objects, objectz)
+        mainWindow.fill((0, 0, 0))
+        mainWindow.blit(seats, (0, 0))
+        mainWindow.blit(stage, (0, 0))
+        for objectz in objects:  # rendering
+            objectz.draw(mainWindow)
+
 
         pygame.display.update()

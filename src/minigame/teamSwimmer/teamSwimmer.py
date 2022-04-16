@@ -16,7 +16,7 @@ from src.minigame.teamSwimmer import seaItem as seaItem
 import random
 from src.minigame.timer.timer import timer as timer
 from src.minigame.minigameData import minigameData as minigameData
-
+from src.minigame.winScreen import winScreen as winScreen
 
 #Daniels code
 def removeObj(objects, object):
@@ -87,7 +87,8 @@ def startGame(mainWindow, scale, framerate):
     gravity = 2.0 * scale
     scaleFancy = 0.0375 * scale #A smaller scale for the giant fancy sprites
     #Load game assets and set up starting posiitons
-    subSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/barrelSub.png", scaleFancy)
+    subSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/teamX.png", scaleFancy)
+    subSprite2 = spritegen.grab_sprite("data/assets/sprites/goodSprites/teamO.png", scaleFancy)
     bg1 = spritegen.grab_sprite("data/assets/sprites/layers/layer1.png", scale)
     bg2 = spritegen.grab_sprite("data/assets/sprites/layers/layer2.png", scale)
     bg = [bg1, bg2]
@@ -122,7 +123,7 @@ def startGame(mainWindow, scale, framerate):
     objects = []
     maxHeight = windowY/8
     team1Sub = swimmerPlayer.swimmerPlayer(subSprite, scale, team1X, team1Y, objects, team1AControls, team1BControls, maxHeight)
-    team2Sub = swimmerPlayer.swimmerPlayer(subSprite, scale, team2X, team2Y, objects, team2AControls, team2BControls, maxHeight)
+    team2Sub = swimmerPlayer.swimmerPlayer(subSprite2, scale, team2X, team2Y, objects, team2AControls, team2BControls, maxHeight)
 
     vert1 = DynamicObject(vertSprite, scale, -1, 0, objects)
     vert2 = DynamicObject(vertSprite, scale, windowX, 0, objects)
@@ -152,6 +153,7 @@ def startGame(mainWindow, scale, framerate):
     timers = []
     goldTimer = timer(3, framerate)
     timers.append(goldTimer)
+    gameStats = None
     EXTRA_GOLD = False
     if(EXTRA_GOLD):
         goldTimer2 = timer(3, framerate)
@@ -162,9 +164,9 @@ def startGame(mainWindow, scale, framerate):
         if(gameTimer.isFinished()):
             print("==========GAME OVER===========")
             gameStats=""
+            sound1.fadeout(3000)
             if(team1Sub.score>team2Sub.score):
                 gameStats = minigameData.minigameData(1, 1, 0, 0, 10, 10, 0, 0)
-
                 print("Team 1 won")
             elif(team1Sub.score<team2Sub.score):
                 gameStats = minigameData.minigameData(0, 0, 1, 1, 0, 0, 10, 10)
@@ -172,7 +174,8 @@ def startGame(mainWindow, scale, framerate):
             else:
                 gameStats = minigameData.minigameData(0, 0, 0, 0, 0, 0, 0, 0)
                 print("Draw!")
-            return gameStats
+            isRunning=False
+            break
         primedInputs = []
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -236,3 +239,17 @@ def startGame(mainWindow, scale, framerate):
             mainWindow.blit(objectz.sprite, (objectz.x, objectz.y))
         mainWindow.blit(bg2, (0, 0))
         pygame.display.update()
+    endGameTimer = timer(5, framerate)
+    bloopSound = "data/assets/sounds/Upbeat.mp3"
+
+    sound1 = pygame.mixer.Sound(bloopSound)
+    #theSound = pygame.mixer.music.load(bloopSound)  # Load the bloop sound
+    sound1.play()
+    sound1.set_volume(100000000)
+    while(not endGameTimer.isFinished()):
+        clock.tick(framerate)
+        endGameTimer.decrement()
+
+        pygame.display.update()
+    sound1.fadeout(3000)
+    return winScreen.startGame(mainWindow, scale, framerate, gameStats)
