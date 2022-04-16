@@ -1,4 +1,6 @@
 import math
+import time
+
 import src.minigame.physicsTest.ball as ball
 import src.minigame.cannonPanic.cannonPanicController as cannonPlayer
 import pygame
@@ -13,6 +15,9 @@ from src.minigame.teamSwimmer import swimmerPlayer as swimmerPlayer
 from src.minigame.teamSwimmer import seaItem as seaItem
 import random
 from src.minigame.timer.timer import timer as timer
+from src.minigame.minigameData import minigameData as minigameData
+
+
 #Daniels code
 def removeObj(objects, object):
     if isinstance(object, DynamicObject): object.halt()
@@ -29,7 +34,7 @@ def removeObj(objects, object):
         :param bad: An optional parameter that determines if the parameter is a bad item or now  
 """
 def spawnCoin(objects, scale, bad=False):
-
+    random.seed(time.time())
     windowX, windowY = pygame.display.get_surface().get_size()
     scaleFancy = 0.05* scale
     coinSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/coinS.png", scaleFancy)
@@ -37,12 +42,14 @@ def spawnCoin(objects, scale, bad=False):
     isValidDrop = True
     xPos = 0
     coin = None
+
+    randSpeed =  random.randint(1,8)
     if(bad):
-        coin = seaItem.seaItem(skullSprite, scale, xPos, 0, objects, bad)
+        coin = seaItem.seaItem(skullSprite, scale, xPos, 0, objects, randSpeed, bad)
 
         coin.cost = -3
     else:
-        coin = seaItem.seaItem(coinSprite, scale, xPos, 0, objects)
+        coin = seaItem.seaItem(coinSprite, scale, xPos, 0, objects, randSpeed)
         coin.cost = 1
     while(isValidDrop):
         xPos = random.randint(coinSprite.get_width(), windowX)-coinSprite.get_width()
@@ -126,6 +133,7 @@ def startGame(mainWindow, scale, framerate):
     theSound=pygame.mixer.music.load(bloopSound) #Load the bloop sound
     sound1.set_volume(100000000)
     sound1.play(loops=-1)
+    gameTimer = timer(60, framerate)
     # pygame.mixer.music.play(loops=-1) #Loop forever
     pygame.event.wait()
 
@@ -148,6 +156,21 @@ def startGame(mainWindow, scale, framerate):
         timers.append(goldTimer2)
     while(isRunning):
         clock.tick(framerate)
+        gameTimer.decrement()
+        if(gameTimer.isFinished()):
+            print("==========GAME OVER===========")
+            gameStats=""
+            if(team1Sub.score>team2Sub.score):
+                gameStats = minigameData.minigameData(1, 1, 0, 0, 10, 10, 0, 0)
+
+                print("Team 1 won")
+            elif(team1Sub.score<team2Sub.score):
+                gameStats = minigameData.minigameData(0, 0, 1, 1, 0, 0, 10, 10)
+                print("Team 2 wons")
+            else:
+                gameStats = minigameData.minigameData(0, 0, 0, 0, 0, 0, 0, 0)
+                print("Draw!")
+            return gameStats
         primedInputs = []
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -9,11 +9,12 @@ from src.minigame.timer.timer import timer as timer
 framerate = 60
 
 class seaItem(DynamicObject):
-    def __init__(self, sprite, scale, x, y, objects, isBad = False, name="undefinedBall", mass = 10):
+    def __init__(self, sprite, scale, x, y, objects, fallSpeed, isBad = False, name="undefinedBall", mass = 10):
         DynamicObject.__init__(self, sprite, scale, x, y, objects, name, mass)
         self.isBad = isBad
         self.cost = 0
         bloopSound = ""
+        self.fallSpeed = fallSpeed
         if(self.isBad):
             bloopSound = "data/assets/sounds/damaged.mp3"
         else:
@@ -33,7 +34,7 @@ class seaItem(DynamicObject):
 
 
     def fall(self):
-        self.momY += 0.35
+        self.momY += 0.35*self.fallSpeed
 
     def damagedSound(self, consec):
         if(consec>0 and not self.isBad):
