@@ -183,9 +183,12 @@ def startGame(mainWindow, scale, framerate):
                         for agents in collisions:
                             if(isinstance(agents, swimmerPlayer.swimmerPlayer)):
                                 agents.changeScore(objectz.cost)
+                                objectz.damagedSound(agents.consec)
                                 if(objectz.isBad):
                                     agents.paralyzed=True
-                                objectz.damagedSound()
+                                    agents.consec=0
+                                else:
+                                    agents.consec+=1
                                 print("agents score %s" %agents.score)
                                 break #only want one agent getting the loot
                         removeObj(objects, objectz)
@@ -193,9 +196,13 @@ def startGame(mainWindow, scale, framerate):
                         for agents in collisions:
                             if(isinstance(agents, seaItem.seaItem)):
                                 objectz.changeScore(agents.cost)
+                                agents.damagedSound(objectz.consec)
                                 if(agents.isBad):
                                     objectz.paralyzed=True
-                                agents.damagedSound()
+                                    agents.consec = 0
+                                else:
+                                    objectz.consec+=1
+
 
                                 removeObj(objects, agents)
         mainWindow.fill((0, 0, 0))
