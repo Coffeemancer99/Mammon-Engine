@@ -23,6 +23,8 @@ class swimmerPlayer(DynamicObject):
         self.score = 0
         self.maxHeight = maxHeight
         self.paralyzedTimer = timer(1.5, framerate)
+        self.consec = 0
+        
 
     def floatSub(self, buttons):
         noMatch = True
