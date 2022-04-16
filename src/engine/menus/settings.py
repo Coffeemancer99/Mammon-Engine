@@ -4,6 +4,7 @@ def launch(width, height, framerate, window, scale):
     pygame.display.set_mode((width, height))
     clock = pygame.time.Clock()  # Clock used for frame rate
     window.fill((0, 0, 0))
+
     #Button images
     windowSizeImg=pygame.image.load("data/assets/sprites/windowsize.png")
     sizesPng=pygame.image.load("data/assets/sprites/sizes.png")
@@ -36,10 +37,10 @@ def launch(width, height, framerate, window, scale):
 
                     #MEDIUM RES
                     if(pos[0]>142*scale and pos[0]<332*scale):
-                        return launch(512*2, 448*2, framerate, window, 2)
+                        return launch((512*2), (448*2), framerate, window, 2)
                     #LARGE ERS
                     if(pos[0]>332*scale and pos[0]<448*scale):
-                        return launch(512 * 3, 448 * 3, framerate, window, 3)
+                        return launch((512 * 3), (448 * 3), framerate, window, 3)
                 #Back Button
                 if (pos[1] > 335 * scale and pos[1] < 448* scale):
                     return mainmenu.launch(width, height, framerate, scale)

@@ -81,7 +81,8 @@ def spawnCoin(objects, scale, bad=False):
 """
 def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
-    windowX, windowY = pygame.display.get_surface().get_size() #Dimensions of window
+    windowX = mainWindow.get_width() #Dimensions of window
+    windowY = mainWindow.get_height()
     isRunning = True #Determines if the main game loop is running
     gravity = 2.0 * scale
     scaleFancy = 0.0375 * scale #A smaller scale for the giant fancy sprites
@@ -96,6 +97,7 @@ def startGame(mainWindow, scale, framerate):
     team1Y = windowY - windowY/2
     team2X = windowX - subSprite.get_width()*2
     team2Y = windowY - windowY/2
+    print(windowY)
     #The controls for team 1
     #This is the player who moves the sub left and right
     team1AControls = {
