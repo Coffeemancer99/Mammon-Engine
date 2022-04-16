@@ -183,6 +183,22 @@ def startGame(mainWindow, scale, framerate):
             #Get every time the button is held up (Prevent holding down the button)_
             if event.type == pygame.KEYUP:
                 primedInputs.append(event)
+                if(event.key == pygame.K_y):
+                    print("==========GAME OVER===========")
+                    gameStats = ""
+                    sound1.fadeout(3000)
+                    if (team1Sub.score > team2Sub.score):
+                        gameStats = minigameData.minigameData(1, 1, 0, 0, 10, 10, 0, 0)
+                        print("Team 1 won")
+                    elif (team1Sub.score < team2Sub.score):
+                        gameStats = minigameData.minigameData(0, 0, 1, 1, 0, 0, 10, 10)
+                        print("Team 2 wons")
+                    else:
+                        gameStats = minigameData.minigameData(0, 0, 0, 0, 0, 0, 0, 0)
+                        print("Draw!")
+                    isRunning = False
+
+                    break
 
 
 
