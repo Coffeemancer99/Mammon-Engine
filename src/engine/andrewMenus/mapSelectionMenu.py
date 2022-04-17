@@ -36,21 +36,24 @@ def createAllMapSelectionButtons(mainWindow, framerate, scale, mapSelectionImage
     def onClickAcceptButton(listOfButtons=None):
         if(listOfButtons is not None):
             # print("====" + str(listOfButtons))
-            if (listOfButtons[-2].name == "map1" and listOfButtons[-1].name == "accept"):
-                # acceptButton.dummy = False
-                print("PLAY FIRST BOARD")
-                firstBoard = FirstBoard(scale).testFirstBoard()
-                return boardGame.startGame(mainWindow, scale, framerate, firstBoard)
+            if len(listOfButtons) > 1:
+                if (listOfButtons[-2].name == "map1" and listOfButtons[-1].name == "accept" and listOfButtons[-2].shouldRet):
+                    # acceptButton.dummy = False
+                    print("PLAY FIRST BOARD")
+                    firstBoard = FirstBoard(scale).testFirstBoard()
+                    return boardGame.startGame(mainWindow, scale, framerate, firstBoard)
+                else:
+                    # cannot set dummy after click happened with current setup...
+                    # acceptButton.dummy = True
+                    print("Nothing Happen")
             else:
-                # cannot set dummy after click happened with current setup...
-                # acceptButton.dummy = True
-                print("Nothing Happen")
+                print("Nothing")
 
     newBackButton = Button(4, 412, 96, 32, scale, onClickBackButton,
                            "data/assets/sprites/backMenuButton.png", mainWindow, "back")
 
     newFirstButton = Button(336, 16, 160, 32, scale, onClickFirstButton,
-                            "data/assets/sprites/mapButton1.png", mainWindow, "map1")
+                            "data/assets/sprites/mapButton1.png", mainWindow, "map1", shouldRet=True)
     newFirstButton.dummy = True
 
     firstComingSoonButton = Button(336, 64, 160, 32, scale, onClickUndefButton,
@@ -63,7 +66,7 @@ def createAllMapSelectionButtons(mainWindow, framerate, scale, mapSelectionImage
 
     acceptButton = Button(380, 348, 128, 96, scale, onClickAcceptButton,
                           "data/assets/sprites/acceptMenuButton.png", mainWindow, "accept")
-
+    acceptButton.dummy = True
     return newBackButton, newFirstButton, firstComingSoonButton, secondComingSoonButton, acceptButton
 
 

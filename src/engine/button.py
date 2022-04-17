@@ -7,7 +7,7 @@ Used to make a button
 '''
 class Button:
 
-    def __init__(self, x, y, width, height, scale, onClick, imagePath, window, name=None):
+    def __init__(self, x, y, width, height, scale, onClick, imagePath, window, name=None, shouldRet=None):
         """
         :param x: x position of button
         :param y: y position of button
@@ -28,6 +28,7 @@ class Button:
         self.imagePath = imagePath  # string
         self.window = window
         self.name = name
+        self.shouldRet = shouldRet
 
         # dummy set true when buttons have no functionality
         self.dummy = False
