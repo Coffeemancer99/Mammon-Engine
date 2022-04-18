@@ -552,7 +552,7 @@ def startGame(mainWindow, scale, framerate, board):
             if event.type == pygame.QUIT:
                 isRunning = False
             # TODO: Andrew Need to make a button and a screen that shows if the player is going to do something with their inventory
-            if key[pygame.K_SPACE]:
+            if key[pygame.K_RETURN]:
                 if currentState == States.FIRSTITERATION:
                     # This is to activate the screen on who goes first
                     currentState = States.PLAYERMOVE
@@ -569,139 +569,138 @@ def startGame(mainWindow, scale, framerate, board):
             #         inventoryScreen(mainWindow,scale,framerate,listOfPlayers[currentPlayer], currentPlayer)
             #         time.sleep(1)
             #         continue
+            if key[pygame.K_i]:
+                if currentState == States.PLAYERMOVE:
+                    inventoryScreen(mainWindow, scale, framerate, listOfPlayers[currentPlayer], currentPlayer)
+                    time.sleep(1)
+                    continue
+            if key[pygame.K_SPACE]:  # End turn and move the character
+                if currentState == States.PLAYERMOVE:
+                    # If the player lost their turn, skip
+                    if listOfPlayers[currentPlayer].getLostTurn():
+                        # Set it to false
+                        listOfPlayers[currentPlayer].setLostTurn()
+                        currentPlayer += 1
+                    # TODO: DO CHECKS HERE START HEREEEEEEEEEEEEEEe
 
-                if key[pygame.K_SPACE]:  # End turn and move the character
-                    if currentState == States.PLAYERMOVE:
-                        # If the player lost their turn, skip
-                        if listOfPlayers[currentPlayer].getLostTurn():
-                            # Set it to false
-                            listOfPlayers[currentPlayer].setLostTurn()
-                            currentPlayer += 1
-                        # TODO: DO CHECKS HERE START HEREEEEEEEEEEEEEEe
-
-                        # Get the player movement here, first check if they can roll 2 dice or only 1 based on an item
-                        if listOfPlayers[currentPlayer].getSecondDiceroll():
-                            print(f"Player {listOfPlayers[currentPlayer]} has 2 dice rolls and will roll 2 dice")
-                            playerMovement = rollTwoDice(6)
-                            listOfPlayers[currentPlayer].toggleSetSecondDiceroll()
-                        else:
-                            playerMovement = rollOneDice(6)
-                        # Check if they have to move one spot less based on an item
-                        if listOfPlayers[currentPlayer].getMoveOneSpotLess():
-                            playerMovement -= 1
-                            listOfPlayers[currentPlayer].toggleMoveOneSpotLess()
-                            print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} activated a bad item of "
-                                  f"moving one spot less but they"
-                                  f" were {listOfPlayers[currentPlayer].getStartCountDown()} moves from getting sent "
-                                  f"to the start ")
-                            # Save the last move the player did
-                        listOfPlayers[currentPlayer].setPrevPosition(listOfPlayers[currentPlayer].getCurrentPosition())
-                        listOfPlayers[currentPlayer].setCurrentPosition(playerMovement)
-                        print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} rolled a {playerMovement}")
-                        # If the player did not use a bad item in 4 turns. They have to go back to the beginning
-                        if listOfPlayers[currentPlayer].getStartCountDown() <= 0:
-                            listOfPlayers[currentPlayer].setPrevPosition(0)
-                            listOfPlayers[currentPlayer].setCurrentPosition(0)
-                            listOfPlayers[currentPlayer].resetStartCountDown()
-                            goingBackToStart = True
-                            listOfPlayers[currentPlayer].clearBadInventory()
-                        # If we see a bad item in our inventory, we have to decrement the setStartCountDown
-                        inventory = listOfPlayers[currentPlayer].getInventory()
-                        flagForBadItems = True
-                        for i in range(len(inventory)):
-                            if inventory[i].isBad():
-                                listOfPlayers[currentPlayer].setStartCountDown(-1)
-                                flagForBadItems = False
-                                break
-                        if flagForBadItems:
-                            listOfPlayers[currentPlayer].resetStartCountDown()
-                            print(
-                                f"Player {listOfPlayers[currentPlayer].getPlayerID()} have no bad items in their "
-                                f"inventory and the counter for bad items was reset!")
-                        # if TESTSTORE: # This is for testing the Bad inventory, uncomment to test
-                        #     listOfPlayers[currentPlayer].setMoney(1000)
-                        #     listOfPlayers[currentPlayer].setInventory(InvertedControlsItem())
-                        #     #storeScreen(mainWindow, 1, 60, listOfPlayers[currentPlayer])
-                        #     itemHandler = ItemHandler(False)
-                        #     item = itemHandler.getItemRegTileBlock()
-                        #     print(f"And the fucking item isssssssssssssssss {item.getName()}")
-                        #     TESTSTORE = False
-                        print(listOfPlayers[currentPlayer].getStartCountDown())
-                        # TODO: Andrew MAKE A SCREEN TOO THAT SAY WHAT IS HAPPENING
-                        currentState = States.ANNIMATING
-                    if currentState == States.ANNIMATING:
-                        while True:  # 190
-                            nextTiles = board.getPotentialMoves(listOfPlayers[currentPlayer])
-                            # If I see a fork in the road, then we need to pick which path to go to next
-                            if not goingBackToStart:
-                                if len(nextTiles) > 1:
-                                    # TODO: Andrew Need to make the selection screen for multiple paths
-                                    if playerSelectFork == 0:
-                                        board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])
-                                    elif playerSelectFork == 1 and playerSelectFork >= len(nextTiles):
-                                        board.movePlayer(nextTiles[1], listOfPlayers[currentPlayer])
-                                    elif playerSelectFork == 2 and playerSelectFork >= len(nextTiles):
-                                        board.movePlayer(nextTiles[2], listOfPlayers[currentPlayer])
-                                else:
-                                    # If we have no fork in the road, then we just go straight
-                                    board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])  # 200
+                    # Get the player movement here, first check if they can roll 2 dice or only 1 based on an item
+                    if listOfPlayers[currentPlayer].getSecondDiceroll():
+                        print(f"Player {listOfPlayers[currentPlayer]} has 2 dice rolls and will roll 2 dice")
+                        playerMovement = rollTwoDice(6)
+                        listOfPlayers[currentPlayer].toggleSetSecondDiceroll()
+                    else:
+                        playerMovement = rollOneDice(6)
+                    # Check if they have to move one spot less based on an item
+                    if listOfPlayers[currentPlayer].getMoveOneSpotLess():
+                        playerMovement -= 1
+                        listOfPlayers[currentPlayer].toggleMoveOneSpotLess()
+                        print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} activated a bad item of "
+                              f"moving one spot less but they"
+                              f" were {listOfPlayers[currentPlayer].getStartCountDown()} moves from getting sent "
+                              f"to the start ")
+                        # Save the last move the player did
+                    listOfPlayers[currentPlayer].setPrevPosition(listOfPlayers[currentPlayer].getCurrentPosition())
+                    listOfPlayers[currentPlayer].setCurrentPosition(playerMovement)
+                    print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} rolled a {playerMovement}")
+                    # If the player did not use a bad item in 4 turns. They have to go back to the beginning
+                    if listOfPlayers[currentPlayer].getStartCountDown() <= 0:
+                        listOfPlayers[currentPlayer].setPrevPosition(0)
+                        listOfPlayers[currentPlayer].setCurrentPosition(0)
+                        listOfPlayers[currentPlayer].resetStartCountDown()
+                        goingBackToStart = True
+                        listOfPlayers[currentPlayer].clearBadInventory()
+                    # If we see a bad item in our inventory, we have to decrement the setStartCountDown
+                    inventory = listOfPlayers[currentPlayer].getInventory()
+                    flagForBadItems = True
+                    for i in range(len(inventory)):
+                        if inventory[i].isBad():
+                            listOfPlayers[currentPlayer].setStartCountDown(-1)
+                            flagForBadItems = False
+                            break
+                    if flagForBadItems:
+                        listOfPlayers[currentPlayer].resetStartCountDown()
+                        print(
+                            f"Player {listOfPlayers[currentPlayer].getPlayerID()} have no bad items in their "
+                            f"inventory and the counter for bad items was reset!")
+                    # if TESTSTORE: # This is for testing the Bad inventory, uncomment to test
+                    #     listOfPlayers[currentPlayer].setMoney(1000)
+                    #     listOfPlayers[currentPlayer].setInventory(InvertedControlsItem())
+                    #     #storeScreen(mainWindow, 1, 60, listOfPlayers[currentPlayer])
+                    #     itemHandler = ItemHandler(False)
+                    #     item = itemHandler.getItemRegTileBlock()
+                    #     print(f"And the fucking item isssssssssssssssss {item.getName()}")
+                    #     TESTSTORE = False
+                    print(listOfPlayers[currentPlayer].getStartCountDown())
+                    # TODO: Andrew MAKE A SCREEN TOO THAT SAY WHAT IS HAPPENING
+                    currentState = States.ANNIMATING
+                if currentState == States.ANNIMATING:
+                    while True:  # 190
+                        nextTiles = board.getPotentialMoves(listOfPlayers[currentPlayer])
+                        # If I see a fork in the road, then we need to pick which path to go to next
+                        if not goingBackToStart:
+                            if len(nextTiles) > 1:
+                                # TODO: Andrew Need to make the selection screen for multiple paths
+                                if playerSelectFork == 0:
+                                    board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])
+                                elif playerSelectFork == 1 and playerSelectFork >= len(nextTiles):
+                                    board.movePlayer(nextTiles[1], listOfPlayers[currentPlayer])
+                                elif playerSelectFork == 2 and playerSelectFork >= len(nextTiles):
+                                    board.movePlayer(nextTiles[2], listOfPlayers[currentPlayer])
                             else:
-                                board.movePlayer(board.getStartTile(), listOfPlayers[currentPlayer])
-                                renderer.render()
-                                time.sleep(1)  # Don't take out the sleep!
-                                # Must be the length of players -1
-                                if currentPlayer == 3:
-                                    currentState = States.STARTMINIGAME
-                                    break
-                                else:
-                                    currentPlayer += 1
-                                    currentState = States.PLAYERMOVE
-                                    break  # 213
-                            numOfSpots += 1
-                            if numOfSpots == playerMovement and not goingBackToStart:
-                                # If we reach here, that means that we are done animating
-                                numOfSpots = 0
-                                # We set the player's position to where they are now within the tile after all the
-                                # potential paths they went
-                                aPlayer = listOfPlayers[currentPlayer]
-                                listOfPlayers[currentPlayer].setCurrentPosition(board.getCurrentTile(aPlayer))
-                                getTypeOfTile(board.getCurrentTile(aPlayer), listOfPlayers[currentPlayer], mainWindow,
-                                              framerate, scale)
-                                # Must be the length of players -1
-                                if currentPlayer == 3:
-                                    currentState = States.STARTMINIGAME
-                                    break
-                                else:
-                                    currentPlayer += 1
-                                    currentState = States.PLAYERMOVE
-                                    break  # 213
+                                # If we have no fork in the road, then we just go straight
+                                board.movePlayer(nextTiles[0], listOfPlayers[currentPlayer])  # 200
+                        else:
+                            board.movePlayer(board.getStartTile(), listOfPlayers[currentPlayer])
                             renderer.render()
                             time.sleep(1)  # Don't take out the sleep!
-                    # Once all the players are done here, we start a random mini-game
-                    if currentState == States.STARTMINIGAME:
+                            # Must be the length of players -1
+                            if currentPlayer == 3:
+                                currentState = States.STARTMINIGAME
+                                break
+                            else:
+                                currentPlayer += 1
+                                currentState = States.PLAYERMOVE
+                                break  # 213
+                        numOfSpots += 1
+                        if numOfSpots == playerMovement and not goingBackToStart:
+                            # If we reach here, that means that we are done animating
+                            numOfSpots = 0
+                            # We set the player's position to where they are now within the tile after all the
+                            # potential paths they went
+                            aPlayer = listOfPlayers[currentPlayer]
+                            listOfPlayers[currentPlayer].setCurrentPosition(board.getCurrentTile(aPlayer))
+                            getTypeOfTile(board.getCurrentTile(aPlayer), listOfPlayers[currentPlayer], mainWindow,
+                                          framerate, scale)
+                            # Must be the length of players -1
+                            if currentPlayer == 3:
+                                currentState = States.STARTMINIGAME
+                                break
+                            else:
+                                currentPlayer += 1
+                                currentState = States.PLAYERMOVE
+                                break  # 213
                         renderer.render()
                         time.sleep(1)  # Don't take out the sleep!
-                        currentPlayer = 0
-                        result = True
-                        while result:  # Keep trying to launch minigames until it works.
-                            result = runMinigame(mainWindow, scale, framerate, listOfPlayers)
-                            if result:  # Something went wrong
-                                miniGameObject = teamSwimmer.startGame(mainWindow, scale, framerate)
-                                for i in range(len(listOfPlayers)):
-                                    print(
-                                        f"Player {listOfPlayers[i].getPlayerID()} money WAS {listOfPlayers[i].getMoney()}")
-                                    listOfPlayers[i].setMoney(miniGameObject.earnings[i])
-                                    print(
-                                        f"Player {listOfPlayers[i].getPlayerID()} earnings was {miniGameObject.earnings[i]}")
-                                    print(
-                                        f"Player {listOfPlayers[i].getPlayerID()} money IS NOW {listOfPlayers[i].getMoney()}")
-                                # print("ERROR! minigameManager.py Failed to launch minigame! Attempting to respin...")
-                                result = False
-                        currentState = States.PLAYERMOVE
-                # if key[pygame.K_i]:
-                #     if currentState == States.PLAYERMOVE:
-                #         inventoryScreen(mainWindow, scale, framerate, listOfPlayers[currentPlayer], currentPlayer)
-                #         time.sleep(1)
-                #         continue
-                goingBackToStart = False
-                renderer.render()  # 225
+                # Once all the players are done here, we start a random mini-game
+                if currentState == States.STARTMINIGAME:
+                    renderer.render()
+                    time.sleep(1)  # Don't take out the sleep!
+                    currentPlayer = 0
+                    result = True
+                    while result:  # Keep trying to launch minigames until it works.
+                        result = runMinigame(mainWindow, scale, framerate, listOfPlayers)
+                        if result:  # Something went wrong
+                            miniGameObject = teamSwimmer.startGame(mainWindow, scale, framerate)
+                            for i in range(len(listOfPlayers)):
+                                print(
+                                    f"Player {listOfPlayers[i].getPlayerID()} money WAS {listOfPlayers[i].getMoney()}")
+                                listOfPlayers[i].setMoney(miniGameObject.earnings[i])
+                                print(
+                                    f"Player {listOfPlayers[i].getPlayerID()} earnings was {miniGameObject.earnings[i]}")
+                                print(
+                                    f"Player {listOfPlayers[i].getPlayerID()} money IS NOW {listOfPlayers[i].getMoney()}")
+                            # print("ERROR! minigameManager.py Failed to launch minigame! Attempting to respin...")
+                            result = False
+                    currentState = States.PLAYERMOVE
+            goingBackToStart = False
+            renderer.render()  # 225
