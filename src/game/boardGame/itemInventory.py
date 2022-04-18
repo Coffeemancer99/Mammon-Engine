@@ -3,9 +3,9 @@ import random
 from enum import Enum, auto
 import numpy
 
-from src.game.boardGame.Items import DestroyAllBadItemsItem, ThirdDiceItem, SpeedBoostItem, GainMoneyRandomItem, \
+from src.game.boardGame.Items import DestroyAllBadItemsItem, SpeedBoostItem, GainMoneyRandomItem, \
     TeleportCloseItem, SabotageDice, StealItem, OpponentLoseTurnItem, MoveOneSpotLess, InvertedControlsItem, \
-    ChangeSpotsItem, OneDiceItem, LostMoneyRandomItem
+    ChangeSpotsItem, OneDiceItem, LostMoneyRandomItem, SecondDiceItem
 
 """
     File authored by Joel Tanig
@@ -21,7 +21,7 @@ class ItemType(Enum):
 
 
 def initGoodItems():
-    goodItems = [DestroyAllBadItemsItem(), ThirdDiceItem(),
+    goodItems = [DestroyAllBadItemsItem(), SecondDiceItem(),
                  SpeedBoostItem(), GainMoneyRandomItem(),
                  TeleportCloseItem(), SabotageDice(),
                  StealItem(), OpponentLoseTurnItem()]

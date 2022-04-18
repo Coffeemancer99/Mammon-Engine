@@ -4,19 +4,19 @@ import random
 # Note the items get destroyed after it is called in the inventory screen
 class ItemInterface:
     def getName(self) -> str:
-        """Returns the name of the item"""
+        """:return the name of the item"""
         pass
 
     def isBad(self) -> bool:
-        """Returns a boolean if it is a bad item"""
+        """:return a boolean if it is a bad item"""
         pass
 
     def getPrice(self) -> int:
-        """Returns a price of a bad item"""
+        """:return a price of a bad item"""
         pass
 
     def getRarity(self) -> float:
-        """Returns the rarity of an item"""
+        """:return the rarity of an item"""
         pass
 
     def getFunctionality(self, player, player2) -> bool:
@@ -28,11 +28,11 @@ class ItemInterface:
         pass
 
     def getButtonImage(self) -> str:
-        """Returns the png image associated with that item"""
+        """:return the png image associated with that item"""
         pass
 
     def affectsSecondPlayer(self):
-        """Returns a boolean if an item affects a second player or not. If true, that means the second parameter of
+        """:return a boolean if an item affects a second player or not. If true, that means the second parameter of
         getFunctionality will be used """
         pass
 
@@ -67,7 +67,7 @@ class DestroyAllBadItemsItem(ItemInterface):
         return False
 
 
-class ThirdDiceItem(ItemInterface):
+class SecondDiceItem(ItemInterface):
     def getName(self):
         return "ThirdDiceItem"
 
@@ -81,9 +81,9 @@ class ThirdDiceItem(ItemInterface):
         return 0.13
 
     def getFunctionality(self, player, player2):
-        if player.toggleSetThirdDiceroll: #TODO: FIXXXXXXXXXXXXXXXXX  THISSSSSSSSSSSSSSs
+        if player.getSecondDiceroll():
             return False
-        player.toggleSetThirdDiceroll()
+        player.toggleSetSecondDiceroll()
         print(f"Player {player.getPlayerID} now has a third dice roll")
         return True
 
@@ -173,7 +173,7 @@ class TeleportCloseItem(ItemInterface):
         return False
 
 
-class SabotageDice(ItemInterface):
+class SabotageDice(ItemInterface): #TODO: START HERE, MAKE THIS 1
     def getName(self):
         return "SabotageDiceItem"
 
@@ -188,7 +188,12 @@ class SabotageDice(ItemInterface):
 
     def getFunctionality(self, player, player2):
         if player2.getOneDiceRollBad():
-            print(f"Player {player2.getPlayerID} already has the debuff of having only one Dice Roll")
+            print(f"Player {player2.getPlayerID()} already has the debuff of having only one Dice Roll")
+            return False
+        if player2.getSecondDiceroll():
+            print(
+                f"Player {player2.getPlayerID()} already activated their item of having a second dice roll, therefore "
+                f"you cant use this item while it is enabled")
             return False
         player2.toggleSetOneDiceroll()
         print(f"Player {player.getPlayerID()} made Player {player2.getPlayerID()} only roll one dice")
@@ -283,6 +288,7 @@ class MoveOneSpotLess(ItemInterface):
 
     def affectsSecondPlayer(self):
         return False
+
 
 class InvertedControlsItem(ItemInterface):
     def getName(self):
@@ -379,6 +385,8 @@ class OneDiceItem(ItemInterface):
 
     def getFunctionality(self, player, player2):
         if player.getOneDiceRollGood():
+            return False
+        if player.getSecondDiceroll():
             return False
         player.toggleSetOneDicerollGood()
         return True

@@ -1,7 +1,7 @@
 import pygame
 
 from src.game.boardGame.boardPlayers import BoardPlayer
-from src.game.boardGame.boardGame import rollOfDice, goesFirstScreen, setPlacementsForBoardPlayers
+from src.game.boardGame.boardGame import rollOneDice, goesFirstScreen, setPlacementsForBoardPlayers
 
 """
     About this file:

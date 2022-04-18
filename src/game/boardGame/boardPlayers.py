@@ -25,7 +25,7 @@ class BoardPlayer(pygame.sprite.Sprite):
         self.speedBoost = False
         self.oneDiceRollBad = False
         self.oneDiceRollGood = False
-        self.thirdDiceRoll = False
+        self.secondDiceRoll = False
         self.itemIndex = 0
         self.moveOneSpotLess = False
         self.invertedControls = False
@@ -34,8 +34,8 @@ class BoardPlayer(pygame.sprite.Sprite):
     def __lt__(self, other):
         return self.getPlacementInGame() < other.getPlacementInGame()
 
-    def setInventory(self, inventory):
-        self.inventory.append(inventory)
+    def setInventory(self, item):
+        self.inventory.append(item)
 
     def setStartCountDown(self, startCountDown): # Make this -
         self.startCountDown += startCountDown
@@ -133,6 +133,9 @@ class BoardPlayer(pygame.sprite.Sprite):
     def getInvertedControls(self):
         return self.invertedControls
 
+    def getSecondDiceroll(self):
+        return self.secondDiceRoll
+
     def resetStartCountDown(self):
         self.startCountDown = 4
 
@@ -148,9 +151,9 @@ class BoardPlayer(pygame.sprite.Sprite):
         self.oneDiceRollGood = not self.oneDiceRollGood
         return self.oneDiceRollGood
 
-    def toggleSetThirdDiceroll(self):
-        self.thirdDiceRoll = not self.thirdDiceRoll
-        return self.thirdDiceRoll
+    def toggleSetSecondDiceroll(self):
+        self.secondDiceRoll = not self.secondDiceRoll
+        return self.secondDiceRoll
 
     def toggleMoveOneSpotLess(self):
         self.moveOneSpotLess = not self.moveOneSpotLess
