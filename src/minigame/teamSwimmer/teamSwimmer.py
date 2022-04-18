@@ -12,7 +12,7 @@ import src.minigame.cannonPanic.cannonball as cannonball
 import src.engine.scenecreator.tile as tile
 import src.engine.scenecreator.drawTileMap as tilemap
 from src.minigame.chartACourse.patientPlayer import patientPlayer
-from src.minigame.teamSwimmer import swimmerPlayer as swimmerPlayer
+from src.minigame.teamSwimmer import swimmerPlayer as swimmerPlayer, textFloat
 from src.minigame.teamSwimmer import seaItem as seaItem
 import random
 from src.minigame.timer.timer import timer as timer
@@ -104,6 +104,8 @@ def startGame(mainWindow, scale, framerate):
     team1Y = windowY - windowY/2
     team2X = windowX - subSprite.get_width()*2
     team2Y = windowY - windowY/2
+    pygame.font.init()
+
     print(windowY)
     #The controls for team 1
     #This is the player who moves the sub left and right
@@ -126,7 +128,10 @@ def startGame(mainWindow, scale, framerate):
     team2BControls = {
         "up": pygame.K_UP
     }
+
+
     objects = []
+    scoreTexts = []
     maxHeight = windowY/8
     team1Sub = swimmerPlayer.swimmerPlayer(subSprite, scale, team1X, team1Y, objects, team1AControls, team1BControls, maxHeight)
     team2Sub = swimmerPlayer.swimmerPlayer(subSprite2, scale, team2X, team2Y, objects, team2AControls, team2BControls, maxHeight)
@@ -141,6 +146,15 @@ def startGame(mainWindow, scale, framerate):
     hor2 = patientPlayer(horSprite, scale, 0, windowY, objects)
     pygame.mixer.init()
     bloopSound = "data/assets/sounds/sfx.mp3"
+
+    team1Score = textFloat.textFloat(scale, 0+(30*scale)/2, 0, team1Sub.storedCoins, (255,255,255), False)
+    team2Score = textFloat.textFloat(scale, windowX-(180*scale), 0, team1Sub.storedCoins, (255, 255, 255), False)
+    timerText = textFloat.textFloat(scale, windowX/2-(30*scale), 0, 90, (255,255,255), False)
+
+    scoreTexts.append(team1Score)
+    scoreTexts.append(team2Score)
+    scoreTexts.append(timerText)
+
 
     sound1 = pygame.mixer.Sound(bloopSound)
     theSound=pygame.mixer.music.load(bloopSound) #Load the bloop sound
@@ -161,10 +175,13 @@ def startGame(mainWindow, scale, framerate):
         # objects.append(hor1)
         # objects.append(hor2)
     timers = []
+
+
     goldTimer = timer(3, framerate)
     timers.append(goldTimer)
     gameStats = None
-    EXTRA_GOLD = False
+    EXTRA_GOLD = True
+    PANIC_TIMERS = False
     if(EXTRA_GOLD):
         goldTimer2 = timer(3, framerate)
         timers.append(goldTimer2)
@@ -190,6 +207,7 @@ def startGame(mainWindow, scale, framerate):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning=False
+
             #Get every time the button is held up (Prevent holding down the button)_
             if event.type == pygame.KEYUP:
                 primedInputs.append(event)
@@ -217,10 +235,26 @@ def startGame(mainWindow, scale, framerate):
             if(timers[i].isFinished()):
                 val = random.randint(0,50)%8
                 val = (val<=1)
-                timers[i] = timer(random.randint(0,3), framerate)
+                if(PANIC_TIMERS):
+                    timers[i] = timer(random.randint(0, 1), framerate)
+                else:
+                    timers[i] = timer(random.randint(0,3), framerate)
                 spawnCoin(objects, scale, val)
 
+        team1Score.sprite = team1Score.scoreFont.render("Team X: " + str(team1Sub.storedCoins), False, team1Score.color)
+        team2Score.sprite = team2Score.scoreFont.render("Team O: " + str(team2Sub.storedCoins), False, team2Score.color)
+        timerText.sprite =  timerText.scoreFont.render(str(gameTimer.getTimeSeconds()), False, timerText.color)
+
+        for texts in scoreTexts:
+            texts.timeUntilDeletion()
+            if (not texts.alive):
+                # removeObj(objects, objectz)
+                removeObj(scoreTexts, texts)
+        if(gameTimer.getTimeSeconds()<=15):
+            PANIC_TIMERS=True
         for objectz in objects:
+
+
             if(isinstance(objectz, physics.Dynamic)):
                 objectz.update(maxMom=15)
 
@@ -244,10 +278,16 @@ def startGame(mainWindow, scale, framerate):
                                     objectz.damagedSound(agents.consec)
                                     foundAgent = True
                                     if(objectz.isBad):
+                                        newText = textFloat.textFloat(scale, agents.x, agents.y,agents.score, (255, 0, 0))
+                                        scoreTexts.append(newText)
+
                                         agents.paralyzed=True
                                         agents.consec=0
 
                                     else:
+                                        newText = textFloat.textFloat(scale, agents.x, agents.y, agents.score)
+                                        #team1Text.displayTimer = timer(1,framerate)
+                                        scoreTexts.append(newText)
                                         agents.consec+=1
                                     print("agents score %s" %agents.score)
                                     break #only want one agent getting the loot
@@ -258,7 +298,9 @@ def startGame(mainWindow, scale, framerate):
                         if (isinstance(objectz, swimmerPlayer.swimmerPlayer)): #If the current object is a player
                             notCornered = True
                             for agents in collisions:
-                                if(isinstance(agents, Chest)): #Colliding with chest
+                                if(isinstance(agents, Chest) and objectz.score>0): #Colliding with chest
+                                    newText = textFloat.textFloat(scale, objectz.x, objectz.y, objectz.score, (255, 255, 0))
+                                    scoreTexts.append(newText)
                                     objectz.depositCoins()
                                     objectz.adjustWeight()
                                 if(isinstance(agents, physics.Object)): #If it is colliding with something already, say a wall
@@ -269,9 +311,13 @@ def startGame(mainWindow, scale, framerate):
                                     objectz.adjustWeight()
                                     agents.damagedSound(objectz.consec)
                                     if(agents.isBad):
+                                        newText = textFloat.textFloat(scale, objectz.x, objectz.y, objectz.score, (255,0,0))
+                                        scoreTexts.append(newText)
                                         objectz.paralyzed=True
                                         agents.consec = 0
                                     else:
+                                        newText = textFloat.textFloat(scale, objectz.x, objectz.y, objectz.score)
+                                        scoreTexts.append(newText)
                                         objectz.consec+=1
                                     removeObj(objects, agents)
                                 elif(isinstance(agents, swimmerPlayer.swimmerPlayer)): #If we are colliding with another player...
@@ -286,13 +332,27 @@ def startGame(mainWindow, scale, framerate):
                                                 objectz.momX = agents.momX*2
                             if(notCornered):
                                 objectz.touchingCorner=False
+        # team1Text.displayTimer.decrement()
+        # team2Text.displayTimer.decrement()
+        # team1Text.x = team1Sub.x
+        # team1Text.y = team1Sub.y
+        # team2Text.x = team2Sub.x
+#        team2Text.y = team2Sub.y
         mainWindow.fill((0, 0, 0))
         mainWindow.blit(bg1, (0,0))
         for objectz in objects:
+
             mainWindow.blit(objectz.sprite, (objectz.x, objectz.y))
+
         mainWindow.blit(bg2, (0, 0))
         mainWindow.blit(chest.sprite, (chest.x, chest.y))
+        for texts in scoreTexts:
+            mainWindow.blit(texts.sprite, (texts.x, texts.y))
+        # if(team1Text.displayTimer.getTime()>0):
+        #     mainWindow.blit(team1Text.display, (team1Text.x, team1Text.y))
+
         pygame.display.update()
+
     endGameTimer = timer(5, framerate)
     bloopSound = "data/assets/sounds/Upbeat.mp3"
 

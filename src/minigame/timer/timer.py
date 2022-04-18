@@ -32,3 +32,6 @@ class timer():
 
     def getTime(self):
         return self.currTime
+
+    def getTimeSeconds(self):
+        return int(self.currTime/self.framerate)
