@@ -11,6 +11,7 @@ import src.minigame.cannonPanic.playerController as player
 import src.minigame.cannonPanic.cannonball as cannonball
 import src.engine.scenecreator.tile as tile
 import src.engine.scenecreator.drawTileMap as tilemap
+from src.minigame.chartACourse.patientPlayer import patientPlayer
 from src.minigame.teamSwimmer import swimmerPlayer as swimmerPlayer
 from src.minigame.teamSwimmer import seaItem as seaItem
 import random
@@ -125,10 +126,10 @@ def startGame(mainWindow, scale, framerate):
     team1Sub = swimmerPlayer.swimmerPlayer(subSprite, scale, team1X, team1Y, objects, team1AControls, team1BControls, maxHeight)
     team2Sub = swimmerPlayer.swimmerPlayer(subSprite2, scale, team2X, team2Y, objects, team2AControls, team2BControls, maxHeight)
 
-    vert1 = DynamicObject(vertSprite, scale, -1, 0, objects)
-    vert2 = DynamicObject(vertSprite, scale, windowX, 0, objects)
-    hor1 = DynamicObject(horSprite, scale, 0, -1, objects)
-    hor2 = DynamicObject(horSprite, scale, 0, windowY, objects)
+    vert1 = patientPlayer(vertSprite, scale, -1, 0, objects)
+    vert2 = patientPlayer(vertSprite, scale, windowX, 0, objects)
+    hor1 = patientPlayer(horSprite, scale, 0, -1, objects)
+    hor2 = patientPlayer(horSprite, scale, 0, windowY, objects)
     pygame.mixer.init()
     bloopSound = "data/assets/sounds/sfx.mp3"
 
@@ -237,9 +238,11 @@ def startGame(mainWindow, scale, framerate):
                                     agents.consec+=1
                                 print("agents score %s" %agents.score)
                                 break #only want one agent getting the loot
+                            if(isinstance(agents, patientPlayer)):
+                                removeObj(objects, objectz)
                         if(foundAgent):
                             removeObj(objects, objectz)
-                    if (isinstance(objectz, swimmerPlayer.swimmerPlayer)):
+                    if (isinstance(objectz, swimmerPlayer.swimmerPlayer)): #If the current object is a player
                         for agents in collisions:
                             if(isinstance(agents, seaItem.seaItem)):
                                 objectz.changeScore(agents.cost)
@@ -249,9 +252,11 @@ def startGame(mainWindow, scale, framerate):
                                     agents.consec = 0
                                 else:
                                     objectz.consec+=1
-
-
                                 removeObj(objects, agents)
+                            elif(isinstance(agents, swimmerPlayer.swimmerPlayer)): #If we are colliding with another player...
+                                if(abs(agents.momX) < abs(objectz.momX)):
+                                    agents.momX = objectz.momX*2
+
         mainWindow.fill((0, 0, 0))
         mainWindow.blit(bg1, (0,0))
         for objectz in objects:
