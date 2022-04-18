@@ -30,6 +30,7 @@ class seaItem(DynamicObject):
         self.fallSpeed = fallSpeed*scale
         self.x=x
         self.y=y
+        self.alive = True
         #If the item is bad, we only need to worry about loading one sound
         if(self.isBad):
             bloopSound = "data/assets/sounds/damaged.mp3"
@@ -60,3 +61,5 @@ class seaItem(DynamicObject):
             return
         self.sound.play() #Otherwise just play the normal sound
 
+    def timeUntilDeletion(self):
+        pass

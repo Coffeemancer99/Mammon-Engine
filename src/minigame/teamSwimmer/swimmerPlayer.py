@@ -9,12 +9,13 @@ from src.minigame.timer.timer import timer as timer
 framerate = 60
 weightPunish = 0.075
 class swimmerPlayer(DynamicObject):
-    def __init__(self, sprite, scale, x, y, objects, playerAControls, playerBControls, maxHeight, name="undefinedBall", mass = 10):
+    def __init__(self, sprite, scale, x, y, objects, playerAControls, playerBControls, maxHeight, timerEnabled=False, name="undefinedBall", mass = 10):
         DynamicObject.__init__(self, sprite, scale, x, y, objects, name, mass)
         #Player A controls the left/right movement
         #Player B controls the jump/float movement
         self.playerAControls = playerAControls
         self.playerBControls = playerBControls
+        self.alive = True
         if(playerAControls != None and playerBControls != None):
             self.left = playerAControls["left"]
             self.right = playerAControls["right"]
@@ -31,6 +32,9 @@ class swimmerPlayer(DynamicObject):
         self.storedCoins = 0
         self.touchingCorner = False
         self.weight = 0
+        self.textActive = False
+        self.timerEnabled = timerEnabled
+
 
     def floatSub(self, buttons):
         noMatch = True
@@ -92,6 +96,9 @@ class swimmerPlayer(DynamicObject):
             self.weight=1
         else:
             self.weight=0
+
+    def timeUntilDeletion(self):
+        pass
 
 
 
