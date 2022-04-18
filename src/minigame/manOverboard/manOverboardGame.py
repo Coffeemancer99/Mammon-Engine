@@ -1,6 +1,7 @@
 import pygame
 
 from src.engine.physics import spritegen, physics
+from src.engine.physics.physics import DynamicObject
 from src.minigame.manOverboard import swimmerPlayer
 
 
@@ -48,4 +49,16 @@ def startGame(mainWindow, scale, framerate):
             if (abs(obj.dX) >= 1) or (abs(obj.dY) >= 1):
                 physics.velHandler(obj, objects)
 
+            outOfBounds(objects)
+
         pygame.display.update()
+
+
+
+def outOfBounds(objects):
+    # if player x or y out of screen bounds
+    for obj in objects:
+        # had to do negative values to account for sprite size
+        if obj.x > 512 or obj.y > 448 or obj.x < -32 or obj.y < -32:
+            if isinstance(obj, swimmerPlayer.SwimmerPlayer):
+                objects.remove(obj)
