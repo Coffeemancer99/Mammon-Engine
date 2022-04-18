@@ -9,6 +9,9 @@ from src.minigame.cannonPanic import cannonPanicScene
 import src.minigame.exampleGame.myLevel as myLevel
 import src.minigame.teamSwimmer.teamSwimmer as teamSwimmer
 import src.minigame.winScreen.winScreen as winScreen
+import src.minigame.chartACourse.chartACourse as chartACourse
+
+
 '''
 Created by Andrew Bunn
 Menu for testing minigames, not the final products. Mainly for experimenting
@@ -47,7 +50,7 @@ def createAllGameMenuButtons(mainWindow, framerate, scale):
         return masher.startGame(mainWindow, scale, framerate)
 
     def onClickRando4Button(listOfButtons=None):
-        return winScreen.startGame(mainWindow, scale, framerate, [1,2])
+        return chartACourse.startGame(mainWindow, scale, framerate)
 
     def onClickRando5Button(listOfButtons=None):
         return myLevel.startGame(mainWindow, scale, framerate)

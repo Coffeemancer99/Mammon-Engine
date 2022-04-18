@@ -23,7 +23,7 @@ def removeObj(objects, object):
     if isinstance(object, DynamicObject): object.halt()
     if object in objects:
         objects.remove(object)
-
+#~200 lines between sea item and this
 """
     spawnCoin: This function spawns a coin in a random position. If the spawned coin location occupies the same
     space as an item already in the scene, it will assign a new position to that coin. There is also the chance

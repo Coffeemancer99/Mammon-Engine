@@ -23,6 +23,10 @@ def removeObj(objects, object):
     if object in objects:
         objects.remove(object)
 
+
+#70 lines
+
+
 def spawnCoin(objects, scale, xPos):
 
     scaleFancy = 0.075* scale
@@ -53,10 +57,10 @@ def startGame(mainWindow, scale, framerate, gameStats):
     player3Spr = spritegen.grab_sprite("data/assets/sprites/goodSprites/pirateDude.png", scaleFancy)
     player4Spr = spritegen.grab_sprite("data/assets/sprites/goodSprites/pirateDude.png", scaleFancy)
     objects = []
-    pirate1= DynamicObject(player1Spr, scale, windowX/4, windowY/4, objects)
-    pirate2 = DynamicObject(player2Spr, scale, windowX / 4 + windowX/8, windowY / 4, objects)
-    pirate3 = DynamicObject(player3Spr, scale, windowX / 2, windowY / 4, objects)
-    pirate4 = DynamicObject(player4Spr, scale, windowX / 2 + windowX / 8, windowY / 4, objects)
+    pirate1= swimmerPlayer.swimmerPlayer(player1Spr, scale, windowX/4, windowY/4, objects, None, None, None)
+    pirate2 = swimmerPlayer.swimmerPlayer(player2Spr, scale, windowX / 4 + windowX/8, windowY / 4, objects, None, None, None)
+    pirate3 = swimmerPlayer.swimmerPlayer(player3Spr, scale, windowX / 2, windowY / 4, objects, None, None, None)
+    pirate4 = swimmerPlayer.swimmerPlayer(player4Spr, scale, windowX / 2 + windowX / 8, windowY / 4, objects, None, None, None)
 
     objects.append(pirate1)
     objects.append(pirate2)

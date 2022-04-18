@@ -14,9 +14,10 @@ class swimmerPlayer(DynamicObject):
         #Player B controls the jump/float movement
         self.playerAControls = playerAControls
         self.playerBControls = playerBControls
-        self.left = playerAControls["left"]
-        self.right = playerAControls["right"]
-        self.up = playerBControls["up"]
+        if(playerAControls != None and playerBControls != None):
+            self.left = playerAControls["left"]
+            self.right = playerAControls["right"]
+            self.up = playerBControls["up"]
         self.timer = timer(0.5, framerate)
         self.paralyzed = False
         self.facingRight = True
@@ -24,7 +25,8 @@ class swimmerPlayer(DynamicObject):
         self.maxHeight = maxHeight
         self.paralyzedTimer = timer(1.5, framerate)
         self.consec = 0
-        
+        self.x = x
+        self.y = y
 
     def floatSub(self, buttons):
         noMatch = True
