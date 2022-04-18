@@ -236,13 +236,17 @@ def startGame(mainWindow, scale, framerate):
                         if (isinstance(objectz, seaItem.seaItem)):
                             foundAgent = False
                             for agents in collisions:
+                                if(isinstance(agents, Chest)):
+                                    removeObj(objects, objectz)
                                 if(isinstance(agents, swimmerPlayer.swimmerPlayer)):
                                     agents.changeScore(objectz.cost)
+                                    agents.adjustWeight()
                                     objectz.damagedSound(agents.consec)
                                     foundAgent = True
                                     if(objectz.isBad):
                                         agents.paralyzed=True
                                         agents.consec=0
+
                                     else:
                                         agents.consec+=1
                                     print("agents score %s" %agents.score)
@@ -256,11 +260,13 @@ def startGame(mainWindow, scale, framerate):
                             for agents in collisions:
                                 if(isinstance(agents, Chest)): #Colliding with chest
                                     objectz.depositCoins()
+                                    objectz.adjustWeight()
                                 if(isinstance(agents, physics.Object)): #If it is colliding with something already, say a wall
                                     objectz.touchingCorner = True
                                     notCornered = False
                                 if(isinstance(agents, seaItem.seaItem)):
                                     objectz.changeScore(agents.cost)
+                                    objectz.adjustWeight()
                                     agents.damagedSound(objectz.consec)
                                     if(agents.isBad):
                                         objectz.paralyzed=True

@@ -7,6 +7,7 @@ import pygame
 import time
 from src.minigame.timer.timer import timer as timer
 framerate = 60
+weightPunish = 0.075
 class swimmerPlayer(DynamicObject):
     def __init__(self, sprite, scale, x, y, objects, playerAControls, playerBControls, maxHeight, name="undefinedBall", mass = 10):
         DynamicObject.__init__(self, sprite, scale, x, y, objects, name, mass)
@@ -29,20 +30,21 @@ class swimmerPlayer(DynamicObject):
         self.y = y
         self.storedCoins = 0
         self.touchingCorner = False
+        self.weight = 0
 
     def floatSub(self, buttons):
         noMatch = True
         #If the player is at the spawning zone or paralyzed, just make them fall
         if self.y<self.maxHeight or self.paralyzed:
-            self.momY += 0.35
+            self.momY += 0.35 + (weightPunish*self.weight)
             return
         #Iterate through the list of buttons gained from the event handler
         for things in buttons:
             if self.up == things.key: #If the up button was pressed (Prevents just holding the button up)
-                self.momY -= 7 #Make them float up
+                self.momY -= 7 + (weightPunish*self.weight)#Make them float up
                 noMatch = False #Prevent them from falling later
         if(noMatch): #If their up button was not pressed, then they should fall
-            self.momY += 0.35
+            self.momY += 0.35 + (weightPunish*self.weight)
 
     def takeInputs(self, objects):
         if(self.paralyzedTimer.isFinished()):
@@ -54,13 +56,13 @@ class swimmerPlayer(DynamicObject):
             return
         key = pygame.key.get_pressed()
         if key[self.left]:
-            self.momX -= 2
+            self.momX -= 2 + (weightPunish*self.weight)
             if(self.facingRight):
                 self.sprite = pygame.transform.flip(self.sprite, True, False)
                 self.facingRight=False
 
         if key[self.right]:
-            self.momX += 2
+            self.momX += 2 - (weightPunish*self.weight)
             if(not self.facingRight):
                 self.sprite = pygame.transform.flip(self.sprite, True, False)
                 self.facingRight=True
@@ -77,5 +79,19 @@ class swimmerPlayer(DynamicObject):
 
     def depositCoins(self):
         self.storedCoins += self.score
+        self.score=0
+
+    def adjustWeight(self):
+        if(self.score>9):
+            self.weight=4
+        elif(self.score>6):
+            self.weight=3
+        elif(self.score>3):
+            self.weight=2
+        elif(self.score>0):
+            self.weight=1
+        else:
+            self.weight=0
+
 
 
