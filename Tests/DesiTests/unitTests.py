@@ -7,6 +7,7 @@ import src.minigame.fruitPanic.handController as player
 import pygame
 
 class timerTests(unittest.TestCase):
+    #87 LINES
     """
 
     ->White Box Test: Along with [test_timerCompleteFromEmpty], achieves Full Branch Coverage

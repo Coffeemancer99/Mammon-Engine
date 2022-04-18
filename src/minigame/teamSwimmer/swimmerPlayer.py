@@ -27,6 +27,8 @@ class swimmerPlayer(DynamicObject):
         self.consec = 0
         self.x = x
         self.y = y
+        self.storedCoins = 0
+        self.touchingCorner = False
 
     def floatSub(self, buttons):
         noMatch = True
@@ -73,5 +75,7 @@ class swimmerPlayer(DynamicObject):
         if(self.score<0):
             self.score = 0
 
+    def depositCoins(self):
+        self.storedCoins += self.score
 
 

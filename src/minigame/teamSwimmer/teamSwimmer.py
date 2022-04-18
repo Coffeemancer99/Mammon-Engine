@@ -18,7 +18,7 @@ import random
 from src.minigame.timer.timer import timer as timer
 from src.minigame.minigameData import minigameData as minigameData
 from src.minigame.winScreen import winScreen as winScreen
-
+from src.minigame.teamSwimmer.chest import Chest
 #Daniels code
 def removeObj(objects, object):
     if isinstance(object, DynamicObject): object.halt()
@@ -80,6 +80,11 @@ def spawnCoin(objects, scale, bad=False):
         :param scale: The scale of the assets, default is 1 but can be scaled further
         :param framerate: The framerate that the game runs in, the default is 60.    
 """
+
+
+
+
+
 def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
     windowX = mainWindow.get_width() #Dimensions of window
@@ -126,6 +131,10 @@ def startGame(mainWindow, scale, framerate):
     team1Sub = swimmerPlayer.swimmerPlayer(subSprite, scale, team1X, team1Y, objects, team1AControls, team1BControls, maxHeight)
     team2Sub = swimmerPlayer.swimmerPlayer(subSprite2, scale, team2X, team2Y, objects, team2AControls, team2BControls, maxHeight)
 
+
+    chestSprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/chest.png", scaleFancy)
+
+    chest = Chest(chestSprite, scale, (windowX/2)-chestSprite.get_width()/2, windowY-chestSprite.get_height(), objects)
     vert1 = patientPlayer(vertSprite, scale, -1, 0, objects)
     vert2 = patientPlayer(vertSprite, scale, windowX, 0, objects)
     hor1 = patientPlayer(horSprite, scale, 0, -1, objects)
@@ -137,12 +146,12 @@ def startGame(mainWindow, scale, framerate):
     theSound=pygame.mixer.music.load(bloopSound) #Load the bloop sound
     sound1.set_volume(100000000)
     sound1.play(loops=-1)
-    gameTimer = timer(60, framerate)
+    gameTimer = timer(90, framerate)
     # pygame.mixer.music.play(loops=-1) #Loop forever
     pygame.event.wait()
 
 
-    objects.extend((team1Sub, team2Sub, vert1, vert2, hor1, hor2))
+    objects.extend((team1Sub, team2Sub, vert1, vert2, hor1, hor2, chest))
     #Extend is a function that lets you append multiple things at once
     #Old garbage code:
         # objects.append(team1Sub)
@@ -166,10 +175,10 @@ def startGame(mainWindow, scale, framerate):
             print("==========GAME OVER===========")
             gameStats=""
             sound1.fadeout(3000)
-            if(team1Sub.score>team2Sub.score):
+            if(team1Sub.storedCoins>team2Sub.storedCoins):
                 gameStats = minigameData.minigameData(1, 1, 0, 0, 10, 10, 0, 0)
                 print("Team 1 won")
-            elif(team1Sub.score<team2Sub.score):
+            elif(team1Sub.storedCoins<team2Sub.storedCoins):
                 gameStats = minigameData.minigameData(0, 0, 1, 1, 0, 0, 10, 10)
                 print("Team 2 wons")
             else:
@@ -220,48 +229,63 @@ def startGame(mainWindow, scale, framerate):
 
             if (isinstance(objectz, seaItem.seaItem)):
                 objectz.fall()
-
-            if ((abs(objectz.dX) >= 1) or (abs(objectz.dY) >= 1)):
-                collisions = physics.velHandler(objectz, objects)
-                if(collisions!=[]):
-                    if (isinstance(objectz, seaItem.seaItem)):
-                        foundAgent = False
-                        for agents in collisions:
-                            if(isinstance(agents, swimmerPlayer.swimmerPlayer)):
-                                agents.changeScore(objectz.cost)
-                                objectz.damagedSound(agents.consec)
-                                foundAgent = True
-                                if(objectz.isBad):
-                                    agents.paralyzed=True
-                                    agents.consec=0
-                                else:
-                                    agents.consec+=1
-                                print("agents score %s" %agents.score)
-                                break #only want one agent getting the loot
-                            if(isinstance(agents, patientPlayer)):
+            if(isinstance(objectz, physics.DynamicObject)):
+                if ((abs(objectz.dX) >= 1) or (abs(objectz.dY) >= 1)):
+                    collisions = physics.velHandler(objectz, objects)
+                    if(collisions!=[]):
+                        if (isinstance(objectz, seaItem.seaItem)):
+                            foundAgent = False
+                            for agents in collisions:
+                                if(isinstance(agents, swimmerPlayer.swimmerPlayer)):
+                                    agents.changeScore(objectz.cost)
+                                    objectz.damagedSound(agents.consec)
+                                    foundAgent = True
+                                    if(objectz.isBad):
+                                        agents.paralyzed=True
+                                        agents.consec=0
+                                    else:
+                                        agents.consec+=1
+                                    print("agents score %s" %agents.score)
+                                    break #only want one agent getting the loot
+                                if(isinstance(agents, patientPlayer)):
+                                    removeObj(objects, objectz)
+                            if(foundAgent):
                                 removeObj(objects, objectz)
-                        if(foundAgent):
-                            removeObj(objects, objectz)
-                    if (isinstance(objectz, swimmerPlayer.swimmerPlayer)): #If the current object is a player
-                        for agents in collisions:
-                            if(isinstance(agents, seaItem.seaItem)):
-                                objectz.changeScore(agents.cost)
-                                agents.damagedSound(objectz.consec)
-                                if(agents.isBad):
-                                    objectz.paralyzed=True
-                                    agents.consec = 0
-                                else:
-                                    objectz.consec+=1
-                                removeObj(objects, agents)
-                            elif(isinstance(agents, swimmerPlayer.swimmerPlayer)): #If we are colliding with another player...
-                                if(abs(agents.momX) < abs(objectz.momX)):
-                                    agents.momX = objectz.momX*2
-
+                        if (isinstance(objectz, swimmerPlayer.swimmerPlayer)): #If the current object is a player
+                            notCornered = True
+                            for agents in collisions:
+                                if(isinstance(agents, Chest)): #Colliding with chest
+                                    objectz.depositCoins()
+                                if(isinstance(agents, physics.Object)): #If it is colliding with something already, say a wall
+                                    objectz.touchingCorner = True
+                                    notCornered = False
+                                if(isinstance(agents, seaItem.seaItem)):
+                                    objectz.changeScore(agents.cost)
+                                    agents.damagedSound(objectz.consec)
+                                    if(agents.isBad):
+                                        objectz.paralyzed=True
+                                        agents.consec = 0
+                                    else:
+                                        objectz.consec+=1
+                                    removeObj(objects, agents)
+                                elif(isinstance(agents, swimmerPlayer.swimmerPlayer)): #If we are colliding with another player...
+                                    if(agents.touchingCorner==False):
+                                        if(abs(agents.momX) < abs(objectz.momX)):
+                                            if(agents.x > vertSprite.get_width()*4):
+                                                if (agents.x < windowX - agents.sprite.get_width()-vertSprite.get_width()*4):
+                                                    agents.momX = objectz.momX*2
+                                    elif(objectz.touchingCorner == False):
+                                        if (objectz.x >vertSprite.get_width()*4):
+                                            if(objectz.x < windowX - objectz.sprite.get_width()-vertSprite.get_width()*4):
+                                                objectz.momX = agents.momX*2
+                            if(notCornered):
+                                objectz.touchingCorner=False
         mainWindow.fill((0, 0, 0))
         mainWindow.blit(bg1, (0,0))
         for objectz in objects:
             mainWindow.blit(objectz.sprite, (objectz.x, objectz.y))
         mainWindow.blit(bg2, (0, 0))
+        mainWindow.blit(chest.sprite, (chest.x, chest.y))
         pygame.display.update()
     endGameTimer = timer(5, framerate)
     bloopSound = "data/assets/sounds/Upbeat.mp3"
