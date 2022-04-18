@@ -128,6 +128,8 @@ def startGame(mainWindow, scale, framerate):
     team2BControls = {
         "up": pygame.K_UP
     }
+
+
     objects = []
     scoreTexts = []
     maxHeight = windowY/8
@@ -145,6 +147,11 @@ def startGame(mainWindow, scale, framerate):
     pygame.mixer.init()
     bloopSound = "data/assets/sounds/sfx.mp3"
 
+    team1Score = textFloat.textFloat(scale, 0+(30*scale)/2, 0, team1Sub.storedCoins, (255,255,255), False)
+    team2Score = textFloat.textFloat(scale, windowX-(180*scale), 0, team1Sub.storedCoins, (255, 255, 255), False)
+
+    scoreTexts.append(team1Score)
+    scoreTexts.append(team2Score)
 
 
     sound1 = pygame.mixer.Sound(bloopSound)
@@ -228,6 +235,10 @@ def startGame(mainWindow, scale, framerate):
                 val = (val<=1)
                 timers[i] = timer(random.randint(0,3), framerate)
                 spawnCoin(objects, scale, val)
+
+        team1Score.sprite = team1Score.scoreFont.render("Team X: " + str(team1Sub.storedCoins), False, team1Score.color)
+        team2Score.sprite = team2Score.scoreFont.render("Team O: " + str(team2Sub.storedCoins), False, team2Score.color)
+
         for texts in scoreTexts:
             texts.timeUntilDeletion()
             if (not texts.alive):

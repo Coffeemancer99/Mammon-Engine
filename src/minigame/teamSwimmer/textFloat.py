@@ -9,11 +9,12 @@ class textFloat():
 
         self.x = x
         self.y = y
-        self.scoreFont = pygame.font.SysFont('Comic Sans MS', 30)
+        self.scoreFont = pygame.font.SysFont('Comic Sans MS', 30*scale)
         self.durTimer = timer(1, framerate)
         self.timerEnabled = timerEnabled
         self.sprite = self.scoreFont.render(str(score), False, color)
         self.alive = True
+        self.color=color
 
     def timeUntilDeletion(self):
         self.durTimer.decrement()
