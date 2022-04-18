@@ -13,6 +13,7 @@ from src.game.boardGame.minigameManager import runMinigame
 from src.game.boardGame2.boardRenderer import BoardRenderer
 from src.game.boardGame2.spriteLoader import SpriteLoader
 from src.minigame.teamSwimmer import teamSwimmer
+from src.game.boardGame.inventoryMenuStuff.inventoryMenuCreatorFunctions import *
 
 """
     575 total
@@ -136,80 +137,93 @@ def getTypeOfTile(currentTile, player, mainWindow, scale, framerate):
 def inventoryScreen(mainWindow, scale, framerate, currentPlayer, listOfPlayers):
     playerThatIsTargetted = 1
     clock = pygame.time.Clock()
-    transaction = False
-    inventoryItemOne = SpriteLoader().loadImage(currentPlayer.getInventoryItem(0).getButtonImage())
-    inventoryItemTwo = SpriteLoader().loadImage(currentPlayer.getInventoryItem(1).getButtonImage())
-    inventoryItemThree = SpriteLoader().loadImage(currentPlayer.getInventoryItem(2).getButtonImage())
-    inventoryItemFour = SpriteLoader().loadImage(currentPlayer.getInventoryItem(3).getButtonImage())
 
-    inventoryItemOne = pygame.transform.scale(inventoryItemOne,
-                                              ((inventoryItemOne.get_width()) * scale,
-                                               (inventoryItemOne.get_height()) * scale))
-    inventoryItemTwo = pygame.transform.scale(inventoryItemTwo,
-                                              ((inventoryItemTwo.get_width()) * scale,
-                                               (inventoryItemTwo.get_height()) * scale))
-    inventoryItemThree = pygame.transform.scale(inventoryItemThree,
-                                                ((inventoryItemThree.get_width()) * scale,
-                                                 (inventoryItemThree.get_height()) * scale))
-    inventoryItemFour = pygame.transform.scale(inventoryItemFour,
-                                               ((inventoryItemFour.get_width()) * scale,
-                                                (inventoryItemFour.get_height()) * scale))
+    # Make the images
+    itemImages = makeAllImages(mainWindow, scale, currentPlayer)
 
-    mainWindow.fill((55, 55, 55))
-    # Put buttons here
-    mainWindow.blit(inventoryItemOne, (32 * scale, 32 * scale))
-    mainWindow.blit(inventoryItemTwo, (32 * scale, 112 * scale))
-    mainWindow.blit(inventoryItemThree, (32 * scale, 208 * scale))
-    mainWindow.blit(inventoryItemFour, (412 * scale, 356 * scale))
+    # Make the buttons
+    invMenuButtons = makeAllButtons(mainWindow, framerate, scale, currentPlayer, itemImages)
 
-    isRunning = True
-    while isRunning:
-        pygame.display.update()
-        clock.tick(framerate)  # 39
-        key = pygame.key.get_pressed()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                isRunning = False
-            if event.type == pygame.MOUSEBUTTONUP:
-                click = pygame.mouse.get_pos()
-                print(click)
-                # Buying logic
-                if (click[0] > 32 * scale) and (click[0] <= 488 * scale):  # x
-                    if (click[1] > 24 * scale) and (click[1] <= 60 * scale):  # y
-                        print(f"Using {currentPlayer.getInventoryItem(0).getName()} item")
-                        if not currentPlayer.currentPlayer.getInventoryItem(0).affectSecondPlayer():
-                            currentPlayer.getInventoryItem(0).getFunctionality(currentPlayer, None)
-                        else:
-                            # TODO: Andrew, make another screen saying, which player you would like to select
-                            currentPlayer.getInventoryItem(0).getFunctionality(currentPlayer,
-                                                                               listOfPlayers[playerThatIsTargetted])
-                    elif (click[1] > 112 * scale) and (click[1] <= 176 * scale):
-                        print(f"Using {currentPlayer.getInventoryItem(1).isBad()} item")
-                        if not currentPlayer.currentPlayer.getInventoryItem(1).affectSecondPlayer():
-                            currentPlayer.getInventoryItem(1).getFunctionality(currentPlayer, None)
-                        else:
-                            # TODO: Andrew, make another screen saying, which player you would like to select
-                            currentPlayer.getInventoryItem(0).getFunctionality(currentPlayer,
-                                                                               listOfPlayers[playerThatIsTargetted])
-                    elif (click[1] > 208 * scale) and (click[1] <= 252 * scale):
-                        print(f"Using {currentPlayer.getInventoryItem(2).getName()} item")
-                        if not currentPlayer.currentPlayer.getInventoryItem(2).affectSecondPlayer():
-                            currentPlayer.getInventoryItem(2).getFunctionality(currentPlayer, None)
-                        else:
-                            # TODO: Andrew, make another screen saying, which player you would like to select
-                            currentPlayer.getInventoryItem(2).getFunctionality(currentPlayer,
-                                                                               listOfPlayers[playerThatIsTargetted])
-                    elif (click[1] > 304 * scale) and (click[1] <= 328 * scale):
-                        print(f"Using {currentPlayer.getInventoryItem(3).getName()} item")
-                        if not currentPlayer.currentPlayer.getInventoryItem(3).affectSecondPlayer():
-                            currentPlayer.getInventoryItem(3).getFunctionality(currentPlayer, None)
-                        else:
-                            # TODO: Andrew, make another screen saying, which player you would like to select
-                            currentPlayer.getInventoryItem(3).getFunctionality(currentPlayer,
-                                                                               listOfPlayers[playerThatIsTargetted])
-                    if transaction:
-                        currentPlayer.getInventory()
-                        isRunning = False
+    # Make the menu
+    invScreen = InventoryMenu("Inventory", buttons=invMenuButtons, images=itemImages,
+                              currentPlayer=currentPlayer, listOfPlayers=listOfPlayers)
+    # Launch the menu
+    invScreen.launch(mainWindow, framerate)
+
+    # transaction = False
+    # inventoryItemOne = SpriteLoader().loadImage(currentPlayer.getInventoryItem(0).getButtonImage())
+    # inventoryItemTwo = SpriteLoader().loadImage(currentPlayer.getInventoryItem(1).getButtonImage())
+    # inventoryItemThree = SpriteLoader().loadImage(currentPlayer.getInventoryItem(2).getButtonImage())
+    # inventoryItemFour = SpriteLoader().loadImage(currentPlayer.getInventoryItem(3).getButtonImage())
+    #
+    # inventoryItemOne = pygame.transform.scale(inventoryItemOne,
+    #                                           ((inventoryItemOne.get_width()) * scale,
+    #                                            (inventoryItemOne.get_height()) * scale))
+    # inventoryItemTwo = pygame.transform.scale(inventoryItemTwo,
+    #                                           ((inventoryItemTwo.get_width()) * scale,
+    #                                            (inventoryItemTwo.get_height()) * scale))
+    # inventoryItemThree = pygame.transform.scale(inventoryItemThree,
+    #                                             ((inventoryItemThree.get_width()) * scale,
+    #                                              (inventoryItemThree.get_height()) * scale))
+    # inventoryItemFour = pygame.transform.scale(inventoryItemFour,
+    #                                            ((inventoryItemFour.get_width()) * scale,
+    #                                             (inventoryItemFour.get_height()) * scale))
+    #
+    # mainWindow.fill((55, 55, 55))
+    # # Put buttons here
+    # mainWindow.blit(inventoryItemOne, (32 * scale, 32 * scale))
+    # mainWindow.blit(inventoryItemTwo, (32 * scale, 112 * scale))
+    # mainWindow.blit(inventoryItemThree, (32 * scale, 208 * scale))
+    # mainWindow.blit(inventoryItemFour, (412 * scale, 356 * scale))
+    #
+    # isRunning = True
+    # while isRunning:
+    #     pygame.display.update()
+    #     clock.tick(framerate)  # 39
+    #     key = pygame.key.get_pressed()
+    #     for event in pygame.event.get():
+    #         if event.type == pygame.QUIT:
+    #             isRunning = False
+    #         if event.type == pygame.MOUSEBUTTONUP:
+    #             click = pygame.mouse.get_pos()
+    #             print(click)
+    #             # Buying logic
+    #             if (click[0] > 32 * scale) and (click[0] <= 488 * scale):  # x
+    #                 if (click[1] > 24 * scale) and (click[1] <= 60 * scale):  # y
+    #                     print(f"Using {currentPlayer.getInventoryItem(0).getName()} item")
+    #                     if not currentPlayer.currentPlayer.getInventoryItem(0).affectSecondPlayer():
+    #                         currentPlayer.getInventoryItem(0).getFunctionality(currentPlayer, None)
+    #                     else:
+    #                         # TODO: Andrew, make another screen saying, which player you would like to select
+    #                         currentPlayer.getInventoryItem(0).getFunctionality(currentPlayer,
+    #                                                                            listOfPlayers[playerThatIsTargetted])
+    #                 elif (click[1] > 112 * scale) and (click[1] <= 176 * scale):
+    #                     print(f"Using {currentPlayer.getInventoryItem(1).isBad()} item")
+    #                     if not currentPlayer.currentPlayer.getInventoryItem(1).affectSecondPlayer():
+    #                         currentPlayer.getInventoryItem(1).getFunctionality(currentPlayer, None)
+    #                     else:
+    #                         # TODO: Andrew, make another screen saying, which player you would like to select
+    #                         currentPlayer.getInventoryItem(0).getFunctionality(currentPlayer,
+    #                                                                            listOfPlayers[playerThatIsTargetted])
+    #                 elif (click[1] > 208 * scale) and (click[1] <= 252 * scale):
+    #                     print(f"Using {currentPlayer.getInventoryItem(2).getName()} item")
+    #                     if not currentPlayer.currentPlayer.getInventoryItem(2).affectSecondPlayer():
+    #                         currentPlayer.getInventoryItem(2).getFunctionality(currentPlayer, None)
+    #                     else:
+    #                         # TODO: Andrew, make another screen saying, which player you would like to select
+    #                         currentPlayer.getInventoryItem(2).getFunctionality(currentPlayer,
+    #                                                                            listOfPlayers[playerThatIsTargetted])
+    #                 elif (click[1] > 304 * scale) and (click[1] <= 328 * scale):
+    #                     print(f"Using {currentPlayer.getInventoryItem(3).getName()} item")
+    #                     if not currentPlayer.currentPlayer.getInventoryItem(3).affectSecondPlayer():
+    #                         currentPlayer.getInventoryItem(3).getFunctionality(currentPlayer, None)
+    #                     else:
+    #                         # TODO: Andrew, make another screen saying, which player you would like to select
+    #                         currentPlayer.getInventoryItem(3).getFunctionality(currentPlayer,
+    #                                                                            listOfPlayers[playerThatIsTargetted])
+    #                 if transaction:
+    #                     currentPlayer.getInventory()
+    #                     isRunning = False
 
 
 # This function is the "store" that will be in the game and I am using dice.png as placeholder
@@ -549,12 +563,12 @@ def startGame(mainWindow, scale, framerate, board):
                 # Game starts here
                 # For each player in listOfPlayers, make them do a move by rolling dice and going to a tile
 
-                # TODO: Andrew Need to make a inventory screen here
-                # if key[pygame.K_i]:
-                #     if currentState == States.PLAYERMOVE:
-                #         inventoryScreen(mainWindow,scale,framerate,listOfPlayers[currentPlayer])
-                #         time.sleep(1)
-                #         continue
+            # TODO: Andrew Need to make a inventory screen here
+            # elif key[pygame.K_i]:
+            #     if currentState == States.PLAYERMOVE:
+            #         inventoryScreen(mainWindow,scale,framerate,listOfPlayers[currentPlayer], currentPlayer)
+            #         time.sleep(1)
+            #         continue
 
                 if key[pygame.K_SPACE]:  # End turn and move the character
                     if currentState == States.PLAYERMOVE:
@@ -684,5 +698,10 @@ def startGame(mainWindow, scale, framerate, board):
                                 # print("ERROR! minigameManager.py Failed to launch minigame! Attempting to respin...")
                                 result = False
                         currentState = States.PLAYERMOVE
+                # if key[pygame.K_i]:
+                #     if currentState == States.PLAYERMOVE:
+                #         inventoryScreen(mainWindow, scale, framerate, listOfPlayers[currentPlayer], currentPlayer)
+                #         time.sleep(1)
+                #         continue
                 goingBackToStart = False
                 renderer.render()  # 225
