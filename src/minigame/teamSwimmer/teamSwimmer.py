@@ -149,9 +149,11 @@ def startGame(mainWindow, scale, framerate):
 
     team1Score = textFloat.textFloat(scale, 0+(30*scale)/2, 0, team1Sub.storedCoins, (255,255,255), False)
     team2Score = textFloat.textFloat(scale, windowX-(180*scale), 0, team1Sub.storedCoins, (255, 255, 255), False)
+    timerText = textFloat.textFloat(scale, windowX/2-(30*scale), 0, 90, (255,255,255), False)
 
     scoreTexts.append(team1Score)
     scoreTexts.append(team2Score)
+    scoreTexts.append(timerText)
 
 
     sound1 = pygame.mixer.Sound(bloopSound)
@@ -173,13 +175,13 @@ def startGame(mainWindow, scale, framerate):
         # objects.append(hor1)
         # objects.append(hor2)
     timers = []
-    scores = []
-    team1Text = None
-    team2Text = None
+
+
     goldTimer = timer(3, framerate)
     timers.append(goldTimer)
     gameStats = None
     EXTRA_GOLD = True
+    PANIC_TIMERS = False
     if(EXTRA_GOLD):
         goldTimer2 = timer(3, framerate)
         timers.append(goldTimer2)
@@ -233,18 +235,23 @@ def startGame(mainWindow, scale, framerate):
             if(timers[i].isFinished()):
                 val = random.randint(0,50)%8
                 val = (val<=1)
-                timers[i] = timer(random.randint(0,3), framerate)
+                if(PANIC_TIMERS):
+                    timers[i] = timer(random.randint(0, 1), framerate)
+                else:
+                    timers[i] = timer(random.randint(0,3), framerate)
                 spawnCoin(objects, scale, val)
 
         team1Score.sprite = team1Score.scoreFont.render("Team X: " + str(team1Sub.storedCoins), False, team1Score.color)
         team2Score.sprite = team2Score.scoreFont.render("Team O: " + str(team2Sub.storedCoins), False, team2Score.color)
+        timerText.sprite =  timerText.scoreFont.render(str(gameTimer.getTimeSeconds()), False, timerText.color)
 
         for texts in scoreTexts:
             texts.timeUntilDeletion()
             if (not texts.alive):
                 # removeObj(objects, objectz)
                 removeObj(scoreTexts, texts)
-
+        if(gameTimer.getTimeSeconds()<=15):
+            PANIC_TIMERS=True
         for objectz in objects:
 
 
