@@ -9,13 +9,13 @@ def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
     windowX, windowY = pygame.display.get_surface().get_size()
     isRunning = True
-    weirdScale = 0.0375 * scale/2
+    weirdScale = 0.0375 * scale/1
 
     swimmer1Sprite = spritegen.grab_sprite("data/assets/sprites/goodSprites/barrelSub.png", weirdScale)
     objects = []
     p1 = swimmerPlayer.SwimmerPlayer(64, 256, scale, pygame.K_w, pygame.K_a, pygame.K_d, pygame.K_s, swimmer1Sprite, 1,
                                      objects)
-    p2 = swimmerPlayer.SwimmerPlayer(256, 64, scale, pygame.K_UP, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN,
+    p2 = swimmerPlayer.SwimmerPlayer(256, 256, scale, pygame.K_UP, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN,
                                      swimmer1Sprite, 1, objects)
 
     objects.append(p1)
@@ -47,7 +47,19 @@ def startGame(mainWindow, scale, framerate):
 
             # Update velocity if it is over 1 in any direction
             if (abs(obj.dX) >= 1) or (abs(obj.dY) >= 1):
-                physics.velHandler(obj, objects)
+                collisions = physics.velHandler(obj, objects)
+                if len(collisions) != 0:
+                    if isinstance(obj, swimmerPlayer.SwimmerPlayer): # If the current object is a player
+                        for otherObj in collisions:
+                            # Update velocity on collision
+                            # TODO figure out why i can only bump once and need to wait for
+                            #   it to slow back to mom = 0 before next bump
+                            if isinstance(otherObj, swimmerPlayer.SwimmerPlayer):
+                                if abs(otherObj.momX) < abs(obj.momX):
+                                    otherObj.momX = obj.momX
+                                if abs(otherObj.momY) < abs(obj.momY):
+                                    otherObj.momY = obj.momY
+
 
             outOfBounds(objects)
 

@@ -14,21 +14,15 @@ Menu to choose what game board to play on
 
 # NEWWWWWWWWWWW
 def createAllMapSelectionButtons(mainWindow, framerate, scale, mapSelectionImages):
-    currentMap = ""
     width, height = pygame.display.get_surface().get_size()
-
-    # def onClickRando():
-    #     print("Unassigned")
 
     def onClickBackButton(listOfButtons=None):
         return mainmenu.launch(width, height, framerate, scale)
 
     def onClickFirstButton(listOfButtons=None):
-        currentMap = "FirstBoard"
         mapSelectionImages[1].renderImage()
 
     def onClickUndefButton(listOfButtons=None):
-        currentMap = "DNE"
         mapSelectionImages[2].renderImage()
 
 
@@ -38,13 +32,10 @@ def createAllMapSelectionButtons(mainWindow, framerate, scale, mapSelectionImage
             # print("====" + str(listOfButtons))
             if len(listOfButtons) > 1:
                 if (listOfButtons[-2].name == "map1" and listOfButtons[-1].name == "accept" and listOfButtons[-2].shouldRet):
-                    # acceptButton.dummy = False
                     print("PLAY FIRST BOARD")
                     firstBoard = FirstBoard(scale).testFirstBoard()
                     return boardGame.startGame(mainWindow, scale, framerate, firstBoard)
                 else:
-                    # cannot set dummy after click happened with current setup...
-                    # acceptButton.dummy = True
                     print("Nothing Happen")
             else:
                 print("Nothing")
@@ -89,10 +80,6 @@ def createAllMapSelectionImages(mainWindow, scale):
                                  scale, "data/assets/sprites/unreleasedMapPrev.png", mainWindow, False)
 
     # needed to decrease the size of the image, div by 1.6 if full res to get to 320x280
-
-    # unreleasedMapPrevImg = pygame.transform.scale(unreleasedMapPrevImg,
-    #                                               ((unreleasedMapPrevImg.get_width()) * scale,
-    #                                                (unreleasedMapPrevImg.get_height()) * scale))
 
     return mapPrevImg, firstBoardPrevImg, unreleasedMapPrevImg
 
