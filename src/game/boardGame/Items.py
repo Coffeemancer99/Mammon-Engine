@@ -31,6 +31,11 @@ class ItemInterface:
         """Returns the png image associated with that item"""
         pass
 
+    def affectsSecondPlayer(self):
+        """Returns a boolean if an item affects a second player or not. If true, that means the second parameter of
+        getFunctionality will be used """
+        pass
+
 
 # Let's make good items first....
 class DestroyAllBadItemsItem(ItemInterface):
@@ -56,7 +61,10 @@ class DestroyAllBadItemsItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return False
 
 
 class ThirdDiceItem(ItemInterface):
@@ -73,7 +81,7 @@ class ThirdDiceItem(ItemInterface):
         return 0.13
 
     def getFunctionality(self, player, player2):
-        if player.toggleSetThirdDiceroll:
+        if player.toggleSetThirdDiceroll: #TODO: FIXXXXXXXXXXXXXXXXX  THISSSSSSSSSSSSSSs
             return False
         player.toggleSetThirdDiceroll()
         print(f"Player {player.getPlayerID} now has a third dice roll")
@@ -81,7 +89,10 @@ class ThirdDiceItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return False
 
 
 class SpeedBoostItem(ItemInterface):
@@ -105,7 +116,10 @@ class SpeedBoostItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return False
 
 
 class GainMoneyRandomItem(ItemInterface):
@@ -125,10 +139,14 @@ class GainMoneyRandomItem(ItemInterface):
         money = random.choice(range(0, 51))
         player.setMoney(money)  # Now need to display the money
         print(f"Player {player.getPlayerID()} got {money} and now has {player.getMoney()}")
+        return True
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return False
 
 
 class TeleportCloseItem(ItemInterface):
@@ -149,7 +167,10 @@ class TeleportCloseItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return False
 
 
 class SabotageDice(ItemInterface):
@@ -175,7 +196,10 @@ class SabotageDice(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return True
 
 
 class StealItem(ItemInterface):
@@ -200,7 +224,10 @@ class StealItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return True
 
 
 class OpponentLoseTurnItem(ItemInterface):
@@ -224,7 +251,10 @@ class OpponentLoseTurnItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return True
 
 
 # Let's do the bad items now....
@@ -249,8 +279,10 @@ class MoveOneSpotLess(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
 
+    def affectsSecondPlayer(self):
+        return False
 
 class InvertedControlsItem(ItemInterface):
     def getName(self):
@@ -275,7 +307,10 @@ class InvertedControlsItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return False
 
 
 class ChangeSpotsItem(ItemInterface):
@@ -296,7 +331,10 @@ class ChangeSpotsItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return False
 
 
 class LostMoneyRandomItem(ItemInterface):
@@ -313,11 +351,17 @@ class LostMoneyRandomItem(ItemInterface):
         return 0.192
 
     def getFunctionality(self, player, player2):
-        pass
+        money = random.choice(range(0, 51))
+        player.setMoney(-money)  # Now need to display the money
+        print(f"Player {player.getPlayerID()} lost {money} and now has {player.getMoney()}")
+        return True
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return False
 
 
 class OneDiceItem(ItemInterface):
@@ -341,4 +385,7 @@ class OneDiceItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        pass
+        return "die1.png"
+
+    def affectsSecondPlayer(self):
+        return False
