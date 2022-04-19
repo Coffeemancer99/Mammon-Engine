@@ -39,6 +39,10 @@ class ItemInterface:
 
 # Let's make good items first....
 class DestroyAllBadItemsItem(ItemInterface):
+    """
+    This item destroys all bad items in an inventory, the resetting of the bad items counter will happen in the main
+    game loop
+    """
     def getName(self):
         return "DestroyAllBadItemsItem"
 
@@ -68,8 +72,9 @@ class DestroyAllBadItemsItem(ItemInterface):
 
 
 class SecondDiceItem(ItemInterface):
+    """This item gives a player a second dice for them to roll"""
     def getName(self):
-        return "ThirdDiceItem"
+        return "SecondDiceItem"
 
     def isBad(self):
         return False
@@ -84,7 +89,7 @@ class SecondDiceItem(ItemInterface):
         if player.getSecondDiceroll():
             return False
         player.toggleSetSecondDiceroll()
-        print(f"Player {player.getPlayerID} now has a third dice roll")
+        print(f"Player {player.getPlayerID} now has a second dice roll")
         return True
 
     def getButtonImage(self):
@@ -96,6 +101,7 @@ class SecondDiceItem(ItemInterface):
 
 
 class SpeedBoostItem(ItemInterface):
+    """This item gives a player a speed boost for a mini-game when activated"""
     def getName(self):
         return "SpeedBoostItem"
 
@@ -123,6 +129,7 @@ class SpeedBoostItem(ItemInterface):
 
 
 class GainMoneyRandomItem(ItemInterface):
+    """This item gives a player a random amount of money when activated which can be a range from 0-50"""
     def getName(self):
         return "GainMoneyRandomItem"
 
@@ -173,7 +180,9 @@ class TeleportCloseItem(ItemInterface):
         return False
 
 
-class SabotageDice(ItemInterface): #TODO: START HERE, MAKE THIS 1
+class SabotageDice(ItemInterface):
+    """This item takes two :param for getFunctionality which is a first player and the second player the first player
+    wants to target. This item makes the second player only move once"""
     def getName(self):
         return "SabotageDiceItem"
 
@@ -188,15 +197,15 @@ class SabotageDice(ItemInterface): #TODO: START HERE, MAKE THIS 1
 
     def getFunctionality(self, player, player2):
         if player2.getOneDiceRollBad():
-            print(f"Player {player2.getPlayerID()} already has the debuff of having only one Dice Roll")
+            print(f"Player {player2.getPlayerID()} already has the debuff of having only moving once")
             return False
         if player2.getSecondDiceroll():
             print(
                 f"Player {player2.getPlayerID()} already activated their item of having a second dice roll, therefore "
                 f"you cant use this item while it is enabled")
             return False
-        player2.toggleSetOneDiceroll()
-        print(f"Player {player.getPlayerID()} made Player {player2.getPlayerID()} only roll one dice")
+        player2.toggleSetOneDicerollBad()
+        print(f"Player {player.getPlayerID()} made Player {player2.getPlayerID()} only move once")
         return True
 
     def getButtonImage(self):
@@ -208,6 +217,8 @@ class SabotageDice(ItemInterface): #TODO: START HERE, MAKE THIS 1
 
 
 class StealItem(ItemInterface):
+    """This item takes two :param for getFunctionality which is a first player and the second player the first player
+    wants to target. This item makes the player take an item form player2 based on what the first player took"""
     def getName(self):
         return "StealItemItem"
 
@@ -236,6 +247,8 @@ class StealItem(ItemInterface):
 
 
 class OpponentLoseTurnItem(ItemInterface):
+    """This item takes two :param for getFunctionality which is a first player and the second player the first player
+    wants to target. This item makes the player target player2 and makes player 2 lose a turn"""
     def getName(self):
         return "OpponentLoseTurnItem"
 
@@ -264,6 +277,8 @@ class OpponentLoseTurnItem(ItemInterface):
 
 # Let's do the bad items now....
 class MoveOneSpotLess(ItemInterface):
+    """This item is a bad item which means if it is not used in 4 turns, the player will go back to the beginning,
+    This item makes the player move one spot less """
     def getName(self):
         return "OpponentLoseTurnItem"
 
@@ -291,6 +306,8 @@ class MoveOneSpotLess(ItemInterface):
 
 
 class InvertedControlsItem(ItemInterface):
+    """This item is a bad item which means if it is not used in 4 turns, the player will go back to the beginning,
+    This item inverts all of the controls for a minigame"""
     def getName(self):
         return "InvertedControlsItem"
 
@@ -320,6 +337,8 @@ class InvertedControlsItem(ItemInterface):
 
 
 class ChangeSpotsItem(ItemInterface):
+    """This item is a bad item which means if it is not used in 4 turns, the player will go back to the beginning.
+    This item changes spots with player 1 and player 2 based on what player 1 picks """
     def getName(self):
         return "ChangeSpotsItem"
 
@@ -344,6 +363,8 @@ class ChangeSpotsItem(ItemInterface):
 
 
 class LostMoneyRandomItem(ItemInterface):
+    """This item is a bad item which means if it is not used in 4 turns, the player will go back to the beginning.
+    This item makes a player lose money from 0-50 """
     def getName(self):
         return "LostMoneyRandomItem"
 
@@ -371,6 +392,8 @@ class LostMoneyRandomItem(ItemInterface):
 
 
 class OneDiceItem(ItemInterface):
+    """This item is a bad item which means if it is not used in 4 turns, the player will go back to the beginning.
+    This item makes it so a plyaer cnn only move once and can't roll the dice """
     def getName(self):
         return "OneDiceItem"
 
@@ -384,11 +407,16 @@ class OneDiceItem(ItemInterface):
         return 0.172
 
     def getFunctionality(self, player, player2):
-        if player.getOneDiceRollGood():
+        if player.getOneDiceRollBad():
+            print(f"Player {player.getPlayerID()} already has the debuff of having only moving once")
             return False
         if player.getSecondDiceroll():
+            print(
+                f"Player {player.getPlayerID()} already activated their item of having a second dice roll, therefore "
+                f"you cant use this item while it is enabled")
             return False
-        player.toggleSetOneDicerollGood()
+        player.toggleSetOneDicerollBad()
+        print(f"Player {player.getPlayerID()} made Player {player.getPlayerID()} only move once")
         return True
 
     def getButtonImage(self):

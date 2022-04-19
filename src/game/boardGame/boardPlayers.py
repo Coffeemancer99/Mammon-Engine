@@ -24,7 +24,6 @@ class BoardPlayer(pygame.sprite.Sprite):
         self.startCountDown = 4
         self.speedBoost = False
         self.oneDiceRollBad = False
-        self.oneDiceRollGood = False
         self.secondDiceRoll = False
         self.itemIndex = 0
         self.moveOneSpotLess = False
@@ -124,9 +123,6 @@ class BoardPlayer(pygame.sprite.Sprite):
     def getOneDicerollBad(self):
         return self.oneDiceRollBad
 
-    def getOneDiceRollGood(self):
-        return self.oneDiceRollGood
-
     def getMoveOneSpotLess(self):
         return self.moveOneSpotLess
 
@@ -146,10 +142,6 @@ class BoardPlayer(pygame.sprite.Sprite):
     def toggleSetOneDicerollBad(self):
         self.oneDiceRollBad = not self.oneDiceRollBad
         return self.oneDiceRollBad
-
-    def toggleSetOneDicerollGood(self):
-        self.oneDiceRollGood = not self.oneDiceRollGood
-        return self.oneDiceRollGood
 
     def toggleSetSecondDiceroll(self):
         self.secondDiceRoll = not self.secondDiceRoll
