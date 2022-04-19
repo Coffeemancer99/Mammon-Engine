@@ -8,6 +8,7 @@ from src.game.boardGame.Store import Store
 from src.game.boardGame.boardPlayers import BoardPlayer
 from enum import Enum, auto
 
+from src.game.boardGame.inventoryMenuStuff.inventoryMenu import InventoryMenu
 from src.game.boardGame.itemInventory import ItemHandler, ItemFunctionalityBad, ItemFunctionalityGood
 from src.game.boardGame.minigameManager import runMinigame
 from src.game.boardGame2.boardRenderer import BoardRenderer
@@ -152,7 +153,7 @@ def inventoryScreen(mainWindow, scale, framerate, currentPlayer, listOfPlayers):
     itemImages = makeAllImages(mainWindow, scale, currentPlayer)
 
     # Make the buttons
-    invMenuButtons = makeAllButtons(mainWindow, framerate, scale, currentPlayer, itemImages)
+    invMenuButtons = makeAllButtons(mainWindow, framerate, scale, currentPlayer, itemImages, listOfPlayers)
 
     # Make the menu
     invScreen = InventoryMenu("Inventory", buttons=invMenuButtons, images=itemImages,
@@ -581,11 +582,6 @@ def startGame(mainWindow, scale, framerate, board):
                 # For each player in listOfPlayers, make them do a move by rolling dice and going to a tile
 
             # TODO: Andrew Need to make a inventory screen here
-            # elif key[pygame.K_i]:
-            #     if currentState == States.PLAYERMOVE:
-            #         inventoryScreen(mainWindow,scale,framerate,listOfPlayers[currentPlayer], currentPlayer)
-            #         time.sleep(1)
-            #         continue
             if key[pygame.K_i]:
                 if currentState == States.PLAYERMOVE:
                     inventoryScreen(mainWindow, scale, framerate, listOfPlayers[currentPlayer], currentPlayer)

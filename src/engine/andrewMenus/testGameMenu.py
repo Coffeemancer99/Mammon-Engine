@@ -40,25 +40,25 @@ def createAllGameMenuButtons(mainWindow, framerate, scale):
     :return: returns all the game menu buttons in a tuple
     """
 
-    def onClickRando1Button(listOfButtons=None):
+    def onClickRando1Button(listOfButtons=None, listOfImages=None):
         return handGame.startGame(mainWindow, scale, framerate)
 
-    def onClickRando2Button(listOfButtons=None):
+    def onClickRando2Button(listOfButtons=None, listOfImages=None):
         return physicstest.startGame(mainWindow, scale, framerate)
 
-    def onClickRando3Button(listOfButtons=None):
+    def onClickRando3Button(listOfButtons=None, listOfImages=None):
         return masher.startGame(mainWindow, scale, framerate)
 
-    def onClickRando4Button(listOfButtons=None):
+    def onClickRando4Button(listOfButtons=None, listOfImages=None):
         return chartACourse.startGame(mainWindow, scale, framerate)
 
-    def onClickRando5Button(listOfButtons=None):
+    def onClickRando5Button(listOfButtons=None, listOfImages=None):
         return myLevel.startGame(mainWindow, scale, framerate)
 
-    def onClickRando6Button(listOfButtons=None):
+    def onClickRando6Button(listOfButtons=None, listOfImages=None):
         return teamSwimmer.startGame(mainWindow, scale, framerate)
 
-    def onClickBackButton(listOfButtons=None):
+    def onClickBackButton(listOfButtons=None, listOfImages=None):
         return minigameTypeMenu.launchMinigameMenu(mainWindow, framerate, scale)
 
     def onClickRandoButtonUnassigned():

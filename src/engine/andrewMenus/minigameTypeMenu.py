@@ -34,13 +34,13 @@ def createAllMinigameButtons(mainWindow, framerate, scale):
     """
     width, height = pygame.display.get_surface().get_size()
 
-    def onClickRando(listOfButtons=None):
+    def onClickRando(listOfButtons=None, listOfImages=None):
         print("Unassigned")
 
-    def onClickBackButton(listOfButtons=None):
+    def onClickBackButton(listOfButtons=None, listOfImages=None):
         return mainmenu.launch(width, height, framerate, scale)
 
-    def onClickTestButton(listOfButtons=None):
+    def onClickTestButton(listOfButtons=None, listOfImages=None):
         return testGameMenu.launchTestMinigame(mainWindow, framerate, scale)
 
     newFfaButton = Button(24, 208, 464, 128, scale, onClickRando,

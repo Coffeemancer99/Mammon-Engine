@@ -16,18 +16,18 @@ Menu to choose what game board to play on
 def createAllMapSelectionButtons(mainWindow, framerate, scale, mapSelectionImages):
     width, height = pygame.display.get_surface().get_size()
 
-    def onClickBackButton(listOfButtons=None):
+    def onClickBackButton(listOfButtons=None, listOfImages=None):
         return mainmenu.launch(width, height, framerate, scale)
 
-    def onClickFirstButton(listOfButtons=None):
+    def onClickFirstButton(listOfButtons=None, listOfImages=None):
         mapSelectionImages[1].renderImage()
 
-    def onClickUndefButton(listOfButtons=None):
+    def onClickUndefButton(listOfButtons=None, listOfImages=None):
         mapSelectionImages[2].renderImage()
 
 
     # obv current map doesn't matter here, added to preserve idea of the logic
-    def onClickAcceptButton(listOfButtons=None):
+    def onClickAcceptButton(listOfButtons=None, listOfImages=None):
         if(listOfButtons is not None):
             # print("====" + str(listOfButtons))
             if len(listOfButtons) > 1:

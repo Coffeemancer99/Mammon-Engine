@@ -18,6 +18,7 @@ class Image:
         self.imagePath = imagePath  # string
         self.window = window
         self.displayNow = displayNow  # BOOLEAN
+        self.renderThis = False
 
     def renderImage(self):
         image = pygame.image.load(self.imagePath)
@@ -27,3 +28,12 @@ class Image:
 
         self.window.blit(image, (self.x * self.scale, self.y * self.scale))
         pygame.display.update()
+
+
+    def renderImageNoUpdate(self):
+        image = pygame.image.load(self.imagePath)
+        image = pygame.transform.scale(image,
+                                       ((image.get_width()) * self.scale,
+                                        (image.get_height()) * self.scale))
+
+        self.window.blit(image, (self.x * self.scale, self.y * self.scale))

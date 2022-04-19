@@ -1,11 +1,6 @@
-import pygame
-
 from src.engine.andrewMenus.image import Image
-from src.game.boardGame.boardPlayers import BoardPlayer
-from src.game.boardGame.inventoryMenuStuff.inventoryMenu import InventoryMenu
 from src.engine.button import Button
-from src.game.boardGame.itemInventory import *
-
+from src.game.boardGame.inventoryMenuStuff.itemUseMenuFunctions import *
 
 
 def makeAllImages(mainWindow, scale, currentPlayer):
@@ -62,48 +57,81 @@ def getInvBoolList(inventory):
     return invBoolList
 
 
-def makeAllButtons(mainWindow, framerate, scale, currentPlayer, itemImages):
+def makeAllButtons(mainWindow, framerate, scale, currentPlayer, itemImages, listOfPlayers):
 
     curPlayerInv = currentPlayer.getInventory()
     invBoolList = getInvBoolList(curPlayerInv)
     print(invBoolList)
+    # imgList = []
 
     # On Click Functions for buttons
-    def onClickBackButton(listOfButtons=None):
-        # return mainmenu.launch(width, height, framerate, scale)
-        print("Back not hooked up RESET DUMMY WHEN WE DO")
+    def onClickBackButton(listOfButtons=None, listOfImages=None):
+        print("INVENTORY Back")
+        return
 
-    def onClickUseButton(listOfButtons=None):
+    def onClickUseButton(listOfButtons=None, listOfImages=None):
         # Will need list of buttons, check prev for item existing
         # If exist, check type, start menu accordingly if bad item
         if (listOfButtons is not None):
             if len(listOfButtons) > 1:
                 if(("item" in listOfButtons[-2].name) and listOfButtons[-1].name == "use" and listOfButtons[-2].shouldRet):
                     print("CAN USE")
+                    curItemButton = listOfButtons[-2]
+                    if curItemButton.name == "item1":
+                        if curPlayerInv[0].affectsSecondPlayer():
+                            # Make the images
+                            itemImages = makeAllUseMenuImages(mainWindow, scale, currentPlayer, listOfPlayers)
+
+                            # Make the buttons
+                            invMenuButtons = makeAllUseMenuButtons(mainWindow, framerate, scale,
+                                                                   currentPlayer, images=itemImages)
+
+                            # Make the menu
+                            useMenu = InventoryMenu("Use Item On Who?", buttons=invMenuButtons, images=itemImages,
+                                                    currentPlayer=currentPlayer, listOfPlayers=listOfPlayers)
+                            # Launch the menu
+                            useMenu.launchInv(mainWindow, framerate)
+
+
+                    # if is a bad item we can use on other players, choose who we wanna use on
+                    # if()
                     #BLIT ITEM from inventory[0]
                 else:
                     print("Use unhooked (button list > 1)")
             else:
                 print("Use unhooked")
 
-    def onClickItem1Button(listOfButtons=None):
+    def onClickItem1Button(listOfButtons=None, listOfImages=None):
         print("Item 1")
         if invBoolList[0]:
             itemImages[1].renderImage()
-        else:
+            # imgList.append(itemImages[1])
+            if listOfImages is not None:
+                itemImages[1].renderThis = True
+                if listOfImages is not None:
+                    if len(listOfImages) > 0:
+                        listOfImages.remove(listOfImages[-1])
+                listOfImages.append(itemImages[1])
 
+        else:
             itemImages[0].renderImage()
 
 
-    def onClickItem2Button(listOfButtons=None):
+    def onClickItem2Button(listOfButtons=None, listOfImages=None):
         print("Item 2")
         if invBoolList[1]:
             itemImages[2].renderImage()
+            if listOfImages is not None:
+                itemImages[2].renderThis = True
+                if listOfImages is not None:
+                    if len(listOfImages) > 0:
+                        listOfImages.remove(listOfImages[-1])
+                listOfImages.append(itemImages[2])
         else:
             # render default image
             itemImages[0].renderImage()
 
-    def onClickItem3Button(listOfButtons=None):
+    def onClickItem3Button(listOfButtons=None, listOfImages=None):
         print("Item 3")
         if invBoolList[2]:
             itemImages[3].renderImage()
@@ -111,7 +139,7 @@ def makeAllButtons(mainWindow, framerate, scale, currentPlayer, itemImages):
             # render default image
             itemImages[0].renderImage()
 
-    def onClickItem4Button(listOfButtons=None):
+    def onClickItem4Button(listOfButtons=None, listOfImages=None):
         print("Item 4")
         if invBoolList[3]:
             itemImages[4].renderImage()
@@ -122,7 +150,6 @@ def makeAllButtons(mainWindow, framerate, scale, currentPlayer, itemImages):
     # Create Buttons
     backButton = Button(4, 412, 96, 32, scale, onClickBackButton,
                         "data/assets/sprites/backMenuButton.png", mainWindow, "back")
-    backButton.dummy = True
 
     useItemButton = Button(412, 412, 96, 32, scale, onClickUseButton,
                            "data/assets/sprites/useButton.png", mainWindow, "use")

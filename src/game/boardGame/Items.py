@@ -240,7 +240,7 @@ class StealItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        return "die1.png"
+        return "die2.png"
 
     def affectsSecondPlayer(self):
         return True

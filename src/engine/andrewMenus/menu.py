@@ -59,7 +59,6 @@ class Menu:
                     for button in self.buttons:
                         if button.wasClicked(click):
                             listOfButtons.append(button)
-                            # print("Click Det in Menu")
                             if not button.dummy:
                                 # return whatever is defined to do onClick
                                 if len(listOfButtons) == 0:

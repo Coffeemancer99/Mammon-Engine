@@ -35,7 +35,7 @@ class Button:
 
 
 
-    def handleClick(self, click, listOfButtons=None):
+    def handleClick(self, click, listOfButtons=None, listOfImages=None):
         """
         handles what to do when a click is detected
         :param click: location of click in the window (x,y)
@@ -43,7 +43,7 @@ class Button:
         """
         if self.wasClicked(click):
             if len(listOfButtons) != 0:
-                return self.onClick(listOfButtons)
+                return self.onClick(listOfButtons, listOfImages=listOfImages)
             else:
                 return self.onClick()
 
@@ -60,6 +60,18 @@ class Button:
                                       (button.get_height()) * self.scale))
         self.window.blit(button, (self.x * self.scale, self.y * self.scale))
         pygame.display.update()
+
+
+    def renderButtonNoUpdate(self):
+        """
+        loads the button image, scales it, and renders it
+        """
+        button = pygame.image.load(self.imagePath)
+        # scale
+        button = pygame.transform.scale(button,
+                                     ((button.get_width()) * self.scale,
+                                      (button.get_height()) * self.scale))
+        self.window.blit(button, (self.x * self.scale, self.y * self.scale))
 
 
 
