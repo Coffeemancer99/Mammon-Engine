@@ -18,13 +18,56 @@ def makeAllUseMenuImages(mainWindow, scale, currentPlayer, playerList):
     return images
 
 
-def makeAllUseMenuButtons(mainWindow, framerate, scale, currentPlayer, images=None):
+def makeAllUseMenuButtons(mainWindow, framerate, scale, currentPlayer, listOfPlayers, images=None,
+                          curPlayerItemIndex=None):
+    curPlayerInv = currentPlayer.getInventory()
+
     def onClickBackButton(listOfButtons=None, listOfImages=None):
         print("USE MENU Back")
         return
 
     def onClickUseButton(listOfButtons=None, listOfImages=None):
-        pass
+        # players are not in order in list... ordered on who goes first
+        player1 = list((filter(lambda x: x.getPlayerID() == 1, listOfPlayers)))[0]
+        player2 = list((filter(lambda x: x.getPlayerID() == 2, listOfPlayers)))[0]
+        player3 = list((filter(lambda x: x.getPlayerID() == 3, listOfPlayers)))[0]
+        player4 = list((filter(lambda x: x.getPlayerID() == 4, listOfPlayers)))[0]
+
+        if (listOfButtons is not None):
+            if len(listOfButtons) > 1:
+                if listOfButtons[-2].name == "p1" and listOfButtons[-1].name == "use":
+                    # should i pass to this menu and its functions the inventory index
+                    if not curPlayerInv[curPlayerItemIndex].getFunctionality(currentPlayer,
+                                                                             player1):
+                        print("Cannot Use Item, same item already used")
+                    else:
+                        currentPlayer.getInventory().pop(curPlayerItemIndex)
+                        return
+                elif listOfButtons[-2].name == "p2" and listOfButtons[-1].name == "use":
+                    # should i pass to this menu and its functions the inventory index
+                    if not curPlayerInv[curPlayerItemIndex].getFunctionality(currentPlayer,
+                                                                             player2):
+                        print("Cannot Use Item, same item already used")
+                    else:
+                        currentPlayer.getInventory().pop(curPlayerItemIndex)
+                        return
+                elif listOfButtons[-2].name == "p3" and listOfButtons[-1].name == "use":
+                    # should i pass to this menu and its functions the inventory index
+                    if not curPlayerInv[curPlayerItemIndex].getFunctionality(currentPlayer,
+                                                                             player3):
+                        print("Cannot Use Item, same item already used")
+                    else:
+                        currentPlayer.getInventory().pop(curPlayerItemIndex)
+                        return
+                elif listOfButtons[-2].name == "p4" and listOfButtons[-1].name == "use":
+                    # should i pass to this menu and its functions the inventory index
+                    if not curPlayerInv[curPlayerItemIndex].getFunctionality(currentPlayer,
+                                                                             player4):
+                        print("Cannot Use Item, same item already used")
+                    else:
+                        currentPlayer.getInventory().pop(curPlayerItemIndex)
+                        return
+
 
     def onClickP1Button(listOfButtons=None, listOfImages=None):
         print("P1 Chosen")
@@ -90,7 +133,7 @@ def launchUseMenu(mainWindow, framerate, scale):
 
     # Make the buttons
     invMenuButtons = makeAllUseMenuButtons(mainWindow, framerate, scale,
-                                           currentPlayer, images=itemImages)
+                                           currentPlayer, listOfPlayers, images=itemImages)
 
     # Make the menu
     useMenu = InventoryMenu("Use Item On Who?", buttons=invMenuButtons, images=itemImages,

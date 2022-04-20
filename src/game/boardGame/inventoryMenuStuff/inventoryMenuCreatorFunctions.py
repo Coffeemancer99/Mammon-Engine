@@ -79,27 +79,66 @@ def makeAllButtons(mainWindow, framerate, scale, currentPlayer, itemImages, list
                     curItemButton = listOfButtons[-2]
                     if curItemButton.name == "item1":
                         if curPlayerInv[0].affectsSecondPlayer():
-                            # Make the images
-                            itemImages = makeAllUseMenuImages(mainWindow, scale, currentPlayer, listOfPlayers)
-
-                            # Make the buttons
-                            invMenuButtons = makeAllUseMenuButtons(mainWindow, framerate, scale,
-                                                                   currentPlayer, images=itemImages)
-
-                            # Make the menu
-                            useMenu = InventoryMenu("Use Item On Who?", buttons=invMenuButtons, images=itemImages,
-                                                    currentPlayer=currentPlayer, listOfPlayers=listOfPlayers)
-                            # Launch the menu
-                            useMenu.launchInv(mainWindow, framerate)
-
-
-                    # if is a bad item we can use on other players, choose who we wanna use on
-                    # if()
+                            showUseMenu(0)
+                        else:
+                            print("Use this on self")
+                            if not curPlayerInv[0].getFunctionality(currentPlayer, None):
+                                print("Cannot Use Item, same item already used")
+                            else:
+                                currentPlayer.getInventory().pop(0)
+                                return
+                                # curPlayerInv.pop(0)
+                    elif curItemButton.name == "item2":
+                        if curPlayerInv[1].affectsSecondPlayer():
+                            showUseMenu(1)
+                        else:
+                            print("Use this on self")
+                            if not curPlayerInv[1].getFunctionality(currentPlayer, None):
+                                print("Cannot Use Item, same item already used")
+                            else:
+                                currentPlayer.getInventory().pop(1)
+                                return
+                                # curPlayerInv.pop(1)
+                    elif curItemButton.name == "item3":
+                        if curPlayerInv[2].affectsSecondPlayer():
+                            showUseMenu(2)
+                        else:
+                            print("Use this on self")
+                            if not curPlayerInv[2].getFunctionality(currentPlayer, None):
+                                print("Cannot Use Item, same item already used")
+                            else:
+                                currentPlayer.getInventory().pop(2)
+                                return
+                                # curPlayerInv.pop(2)
+                    elif curItemButton.name == "item4":
+                        if curPlayerInv[3].affectsSecondPlayer():
+                            showUseMenu(3)
+                        else:
+                            print("Use this on self")
+                            if not curPlayerInv[3].getFunctionality(currentPlayer, None):
+                                print("Cannot Use Item, same item already used")
+                            else:
+                                currentPlayer.getInventory().pop(3)
+                                return
+                                # curPlayerInv.pop(3)
                     #BLIT ITEM from inventory[0]
                 else:
                     print("Use unhooked (button list > 1)")
             else:
                 print("Use unhooked")
+
+    def showUseMenu(curPlayerItemIndex):
+        # Make the images
+        itemImages = makeAllUseMenuImages(mainWindow, scale, currentPlayer, listOfPlayers)
+        # Make the buttons
+        invMenuButtons = makeAllUseMenuButtons(mainWindow, framerate, scale,
+                                               currentPlayer, listOfPlayers, images=itemImages,
+                                               curPlayerItemIndex=curPlayerItemIndex)
+        # Make the menu
+        useMenu = InventoryMenu("Use Item On Who?", buttons=invMenuButtons, images=itemImages,
+                                currentPlayer=currentPlayer, listOfPlayers=listOfPlayers)
+        # Launch the menu
+        useMenu.launchInv(mainWindow, framerate)
 
     def onClickItem1Button(listOfButtons=None, listOfImages=None):
         print("Item 1")
@@ -115,6 +154,12 @@ def makeAllButtons(mainWindow, framerate, scale, currentPlayer, itemImages, list
 
         else:
             itemImages[0].renderImage()
+            if listOfImages is not None:
+                itemImages[0].renderThis = True
+                if listOfImages is not None:
+                    if len(listOfImages) > 0:
+                        listOfImages.remove(listOfImages[-1])
+                listOfImages.append(itemImages[0])
 
 
     def onClickItem2Button(listOfButtons=None, listOfImages=None):
@@ -130,22 +175,53 @@ def makeAllButtons(mainWindow, framerate, scale, currentPlayer, itemImages, list
         else:
             # render default image
             itemImages[0].renderImage()
+            if listOfImages is not None:
+                itemImages[0].renderThis = True
+                if listOfImages is not None:
+                    if len(listOfImages) > 0:
+                        listOfImages.remove(listOfImages[-1])
+                listOfImages.append(itemImages[0])
+
 
     def onClickItem3Button(listOfButtons=None, listOfImages=None):
         print("Item 3")
         if invBoolList[2]:
             itemImages[3].renderImage()
+            if listOfImages is not None:
+                itemImages[3].renderThis = True
+                if listOfImages is not None:
+                    if len(listOfImages) > 0:
+                        listOfImages.remove(listOfImages[-1])
+                listOfImages.append(itemImages[3])
         else:
             # render default image
             itemImages[0].renderImage()
+            if listOfImages is not None:
+                itemImages[0].renderThis = True
+                if listOfImages is not None:
+                    if len(listOfImages) > 0:
+                        listOfImages.remove(listOfImages[-1])
+                listOfImages.append(itemImages[0])
 
     def onClickItem4Button(listOfButtons=None, listOfImages=None):
         print("Item 4")
         if invBoolList[3]:
             itemImages[4].renderImage()
+            if listOfImages is not None:
+                itemImages[4].renderThis = True
+                if listOfImages is not None:
+                    if len(listOfImages) > 0:
+                        listOfImages.remove(listOfImages[-1])
+                listOfImages.append(itemImages[4])
         else:
             # render default image
             itemImages[0].renderImage()
+            if listOfImages is not None:
+                itemImages[0].renderThis = True
+                if listOfImages is not None:
+                    if len(listOfImages) > 0:
+                        listOfImages.remove(listOfImages[-1])
+                listOfImages.append(itemImages[0])
 
     # Create Buttons
     backButton = Button(4, 412, 96, 32, scale, onClickBackButton,

@@ -9,7 +9,6 @@ class InventoryMenu(Menu):
         # Now menu as it originally is, is initiallized
         # Can add more functionality from here, using the additional params
 
-
     # Only difference here is that we don't pygame.display.update() in
     # render functions, only do in main loop. Allowed less images to be
     # created in itemUseMenu
@@ -18,7 +17,6 @@ class InventoryMenu(Menu):
         listOfButtons = []
         isRunning = True
         listOfImagesCopy = self.images.copy()
-
 
         while isRunning:
             # Paint screen background grey
