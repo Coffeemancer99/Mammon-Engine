@@ -12,7 +12,7 @@ class BoardRenderer:
 
     def __init__(self, board, window, scale):
         """
-        :param board: the board to render
+        :param board: the board filled with tiles to render
         """
         self.board = board
         pygame.init()
@@ -25,7 +25,7 @@ class BoardRenderer:
     def renderTile(self, tile):
         """
         renders the tile to the screen at its current position
-        :param tile:
+        :param tile: the current tile to scale and render
         """
         img = tile.image
         img = pygame.transform.scale(img,
@@ -49,7 +49,14 @@ class BoardRenderer:
         """
         Renders all the tiles and players
         """
-        self.window.fill((155, 155, 155))
+        # self.window.fill((155, 155, 155))
+
+        # blit the background of the board
+        image = pygame.image.load("data/assets/sprites/mapBackground.png")
+        image = pygame.transform.scale(image,
+                                       ((image.get_width()) * self.scale,
+                                        (image.get_height()) * self.scale))
+        self.window.blit(image, (0, 0))
 
         for tile in self.board.getTiles():
             self.renderTile(tile)

@@ -12,7 +12,7 @@ FFA, 2v2, 3v1
 
 def launchMinigameMenu(mainWindow, framerate, scale):
     """
-    launchs the minigame menu
+    launches the minigame menu
     :param mainWindow: the window to display the menu in
     :param framerate: set the refresh rate of the menu
     :param scale: what to scale the display by
@@ -30,7 +30,7 @@ def createAllMinigameButtons(mainWindow, framerate, scale):
     :param mainWindow: the window to display the menu in
     :param framerate: set the refresh rate of the menu
     :param scale: what to scale the display by
-    :return:
+    :return: returns a list of buttons
     """
     width, height = pygame.display.get_surface().get_size()
 
