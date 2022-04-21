@@ -8,18 +8,15 @@ from src.game.boardGame.itemInventory import *
 
 
 def makeAllUseMenuImages(mainWindow, scale, currentPlayer, playerList):
-    width = 96
-    height = 96
-
-    p1Check = Image(12, 192, width, height, scale, "data/assets/sprites/checkMark96.png",
+    p1Check = Image(12, 192, 96, 96, scale, "data/assets/sprites/checkMark96.png",
                     mainWindow, True)
     images = [p1Check]
-
     return images
 
 
 def makeAllUseMenuButtons(mainWindow, framerate, scale, currentPlayer, listOfPlayers, images=None,
                           curPlayerItemIndex=None):
+
     curPlayerInv = currentPlayer.getInventory()
 
     def onClickBackButton(listOfButtons=None, listOfImages=None):
@@ -28,15 +25,15 @@ def makeAllUseMenuButtons(mainWindow, framerate, scale, currentPlayer, listOfPla
 
     def onClickUseButton(listOfButtons=None, listOfImages=None):
         # players are not in order in list... ordered on who goes first
-        player1 = list((filter(lambda x: x.getPlayerID() == 1, listOfPlayers)))[0]
-        player2 = list((filter(lambda x: x.getPlayerID() == 2, listOfPlayers)))[0]
-        player3 = list((filter(lambda x: x.getPlayerID() == 3, listOfPlayers)))[0]
-        player4 = list((filter(lambda x: x.getPlayerID() == 4, listOfPlayers)))[0]
+        # extract the players so items can be used on them
+        player1, player2, player3, player4 = getPlayers()
 
         if (listOfButtons is not None):
             if len(listOfButtons) > 1:
                 if listOfButtons[-2].name == "p1" and listOfButtons[-1].name == "use":
-                    # should i pass to this menu and its functions the inventory index
+                    # Wanted to refactor to make a function of each of these nested if's
+                    # but because of the potential return, it would mess things up.
+                    # I felt that it would be messier to add a flag and return accordingly
                     if not curPlayerInv[curPlayerItemIndex].getFunctionality(currentPlayer,
                                                                              player1):
                         print("Cannot Use Item, same item already used")
@@ -68,28 +65,39 @@ def makeAllUseMenuButtons(mainWindow, framerate, scale, currentPlayer, listOfPla
                         currentPlayer.getInventory().pop(curPlayerItemIndex)
                         return
 
+    def getPlayers():
+        player1 = list((filter(lambda x: x.getPlayerID() == 1, listOfPlayers)))[0]
+        player2 = list((filter(lambda x: x.getPlayerID() == 2, listOfPlayers)))[0]
+        player3 = list((filter(lambda x: x.getPlayerID() == 3, listOfPlayers)))[0]
+        player4 = list((filter(lambda x: x.getPlayerID() == 4, listOfPlayers)))[0]
+        return player1, player2, player3, player4
+
+    def changeXAndRender(x):
+        """
+        This function renders the image in images[0] at the
+        specified x position
+        :param x: value to change x position of image to
+        """
+        images[0].x = x
+        images[0].renderImage()
 
     def onClickP1Button(listOfButtons=None, listOfImages=None):
         print("P1 Chosen")
-        images[0].x = 12
-        images[0].renderImage()
+        changeXAndRender(12)
         # change selected pid in data object (assume we need something to transfer data
         # between menus and game)
 
     def onClickP2Button(listOfButtons=None, listOfImages=None):
         print("P2 Chosen")
-        images[0].x = 140
-        images[0].renderImage()
+        changeXAndRender(140)
 
     def onClickP3Button(listOfButtons=None, listOfImages=None):
         print("P3 Chosen")
-        images[0].x = 268
-        images[0].renderImage()
+        changeXAndRender(268)
 
     def onClickP4Button(listOfButtons=None, listOfImages=None):
         print("P4 Chosen")
-        images[0].x = 396
-        images[0].renderImage()
+        changeXAndRender(396)
 
     width = 96
     height = 96

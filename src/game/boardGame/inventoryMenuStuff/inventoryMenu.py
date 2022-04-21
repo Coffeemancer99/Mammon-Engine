@@ -4,14 +4,25 @@ from src.engine.andrewMenus.menu import Menu
 
 class InventoryMenu(Menu):
     def __init__(self, title, buttons, currentPlayer, listOfPlayers, images=[], scaleFactors=None):
+        """
+        Slight variant of the original Menu class. Has a modified launch function that only updates
+        display in the loop, not in the render functions.
+        :param title: Title of the window
+        :param buttons: all the necessary buttons for the menu
+        :param currentPlayer: the BoardPlayer object whose turn it is
+        :param listOfPlayers: list of all BoardPlayers on the board
+        :param images: images for the menu
+        :param scaleFactors: optional parameter for any abnormal scaling for non-standard assets
+        """
         super().__init__(title, buttons, images, scaleFactors)
         self.displayThing = []
-        # Now menu as it originally is, is initiallized
+        # Now menu as it originally is, is initialized
         # Can add more functionality from here, using the additional params
 
     # Only difference here is that we don't pygame.display.update() in
     # render functions, only do in main loop. Allowed less images to be
-    # created in itemUseMenu
+    # created in itemUseMenu, as in, we dont need a special image for each
+    # location it needs to be, can simply update coordinates
     def launchInv(self, mainWindow, framerate):
         clock = pygame.time.Clock()
         listOfButtons = []
@@ -47,7 +58,6 @@ class InventoryMenu(Menu):
                     for button in self.buttons:
                         if button.wasClicked(click):
                             listOfButtons.append(button)
-                            # print("Click Det in Menu")
                             if not button.dummy:
                                 # return whatever is defined to do onClick
                                 if len(listOfButtons) == 0 and len(listOfImagesCopy) > 0:
@@ -67,7 +77,6 @@ class InventoryMenu(Menu):
                                     button.handleClick(click, listOfButtons)
                                 else:
                                     button.handleClick()
-                                # button.handleClick(click, listOfButtons)
                             break
 
             pygame.display.update()

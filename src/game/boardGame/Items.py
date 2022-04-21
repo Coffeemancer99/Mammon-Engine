@@ -236,6 +236,7 @@ class StealItem(ItemInterface):
             return False
         # Get the winning players requested item
         player.setInventory(player2.removeInventoryItem(player.getItemIndex()))
+        print("You stole an item!")
         return True
 
     def getButtonImage(self):
