@@ -41,22 +41,22 @@ def createAllMapSelectionButtons(mainWindow, framerate, scale, mapSelectionImage
                 print("Nothing")
 
     newBackButton = Button(4, 412, 96, 32, scale, onClickBackButton,
-                           "data/assets/sprites/backMenuButton.png", mainWindow, "back")
+                           "data/assets/sprites/newBackButton.png", mainWindow, "back")
 
     newFirstButton = Button(336, 16, 160, 32, scale, onClickFirstButton,
                             "data/assets/sprites/mapButton1.png", mainWindow, "map1", shouldRet=True)
     newFirstButton.dummy = True
 
     firstComingSoonButton = Button(336, 64, 160, 32, scale, onClickUndefButton,
-                                   "data/assets/sprites/comingSoonMenuButton.png", mainWindow, "comingSoon1")
+                                   "data/assets/sprites/newComingSoon.png", mainWindow, "comingSoon1")
     firstComingSoonButton.dummy = True
 
     secondComingSoonButton = Button(336, 112, 160, 32, scale, onClickUndefButton,
-                                    "data/assets/sprites/comingSoonMenuButton.png", mainWindow, "comingSoon2")
+                                    "data/assets/sprites/newComingSoon.png", mainWindow, "comingSoon2")
     secondComingSoonButton.dummy = True
 
     acceptButton = Button(380, 348, 128, 96, scale, onClickAcceptButton,
-                          "data/assets/sprites/acceptMenuButton.png", mainWindow, "accept")
+                          "data/assets/sprites/newAccept.png", mainWindow, "accept")
     acceptButton.dummy = True
     return newBackButton, newFirstButton, firstComingSoonButton, secondComingSoonButton, acceptButton
 
@@ -72,12 +72,12 @@ def createAllMapSelectionImages(mainWindow, scale):
                                                    (firstBoardImgForDims.get_height() * scale)))
 
     mapPrevImg = Image(0, 0, 320, 280,
-                       scale, "data/assets/sprites/mapPreview.png", mainWindow, True)
+                       scale, "data/assets/sprites/defaultMapPrev.png", mainWindow, True)
 
     firstBoardPrevImg = Image(0, 0, firstBoardImgForDims.get_width(), firstBoardImgForDims.get_height(),
                               scale, "data/assets/sprites/boardPrev.png", mainWindow, False)
     unreleasedMapPrevImg = Image(0, 0, unreleasedImgForDims.get_width(), unreleasedImgForDims.get_height(),
-                                 scale, "data/assets/sprites/unreleasedMapPrev.png", mainWindow, False)
+                                 scale, "data/assets/sprites/defaultMapPrev.png", mainWindow, False)
 
     # needed to decrease the size of the image, div by 1.6 if full res to get to 320x280
 

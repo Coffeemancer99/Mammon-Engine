@@ -104,10 +104,10 @@ def makeAllUseMenuButtons(mainWindow, framerate, scale, currentPlayer, listOfPla
 
     # Create Buttons
     backButton = Button(4, 412, width, 32, scale, onClickBackButton,
-                        "data/assets/sprites/backMenuButton.png", mainWindow, "back")
+                        "data/assets/sprites/newBackButton.png", mainWindow, "back")
 
     acceptButton = Button(412, 412, width, 32, scale, onClickUseButton,
-                          "data/assets/sprites/useButton.png", mainWindow, "use")
+                          "data/assets/sprites/newUseButton.png", mainWindow, "use")
     acceptButton.dummy = True
 
     p1Button = Button(12, 288, width, height, scale, onClickP1Button,

@@ -81,5 +81,5 @@ def createAllGameMenuButtons(mainWindow, framerate, scale):
                        "data/assets/sprites/rando6Button.png", mainWindow)
     newRando6.dummy = True
     newBackButton = Button(4, 412, 96, 32, scale, onClickBackButton,
-                           "data/assets/sprites/backMenuButton.png", mainWindow)
+                           "data/assets/sprites/newBackButton.png", mainWindow)
     return newBackButton, newRando1, newRando2, newRando3, newRando4, newRando5, newRando6

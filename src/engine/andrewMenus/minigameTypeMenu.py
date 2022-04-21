@@ -53,7 +53,7 @@ def createAllMinigameButtons(mainWindow, framerate, scale):
                               "data/assets/sprites/smaller2v2Button.png", mainWindow)
     newTwoVTwoButton.dummy = True
     newBackButtonImg = Button(4, 412, 96, 32, scale, onClickBackButton,
-                              "data/assets/sprites/backMenuButton.png", mainWindow)
+                              "data/assets/sprites/newBackButton.png", mainWindow)
     newTestButton = Button(412, 412, 96, 32, scale, onClickTestButton,
                            "data/assets/sprites/testingButton.png", mainWindow, "test")
     return newBackButtonImg, newFfaButton, newOneVThreeButton, newTestButton, newTwoVTwoButton

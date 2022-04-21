@@ -25,7 +25,7 @@ def makeAllImages(mainWindow, scale, currentPlayer):
     width = 64
     height = 64
 
-    defaultImg = Image(352, 16, 128, 128, scale, "data/assets/sprites/128square.png",
+    defaultImg = Image(352, 16, 128, 128, scale, "data/assets/sprites/new128Square.png",
                        mainWindow, True)
     images.append(defaultImg)
 
@@ -195,29 +195,29 @@ def makeAllButtons(mainWindow, framerate, scale, currentPlayer, itemImages, list
 
     # Create Buttons
     backButton = Button(4, 412, 96, 32, scale, onClickBackButton,
-                        "data/assets/sprites/backMenuButton.png", mainWindow, "back")
+                        "data/assets/sprites/newBackButton.png", mainWindow, "back")
 
     useItemButton = Button(412, 412, 96, 32, scale, onClickUseButton,
-                           "data/assets/sprites/useButton.png", mainWindow, "use")
+                           "data/assets/sprites/newUseButton.png", mainWindow, "use")
     useItemButton.dummy = True
 
     item1Button = Button(4, 6, 320, 96, scale, onClickItem1Button,
-                         "data/assets/sprites/inventoryItemButton.png",
+                         "data/assets/sprites/invItemButton2.png",
                          mainWindow, "item1", shouldRet=invBoolList[0])
     item1Button.dummy = True
 
     item2Button = Button(4, 108, 320, 96, scale, onClickItem2Button,
-                         "data/assets/sprites/inventoryItemButton.png",
+                         "data/assets/sprites/invItemButton2.png",
                          mainWindow, "item2", shouldRet=invBoolList[1])
     item2Button.dummy = True
 
     item3Button = Button(4, 210, 320, 96, scale, onClickItem3Button,
-                         "data/assets/sprites/inventoryItemButton.png",
+                         "data/assets/sprites/invItemButton2.png",
                          mainWindow, "item3", shouldRet=invBoolList[2])
     item3Button.dummy = True
 
     item4Button = Button(4, 312, 320, 96, scale, onClickItem4Button,
-                         "data/assets/sprites/inventoryItemButton.png",
+                         "data/assets/sprites/invItemButton2.png",
                          mainWindow, "item4", shouldRet=invBoolList[3])
     item4Button.dummy = True
 
