@@ -57,7 +57,7 @@ class Ball(DynamicObject):
     def launch(self):
         print("LAUNCHED")
 
-    def impact(self, obj2, sign): # is called when this Ball *impacts* obj2- unreliable triggering at low velocity- Daniel
+    def impact(self, obj2, sign): # is called when this Ball *impacts* some obj2- unreliable triggering at low velocity- Daniel
         DynamicObject.impact(self, obj2, sign)
         if isinstance(obj2, Crate):
             self.points += obj2.value

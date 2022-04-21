@@ -11,8 +11,11 @@ def removeObj(objects, object):
     if object in objects: objects.remove(object)
 
 def startGame(mainWindow, scale, framerate):
-    def takeInputs(key): # inputs not associated with an object
-        nonlocal gravity # gravity belongs to startGame
+    gravity = 1.5
+    objects = []
+    clock = pygame.time.Clock()  # Clock used for frame rate
+
+    def takeInputs(key, gravity = gravity): # inputs not associated with an object
 
         if key[pygame.K_g]:
             gravity -= .1
@@ -33,21 +36,15 @@ def startGame(mainWindow, scale, framerate):
             gravity = 0
             time.sleep(.3)
 
-    objects = []
-
-    def addCrate(x, y, value = 10, scale = scale): # the code for adding objects is kind of messy, so this
+    def addCrate(x, y, value = 10, scale = scale, objects = objects): # the code for adding objects is kind of messy, so this
         # can be preferable.
-        nonlocal objects
         sprite = grab_sprite("data/assets/sprites/bluebox.png", scale)
         objects.append(myObjects.Crate(sprite,scale, x, y - sprite.get_height()/scale, objects, value))
-    def addBall(sprite, x, y, scale = scale, name = "undefinedBall", mass = 10):
-        nonlocal objects
+    def addBall(sprite, x, y, scale = scale, name = "undefinedBall", mass = 10, objects = objects):
         objects.append(myObjects.Ball(sprite, scale, x, y, objects, name, mass))
-    def addRect(position, dimensions, frict = physics.frictS, color = (180,180,180), scale = scale):
-        nonlocal objects
+    def addRect(position, dimensions, frict = physics.frictS, color = (180,180,180), scale = scale, objects = objects):
         objects.append(RectObject(dimensions, scale, position[0], position[1], objects, frict, color = color))
 
-    clock = pygame.time.Clock()  # Clock used for frame rate
 
     triangle = terrain.from_polygon([[20,345],[50,310],[20,280]], scale, objects, color = (0,255,0,255), name="triangle")
     objects.append(triangle)
@@ -58,10 +55,8 @@ def startGame(mainWindow, scale, framerate):
     addCrate(420, 400) # y-position is for bottom of crate rather than top
 
     addBall(generate_circle(20,scale), 25, 20)
+
     isRunning=True
-
-
-    gravity = 1.5
     while(isRunning):
         clock.tick(framerate)
         mainWindow.fill((0,0,0)) # wipes the screen

@@ -1,7 +1,6 @@
 # This stores a pool of items and return one item from a list that will be put into item array of the boardPlayer
 import random
 from enum import Enum, auto
-import numpy
 
 from src.game.boardGame.Items import DestroyAllBadItemsItem, SpeedBoostItem, GainMoneyRandomItem, \
     TeleportCloseItem, SabotageDice, StealItem, OpponentLoseTurnItem, MoveOneSpotLess, InvertedControlsItem, \
