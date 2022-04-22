@@ -1,15 +1,5 @@
-import pygame
 import time
-import random
-
-from src.game.boardGame import itemInventory
-from src.game.boardGame.Items import InvertedControlsItem
 from src.game.boardGame.Store import Store
-from src.game.boardGame.boardPlayers import BoardPlayer
-from enum import Enum, auto
-
-from src.game.boardGame.inventoryMenuStuff.inventoryMenu import InventoryMenu
-from src.game.boardGame.itemInventory import ItemHandler, ItemFunctionalityBad, ItemFunctionalityGood
 from src.game.boardGame.minigameManager import runMinigame
 from src.game.boardGame2.boardRenderer import BoardRenderer
 from src.game.boardGame2.spriteLoader import SpriteLoader
@@ -56,84 +46,6 @@ def getTypeOfTile(currentTile, player, mainWindow, scale, framerate):
         print(f"The type of tile is {currentTile.typeOfTile}")
 
 
-# def inventoryScreen(mainWindow, scale, framerate, currentPlayer):
-#     clock = pygame.time.Clock()
-#     transaction = False
-#     getItemBadFunctionality = ItemFunctionalityBad()
-#     getItemGoodFunctionality = ItemFunctionalityGood()
-#     # We will let die4.png represent empty inventory spots
-#     listOfItemImages = ["die4.png","die4.png","die4.png","die4.png"]
-#     # TODO: Need to figure out how to get each inventory item and blit different images with them
-#     for i in range(currentPlayer.getInventoryLength()):
-#         ## TODO: WILL JUST BLIT DICE1.PNG FOR NOW
-#         listOfItemImages[i] = "die1.png"
-#
-#     inventoryItemOne = SpriteLoader().loadImage(listOfItemImages[0])
-#     inventoryItemTwo = SpriteLoader().loadImage(listOfItemImages[1])
-#     inventoryItemThree = SpriteLoader().loadImage(listOfItemImages[2])
-#     inventoryItemFour = SpriteLoader().loadImage(listOfItemImages[3])
-#
-#     inventoryItemOne = pygame.transform.scale(inventoryItemOne,
-#                                               ((inventoryItemOne.get_width()) * scale, (inventoryItemOne.get_height())*scale))
-#     inventoryItemTwo = pygame.transform.scale(inventoryItemTwo,
-#                                               ((inventoryItemTwo.get_width()) * scale, (inventoryItemTwo.get_height())*scale))
-#     inventoryItemThree = pygame.transform.scale(inventoryItemThree,
-#                                               ((inventoryItemThree.get_width()) * scale,
-#                                                (inventoryItemThree.get_height()) * scale))
-#     inventoryItemFour = pygame.transform.scale(inventoryItemFour,
-#                                               ((inventoryItemFour.get_width()) * scale,
-#                                                (inventoryItemFour.get_height()) * scale))
-#
-#     mainWindow.fill((55, 55, 55))
-#     # Put buttons here
-#     mainWindow.blit(inventoryItemOne, (32 * scale, 32 * scale))
-#     mainWindow.blit(inventoryItemTwo, (32 * scale, 112 * scale))
-#     mainWindow.blit(inventoryItemThree, (32 * scale, 208 * scale))
-#     mainWindow.blit(inventoryItemFour, (412 * scale, 356 * scale))
-#
-#
-#     isRunning = True
-#     while isRunning:
-#         pygame.display.update()
-#         clock.tick(framerate)  # 39
-#         key = pygame.key.get_pressed()
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 isRunning = False
-#             if event.type == pygame.MOUSEBUTTONUP:
-#                 click = pygame.mouse.get_pos()
-#                 print(click)
-#                 # Buying logic
-#                 if (click[0] > 32 * scale) and (click[0] <= 488 * scale):  # x
-#                     if (click[1] > 24 * scale) and (click[1] <= 60 * scale):  # y
-#                         print(f"Using {currentPlayer.getInventoryItem(0).getName()} item")
-#                         if currentPlayer.getInventoryItem(0).isBad():
-#                             getItemBadFunctionality.getFunctionality(currentPlayer.getInventoryItem(0).getName(),currentPlayer)
-#                         else:
-#                             getItemGoodFunctionality.getFunctionality(currentPlayer.getInventoryItem(0).getName(),currentPlayer)
-#                     elif (click[1] > 112 * scale) and (click[1] <= 176 * scale):
-#                         print(f"Using {currentPlayer.getInventoryItem(1).isBad()} item")
-#                         if currentPlayer.getInventoryItem(1).isBad():
-#                             getItemBadFunctionality.getFunctionality(currentPlayer.getInventoryItem(1).getName(),currentPlayer)
-#                         else:
-#                             getItemGoodFunctionality.getFunctionality(currentPlayer.getInventoryItem(1).getName(),currentPlayer)
-#                     elif (click[1] > 208 * scale) and (click[1] <= 252 * scale):
-#                         print(f"Using {currentPlayer.getInventoryItem(2).getName()} item")
-#                         if currentPlayer.getInventoryItem(2).isBad():
-#                             getItemBadFunctionality.getFunctionality(currentPlayer.getInventoryItem(2).getName(),currentPlayer)
-#                         else:
-#                             getItemGoodFunctionality.getFunctionality(currentPlayer.getInventoryItem(2).getName(),currentPlayer)
-#                     elif (click[1] > 304 * scale) and (click[1] <= 328 * scale):
-#                         print(f"Using {currentPlayer.getInventoryItem(3).getName()} item")
-#                         if currentPlayer.getInventoryItem(3).isBad():
-#                             getItemBadFunctionality.getFunctionality(currentPlayer.getInventoryItem(3).getName(),currentPlayer)
-#                         else:
-#                             getItemGoodFunctionality.getFunctionality(currentPlayer.getInventoryItem(3).getName(),currentPlayer)
-#                     if transaction:
-#                         currentPlayer.getInventory()
-#                         isRunning = False
-
-
 # TODO: Andrew, recreate this
 """This function is a inventory screen that gets passed in
 
@@ -145,6 +57,8 @@ def getTypeOfTile(currentTile, player, mainWindow, scale, framerate):
     
     THIS IS A TEST FUNCTION THAT WILL BE RECREATED BY ANDREW
 """
+
+
 def inventoryScreen(mainWindow, scale, framerate, currentPlayer, listOfPlayers):
     playerThatIsTargetted = 1
     clock = pygame.time.Clock()
@@ -246,13 +160,14 @@ def inventoryScreen(mainWindow, scale, framerate, currentPlayer, listOfPlayers):
     THIS IS A TEST FUNCTION THAT WILL BE RECREATED BY ANDREW
     
 """
+
+
 # TODO: Andrew, recreate this
 def storeScreen(mainWindow, scale, framerate, currentPlayer):
     clock = pygame.time.Clock()
     transaction = False
     store = Store()
 
-    # TODO: Need to blit different images that relate to the storeInventory list
     gooditemOne = SpriteLoader().loadImage(store.storeInventory[0].getButtonImage())
     gooditemTwo = SpriteLoader().loadImage(store.storeInventory[1].getButtonImage())
     gooditemThree = SpriteLoader().loadImage(store.storeInventory[2].getButtonImage())
@@ -318,7 +233,7 @@ def storeScreen(mainWindow, scale, framerate, currentPlayer):
 
 
 # TODO: Andrew, Use this
-def rollingDiceAnnimation(mainWindow, scale, framerate, listOfPlayers):
+def rollingDiceAnnimation(mainWindow, scale, framerate, listOfPlayers, regDiceRoll, player):
     # Note that scale is one for now
     # Set up all the buttons
     dice1 = SpriteLoader().loadImage("die1.png")
@@ -339,82 +254,113 @@ def rollingDiceAnnimation(mainWindow, scale, framerate, listOfPlayers):
 
     rollingDice = False
     isRunning = True
+    testFlag = ""
     clock = pygame.time.Clock()
     currentPlayerIndex = 0
     diceState = DiceStates.DICEONE
+    print("Press r to roll the dice and r again to stop rolling the dice ")
     while isRunning:
         clock.tick(framerate)  # 39
         key = pygame.key.get_pressed()
+        xDiceDir = 16 * scale
+        yDiceDir = 16 * scale
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning = False
-            if key[pygame.K_SPACE] and rollingDice:
+            if key[pygame.K_r] and rollingDice:
                 rollingDice = False
-                currentPlayer = listOfPlayers[currentPlayerIndex]
+                currentPlayer = listOfPlayers[currentPlayerIndex] if player is None else player
                 if diceState == DiceStates.DICEONE:
                     if currentPlayer.getDiceOnePlacement() == 1:
-                        diceWindow.blit(dice1, (256, 256))
+                        diceWindow.blit(dice1, (xDiceDir, yDiceDir))
                         currentPlayer.setBlit1(True)
+                        pygame.display.update()
+                        testFlag = "I enter 1"
                     elif currentPlayer.getDiceOnePlacement() == 2:
-                        diceWindow.blit(dice2, (256, 256))
+                        diceWindow.blit(dice2, (xDiceDir, yDiceDir))
+                        pygame.display.update()
                         currentPlayer.setBlit1(True)
+                        testFlag = "I enter 2"
                     elif currentPlayer.getDiceOnePlacement() == 3:
-                        diceWindow.blit(dice3, (256, 256))
+                        diceWindow.blit(dice3, (xDiceDir, yDiceDir))
+                        pygame.display.update()
                         currentPlayer.setBlit1(True)
+                        testFlag = "I enter 3"
                     elif currentPlayer.getDiceOnePlacement() == 4:
-                        diceWindow.blit(dice4, (256, 256))
+                        diceWindow.blit(dice4, (xDiceDir, yDiceDir))
                         currentPlayer.setBlit1(True)
+                        pygame.display.update()
+                        testFlag = "I enter 4"
                     elif currentPlayer.getDiceOnePlacement() == 5:
-                        diceWindow.blit(dice5, (256, 256))
+                        diceWindow.blit(dice5, (xDiceDir, yDiceDir))
                         currentPlayer.setBlit1(True)
+                        pygame.display.update()
+                        testFlag = "I enter 5"
                     elif currentPlayer.getDiceOnePlacement() == 6:
-                        diceWindow.blit(dice6, (256, 256))
+                        diceWindow.blit(dice6, (xDiceDir, yDiceDir))
                         currentPlayer.setBlit1(True)
+                        pygame.display.update()
+                        testFlag = "I enter 6"
+                    if regDiceRoll and currentPlayer.getDiceTwoPlacement() is None:
+                        print(f"The dice one placement is {currentPlayer.getDiceOnePlacement()}")
+                        print(testFlag)
+                        currentPlayer.setDiceOnePlacement(None)
+                        currentPlayer.setDiceTwoPlacement(None)
+                        time.sleep(2)
+                        pygame.display.update()
+                        isRunning = False
                     diceState = DiceStates.DICETWO  # 60
-                elif diceState == DiceStates.DICETWO:
+                elif diceState == DiceStates.DICETWO and currentPlayer.getDiceTwoPlacement() is not None:
                     if currentPlayer.getDiceTwoPlacement() == 1:
-                        diceWindow.blit(dice1, (256, 256))
+                        diceWindow.blit(dice1, (xDiceDir, yDiceDir))
                         currentPlayer.setBlit2(True)
+                        pygame.display.update()
                     elif currentPlayer.getDiceTwoPlacement() == 2:
-                        diceWindow.blit(dice2, (256, 256))
+                        diceWindow.blit(dice2, (xDiceDir, yDiceDir))
                         currentPlayer.setBlit2(True)
+                        pygame.display.update()
                     elif currentPlayer.getDiceTwoPlacement() == 3:
-                        diceWindow.blit(dice3, (256, 256))
+                        diceWindow.blit(dice3, (xDiceDir, yDiceDir))
                         currentPlayer.setBlit2(True)
+                        pygame.display.update()
                     elif currentPlayer.getDiceTwoPlacement() == 4:
-                        diceWindow.blit(dice4, (256, 256))
+                        diceWindow.blit(dice4, (xDiceDir, yDiceDir))
                         currentPlayer.setBlit2(True)
+                        pygame.display.update()
                     elif currentPlayer.getDiceTwoPlacement() == 5:
-                        diceWindow.blit(dice5, (256, 256))
+                        diceWindow.blit(dice5, (xDiceDir, yDiceDir))
                         currentPlayer.setBlit2(True)
+                        pygame.display.update()
                     elif currentPlayer.getDiceTwoPlacement() == 6:
-                        diceWindow.blit(dice6, (256, 256))
+                        diceWindow.blit(dice6, (xDiceDir, yDiceDir))
                         currentPlayer.setBlit2(True)
+                        pygame.display.update()
                     currentPlayerIndex += 1
-                    if currentPlayerIndex == 4:
+                    if currentPlayerIndex == 4 or regDiceRoll:
+                        currentPlayer.setDiceOnePlacement(None)
+                        currentPlayer.setDiceTwoPlacement(None)
+                        time.sleep(2)
+                        pygame.display.update()
                         isRunning = False
                     diceState = DiceStates.DICEONE
-                time.sleep(0.01)
                 pygame.display.update()
-            elif key[pygame.K_SPACE] and not rollingDice:
+            elif key[pygame.K_r] and not rollingDice:
                 rollingDice = True
         if rollingDice:
             number = rollOneDice(6)
             if number == 1:
-                diceWindow.blit(dice1, (256, 256))
+                diceWindow.blit(dice1, (xDiceDir, yDiceDir))
             elif number == 2:
-                diceWindow.blit(dice2, (256, 256))
+                diceWindow.blit(dice2, (xDiceDir, yDiceDir))
             elif number == 3:
-                diceWindow.blit(dice3, (256, 256))
+                diceWindow.blit(dice3, (xDiceDir, yDiceDir))
             elif number == 4:
-                diceWindow.blit(dice4, (256, 256))
+                diceWindow.blit(dice4, (xDiceDir, yDiceDir))
             elif number == 5:
-                diceWindow.blit(dice5, (256, 256))
+                diceWindow.blit(dice5, (xDiceDir, yDiceDir))
             elif number == 6:
-                diceWindow.blit(dice6, (256, 256))
-        time.sleep(0.01)
+                diceWindow.blit(dice6, (xDiceDir, yDiceDir))
         pygame.display.update()
-    listOfPlayers.sort()
 
 
 """
@@ -461,10 +407,6 @@ def rollTwoDice(x):
 
 def setPlacementsForBoardPlayers(listOfPlayers, listOfPlacements, listOfDice):  # 110
     while True:
-        # First rolled dice
-        # Second rolled dice
-        # Use map to add them together
-        # List of everyone's first dice
         listOfDice1 = list(map(lambda x: rollOneDice(x), listOfDice))
         for i in range(len(listOfDice1)):
             listOfPlayers[i].diceOnePlacement = listOfDice1[i]
@@ -518,7 +460,10 @@ def goesFirstScreen(mainWindow, scale, frameRate, listOfPlayers, board):
     for i in range(len(listOfPlayers)):
         print(f"The order of the players are {listOfPlayers[i].getPlayerID()}")
 
-    rollingDiceAnnimation(mainWindow, scale, frameRate, listOfPlayers)
+    rollingDiceAnnimation(mainWindow, scale, frameRate, listOfPlayers, False, None)
+    for i in range(len(listOfPlayers)):
+        listOfPlayers[i].setDiceTwoPlacement(None)
+    listOfPlayers.sort()
 
 
 """
@@ -538,7 +483,7 @@ def startGame(mainWindow, scale, framerate, board):
     currentPlayer = 0
     playerMovement = 0
     numOfSpots = 0
-    playerSelectFork = 0  # TODO: change to 1 or 0 for a different path
+    playerSelectFork = 0  # change to 1 or 0 for a different path
     clock = pygame.time.Clock()
     renderer = BoardRenderer(board, mainWindow, scale)
     # init the players
@@ -562,7 +507,7 @@ def startGame(mainWindow, scale, framerate, board):
 
     TESTSTORE = True
     # storeScreen(mainWindow, scale, framerate, listOfPlayers[currentPlayer])
-    print("Press ENTER to enter the dice rolling phase then SPACE start dice rolling")
+    print("Press ENTER to enter the dice rolling phase then r start dice rolling")
     while isRunning:  # 170
         clock.tick(framerate)
         key = pygame.key.get_pressed()
@@ -587,6 +532,8 @@ def startGame(mainWindow, scale, framerate, board):
                     inventoryScreen(mainWindow, scale, framerate, listOfPlayers[currentPlayer], currentPlayer)
                     time.sleep(1)
                     continue
+
+            print("Press Space to end turn")
             if key[pygame.K_SPACE]:  # End turn and move the character
                 print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} turn")
                 if currentState == States.PLAYERMOVE:
@@ -598,15 +545,26 @@ def startGame(mainWindow, scale, framerate, board):
                     # TODO: DO CHECKS HERE START HEREEEEEEEEEEEEEEe
                     if listOfPlayers[currentPlayer].getOneDicerollBad():
                         playerMovement = 1
-                        print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} can only move one spot because of an item")
+                        print(
+                            f"Player {listOfPlayers[currentPlayer].getPlayerID()} can only move one spot because of an item")
                         listOfPlayers[currentPlayer].toggleSetOneDicerollBad()
                     # Get the player movement here, first check if they can roll 2 dice or only 1 based on an item
                     elif listOfPlayers[currentPlayer].getSecondDiceroll():
                         print(f"Player {listOfPlayers[currentPlayer]} has 2 dice rolls and will roll 2 dice")
-                        playerMovement = rollTwoDice(6)
+                        playerMovement = rollOneDice(6)
+                        playerMovement2 = rollOneDice(6)
+                        listOfPlayers[currentPlayer].setDiceOnePlacement(playerMovement)
+                        listOfPlayers[currentPlayer].setDiceTwoPlacement(playerMovement2)
                         listOfPlayers[currentPlayer].toggleSetSecondDiceroll()
+                        rollingDiceAnnimation(mainWindow, scale, framerate, listOfPlayers, True,
+                                              listOfPlayers[currentPlayer])
+                        listOfPlayers[currentPlayer].setDiceTwoPlacement(None)
                     else:
                         playerMovement = rollOneDice(6)
+                        listOfPlayers[currentPlayer].setDiceOnePlacement(playerMovement)
+                        print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} rolled a {playerMovement}")
+                        rollingDiceAnnimation(mainWindow, scale, framerate, listOfPlayers, True,
+                                              listOfPlayers[currentPlayer])
                     # Check if they have to move one spot less based on an item
                     if listOfPlayers[currentPlayer].getMoveOneSpotLess():
                         playerMovement -= 1
@@ -647,7 +605,8 @@ def startGame(mainWindow, scale, framerate, board):
                     #     item = itemHandler.getItemRegTileBlock()
                     #     print(f"And the fucking item isssssssssssssssss {item.getName()}")
                     #     TESTSTORE = False
-                    print(f"Player {listOfPlayers[currentPlayer].getPlayerID()} countdown timer is {listOfPlayers[currentPlayer].getStartCountDown()}")
+                    print(
+                        f"Player {listOfPlayers[currentPlayer].getPlayerID()} countdown timer is {listOfPlayers[currentPlayer].getStartCountDown()}")
                     # TODO: Andrew MAKE A SCREEN TOO THAT SAY WHAT IS HAPPENING
                     currentState = States.ANNIMATING
                 if currentState == States.ANNIMATING:
