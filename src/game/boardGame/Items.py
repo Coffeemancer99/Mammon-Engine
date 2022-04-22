@@ -65,7 +65,7 @@ class DestroyAllBadItemsItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        return "die1.png"
+        return "destroyAllBadItemsImg.png"
 
     def affectsSecondPlayer(self):
         return False
@@ -94,7 +94,7 @@ class SecondDiceItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        return "die1.png"
+        return "secondDieImg.png"
 
     def affectsSecondPlayer(self):
         return False
@@ -122,7 +122,7 @@ class SpeedBoostItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        return "die1.png"
+        return "speedBoostImg.png"
 
     def affectsSecondPlayer(self):
         return False
@@ -150,7 +150,7 @@ class GainMoneyRandomItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        return "die1.png"
+        return "gainMoneyImg.png"
 
     def affectsSecondPlayer(self):
         return False
@@ -174,7 +174,7 @@ class TeleportCloseItem(ItemInterface):
 
     def getButtonImage(self):
         # TODO: NEED IMAGE
-        return "die1.png"
+        return "teleportItemImg.png"
 
     def affectsSecondPlayer(self):
         return False
