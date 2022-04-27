@@ -1,23 +1,8 @@
-import math
-import time
-
-import src.minigame.physicsTest.ball as ball
-import src.minigame.cannonPanic.cannonPanicController as cannonPlayer
 import pygame
-from src.engine.physics.physics import Object, DynamicObject, RectObject, DynamicRect
-import src.engine.physics.spritegen as spritegen
-import src.engine.physics.physics as physics
-import src.minigame.cannonPanic.playerController as player
-import src.minigame.cannonPanic.cannonball as cannonball
-import src.engine.scenecreator.tile as tile
-import src.engine.scenecreator.drawTileMap as tilemap
+import src.engine.graphics.spritegen as spritegen
 from src.minigame.chartACourse.patientPlayer import patientPlayer
-from src.minigame.teamSwimmer import swimmerPlayer as swimmerPlayer
-from src.minigame.teamSwimmer import seaItem as seaItem
 import random
-from src.minigame.timer.timer import timer as timer
-from src.minigame.minigameData import minigameData as minigameData
-from src.minigame.winScreen import winScreen as winScreen
+
 
 def startGame(mainWindow, scale, framerate):
     clock = pygame.time.Clock()  # Clock used for frame rate
@@ -36,7 +21,7 @@ def startGame(mainWindow, scale, framerate):
 
     maps = []
     for i in range(1,9):
-        currMap = spritegen.grab_sprite("data/assets/sprites/map"+str(i)+".png", scale*2)
+        currMap = spritegen.grab_sprite("data/assets/sprites/map" + str(i) + ".png", scale * 2)
         maps.append(currMap)
 
     #Refactored code. Original : Updated is in the for loop
@@ -89,7 +74,7 @@ def startGame(mainWindow, scale, framerate):
     pirate3 = patientPlayer(player3Spr, scale, pirate3X, pirate3Y, objects)
     pirate4 = patientPlayer(player4Spr, scale, pirate4X, pirate4Y, objects)
 
-    groundSprite = spritegen.grab_sprite("data/assets/sprites/standBlock.png", scale*0.80)
+    groundSprite = spritegen.grab_sprite("data/assets/sprites/standBlock.png", scale * 0.80)
 
 
     # pirate2 = DynamicObject(player2Spr, scale, windowX / 4 + windowX/8, windowY / 4, objects)

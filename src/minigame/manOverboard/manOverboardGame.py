@@ -1,7 +1,7 @@
 import pygame
 
-from src.engine.physics import spritegen, physics
-from src.engine.physics.physics import DynamicObject
+from src.engine.physics import physics
+from src.engine.graphics import spritegen
 from src.minigame.manOverboard import swimmerPlayer
 
 

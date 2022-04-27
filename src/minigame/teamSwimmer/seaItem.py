@@ -1,8 +1,7 @@
-import src.engine.physics.physics as physics
 from src.engine.physics.physics import Object, DynamicObject, RectObject, DynamicRect
-from src.engine.physics.spritegen import *
-import src.engine.physics.terrain as terrain
+from src.engine.graphics.spritegen import *
 import src.minigame.exampleGame.myObjects as myObjects
+import src.engine.physics.terrain as terrain
 import pygame
 import time
 from src.minigame.timer.timer import timer as timer
@@ -28,8 +27,7 @@ class seaItem(DynamicObject):
         self.cost = 0
         bloopSound = ""
         self.fallSpeed = fallSpeed*scale
-        self.x=x
-        self.y=y
+
         self.alive = True
         #If the item is bad, we only need to worry about loading one sound
         if(self.isBad):

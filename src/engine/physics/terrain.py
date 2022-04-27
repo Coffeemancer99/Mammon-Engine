@@ -1,4 +1,3 @@
-import pygame
 import src.engine.physics.physics as physics
 import src.engine.physics.normal as normal
 import functools

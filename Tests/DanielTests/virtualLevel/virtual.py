@@ -1,9 +1,7 @@
 import src.engine.physics.physics as physics
-from src.engine.physics.physics import Object, DynamicObject, RectObject, DynamicRect
-from src.engine.physics.spritegen import *
+from src.engine.graphics.spritegen import *
 import src.engine.physics.terrain as terrain
 import src.minigame.physicsTest.ball as ball
-import unittest
 import pygame
 from io import StringIO
 import sys

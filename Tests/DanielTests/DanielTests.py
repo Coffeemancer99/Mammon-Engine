@@ -1,14 +1,12 @@
-import src.engine.physics.physics as physics
 import src.engine.physics.terrain as terrain
-import src.game.boardGame.minigameManager as minigameManager
-from src.engine.physics.spritegen import *
+from src.engine.graphics.spritegen import *
 import Tests.DanielTests.virtualLevel.virtual as virtualLevel
 import pygame
 from io import StringIO
 from functools import partial
-import sys, os, shutil
 import unittest
-import logging; import tempfile
+import logging;
+
 
 def load_tests(loader, standard_tests, pattern):
     print("loading tests...")
