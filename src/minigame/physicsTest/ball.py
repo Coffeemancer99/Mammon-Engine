@@ -5,9 +5,9 @@ import src.engine.physics.physics as physics
 from src.engine.physics.physics import Object
 from src.engine.physics.physics import DynamicObject
 
-defMaxPow = 80 # default max power
+defMaxPow = 110 # default max power
 class Ball(DynamicObject):
-    def __init__(self, sprite, scale, x, y, name="undefinedBall", mass = 10, maxpower = defMaxPow):
+    def __init__(self, sprite, scale, x, y, objects, name="undefinedBall", mass = 10, maxpower = defMaxPow):
         DynamicObject.__init__(self, sprite, scale, x, y, name, mass)
         self.power = 0
         self.angle = 0
@@ -20,9 +20,9 @@ class Ball(DynamicObject):
 
     def slide(self, obj2):
         print("ball ", end = "")
-        obj2.frict = obj2.frict/2
+        obj2.frict = obj2.frict/1.5
         DynamicObject.slide(self,obj2)
-        obj2.frict = obj2.frict*2
+        obj2.frict = obj2.frict*1.5
 
     def prime(self):
         self.power = self.maxpower
@@ -59,7 +59,7 @@ class Ball(DynamicObject):
     def fall(self, gravity):
         self.momY += gravity  # gravity
 
-    def launch(self):
+    def launch(self, resetAngle = True, resetPower = True):
         if(self.power == 0):
             return
         print("\r\rlaunched!            \n")
@@ -72,5 +72,5 @@ class Ball(DynamicObject):
 
         self.momX += self.power*math.cos(self.angle)
         self.momY -= self.power*math.sin(self.angle)
-        self.power = 0
-        self.angle = 0
+        if(resetAngle): self.angle = 0
+        if(resetPower): self.power = 0

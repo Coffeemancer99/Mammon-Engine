@@ -1,7 +1,5 @@
-import pygame
-import src.engine.physics.physics as physics
-from src.engine.physics.spritegen import * # allows shorter references
-from src.engine.physics.physics import Object, DynamicObject, RectObject, DynamicRect
+from src.engine.physics.physics import RectObject
+from src.engine.player.playerController import *
 
 
 """
@@ -15,69 +13,32 @@ Terrain is an unfinished Object class which supports edges, to be used in calcul
 """
 
 
-
-class Ball(DynamicObject):
-    # if you want to extend from someone else's object class, replace DynamicObject with the name of the other class
-    def __init__(self, sprite, scale, x, y, objects, name="undefinedBall", mass = 10):
-        DynamicObject.__init__(self, sprite, scale, x, y, objects, name, mass)
+class Pirate(Platformer):
+    """ Player Documentation:
+    xSpeed and ySpeed are how fast the Player object propels itself when directed
+    The Platformer subclass jumps if grounded when space() is called, can move left and right.
+    The TopDown subclass can move in all 4 directions.
+    """
+    def __init__(self, sprite, scale, x, y, objects, xSpeed, ySpeed, name="undefinedPirate", mass=10, controls = None):
+        Platformer.__init__(self, sprite, scale, x, y, objects, xSpeed, ySpeed, name, mass, controls)
         self.points = 0
-        self.controls = {
-            'up': pygame.K_w,
-            'down': pygame.K_s,
-            'left': pygame.K_a,
-            'right': pygame.K_d,
-            'space': pygame.K_SPACE,
-            'action': pygame.K_u
-        }
 
-    def update(self, airRes=physics.airRes, minMom=physics.minMom, maxMom=None): # retrieves default values from physics module
-        try: self.takeInputs(pygame.key.get_pressed())
-        except: pass # pygame not initialized, so ignore takeInputs
-        DynamicObject.update(self, airRes, minMom, maxMom)
-
-    def takeInputs(self, key):
-        if key[self.controls['up']]:
-            self.momY -= 3
-        if key[self.controls['down']]:
-            self.momY += 3
-        if key[self.controls['left']]:
-            self.momX -= 3
-        if key[self.controls['right']]:
-            self.momX += 3
-        if key[self.controls['space']]:
-            if physics.grounded(self, self.objects):
-                self.momY -= 10
-                print("JUMP")
-        if key[pygame.K_p]:
-            print(self.name + " points = " + str(self.points))
-        if key[pygame.K_o]:
-            print("incrementing points")
-            self.points += 1
-
-    def launch(self):
-        print("LAUNCHED")
-
-    def impact(self, obj2, sign): # is called when this Ball *impacts* some obj2- unreliable triggering at low velocity- Daniel
-        DynamicObject.impact(self, obj2, sign)
-        if isinstance(obj2, Crate):
-            self.points += obj2.value
-            obj2.explode()
-
+    def special(self):
+        print(self.name + " points = " + str(self.points))
 
 class Crate(RectObject):
     def __init__(self,sprite, scale, x, y, objects, value, name = "undefinedCrate"):
         RectObject.__init__(self, sprite, scale, x, y, objects, name)
-
         self.value = value
+
+    def impact(self, obj2): # is called when this object is *impacted* by some obj2- unreliable triggering at low velocity
+        if isinstance(obj2, Pirate):
+            obj2.points += self.value
+        self.explode()
 
     def explode(self):
         print("BOOOM")
-        self.value = 0
-        i = 0
         for object in self.objects:
             if object is self:
-                self.objects.pop(i)
+                self.objects.remove(self)
                 break
-            i += 1
-
-

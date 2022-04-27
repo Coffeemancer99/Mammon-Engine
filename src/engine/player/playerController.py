@@ -1,72 +1,91 @@
-import pygame
-from src.engine.physics.physics import movementLeftRight, applyGravityPlayer
+import src.engine.physics.physics as physics
+from src.engine.graphics.spritegen import * # allows shorter references
+from src.engine.physics.physics import DynamicObject
+
+"""
+xSpeed and ySpeed are how fast the Player object propels itself when directed
+The Platformer subclass jumps if grounded when space() is called, can move left and right.
+The TopDown subclass can move in all 4 directions.
+"""
+class Player(DynamicObject):
+    def __init__(self, sprite, scale, x, y, objects, xSpeed, ySpeed, name="undefinedPlayer", mass = 10, controls = None):
+        DynamicObject.__init__(self, sprite, scale, x, y, objects, name, mass)
+        self.controls = controls
+        self.xSpeed = xSpeed
+        self.ySpeed = ySpeed
 
 
-'''
-playerController.py created by Andrew Bunn
-Player class implemented by Andrew Bunn
-Player class defining a user controlled player
-'''
+    def update(self, airRes=physics.airRes, minMom=physics.minMom, maxMom=None): # retrieves default values from physics module
+        if self.controls: self.takeInputs()
+        DynamicObject.update(self, airRes, minMom, maxMom)
 
-class Player():
-    def __init__(self, x, y, scale, jumpKey, leftKey, rightKey, sprite):
-        """
-        :param x: player spawn x coord
-        :param y: player spawn y coord
-        :param scale: scales the player size
-        :param jumpKey: specify pygame key for jump
-        :param leftKey: specify pygame key for moving left
-        :param rightKey: specify pygame key for moving right
-        :param sprite: png of the sprite
-        """
-        self.scale = scale
-        self.sprite = sprite
-        self.sprite = pygame.transform.scale(self.sprite, ((self.sprite.get_width()) * scale, (self.sprite.get_height()) * scale))
-        # may need to scale later
-        self.rect = self.sprite.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.velY = 0
-        self.jumpKey = jumpKey
-        self.leftKey = leftKey
-        self.rightKey = rightKey
-        self.jumped = False
+    def takeInputs(self):
+        try: key = pygame.key.get_pressed()
+        except: return # pygame not initialized, so do nothing
+        if key[self.controls['up']]:
+            self.up()
+        if key[self.controls['down']]:
+            self.down()
+        if key[self.controls['left']]:
+            self.left()
+        if key[self.controls['right']]:
+            self.right()
+        if key[self.controls['space']]:
+            self.space()
+        if key[self.controls['action']]:
+            self.action()
+        if key[self.controls['special']]:
+            self.special()
 
-        self.width = self.sprite.get_width()
-        self.height = self.sprite.get_height()
+    def up(self):
+        pass
+    def down(self):
+        pass
+    def left(self):
+        pass
+    def right(self):
+        pass
+    def space(self):
+        pass
+    def action(self):
+        pass
+    def special(self):
+        pass
 
-        self.dX = 0
-        self.dY = 0
+class Platformer(Player):
+    # def __init__(self, sprite, scale, x, y, objects, xSpeed, ySpeed, name = "undefinedPlatformer", mass = 10, controls = None):
+    #     Player.__init__(self, sprite, scale, x, y, objects, xSpeed, ySpeed, name, mass, controls)
 
+    def left(self):
+        if isinstance(self.xSpeed, Iterable): # separate speed values for left and right
+            self.momX -= self.xSpeed[0]
+        else: self.momX -= self.xSpeed
+    def right(self):
+        if isinstance(self.xSpeed, Iterable): # separate speed values for left and right
+            self.momX += self.xSpeed[1]
+        else: self.momX += self.xSpeed
+    def space(self):
+        if physics.grounded(self, self.objects):
+            self.momY -= self.ySpeed
 
-    def update(self):
-        """
-        updates the player position based on inputs
-        """
-        self.dX = 0
-        self.dY = 0
-        jumpHeight = 16 * self.scale
-        curX = 0
-        curY = 0
-        fallSpeed = 1 * self.scale
-        terminalV = 6 * self.scale
-        transformSpeed = 4 * self.scale
+class TopDown(Player):
+    # def __init__(self, sprite, scale, x, y, objects, xSpeed, ySpeed, name = "undefinedTopDown", mass = 10):
+    #     Player.__init__(self, sprite, scale, x, y, objects, xSpeed, ySpeed, name, mass)
 
-        key = pygame.key.get_pressed()
-        if key[self.jumpKey] and self.jumped == False:
-            self.velY = -jumpHeight # negative moves up
-            self.jumped = True
-        if key[self.leftKey]:
-            self.dX = movementLeftRight(self.dX, -transformSpeed)
-        if key[self.rightKey]:
-            self.dX = movementLeftRight(self.dX, transformSpeed)
-        # add some form of gravity
-        self.velY = applyGravityPlayer(self.velY, fallSpeed, terminalV)
-        # make sure to set curY
-        self.dY += self.velY
+    def left(self):
+        if isinstance(self.xSpeed, Iterable): # separate speed values for left and right
+            self.momX -= self.xSpeed[0]
+        else: self.momX -= self.xSpeed
+    def right(self):
+        if isinstance(self.xSpeed, Iterable): # separate speed values for left and right
+            self.momX += self.xSpeed[1]
+        else: self.momX += self.xSpeed
+    def up(self):
+        if isinstance(self.ySpeed, Iterable): # separate speed values for up and down
+            self.momY -= self.ySpeed[0]
+        else: self.momY -= self.ySpeed
 
-
-    # ONLY UPDATE RECTANGLE IN ONE PLACE!!! O_O SHARED MUTABLE STATE OH MY
-    def updateRect(self):
-        self.rect.x += self.dX
-        self.rect.y += self.dY
+    def down(self):
+        if isinstance(self.ySpeed, Iterable): # separate speed values for up and down
+            self.momY += self.ySpeed[1]
+        else: self.momY += self.ySpeed
