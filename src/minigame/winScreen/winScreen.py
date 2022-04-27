@@ -1,11 +1,6 @@
-import math
-import time
-
-import src.minigame.physicsTest.ball as ball
-import src.minigame.cannonPanic.cannonPanicController as cannonPlayer
 import pygame
 from src.engine.physics.physics import Object, DynamicObject, RectObject, DynamicRect
-import src.engine.physics.spritegen as spritegen
+import src.engine.graphics.spritegen as spritegen
 import src.engine.physics.physics as physics
 import src.minigame.cannonPanic.playerController as player
 import src.minigame.cannonPanic.cannonball as cannonball
@@ -13,9 +8,8 @@ import src.engine.scenecreator.tile as tile
 import src.engine.scenecreator.drawTileMap as tilemap
 from src.minigame.teamSwimmer import swimmerPlayer as swimmerPlayer
 from src.minigame.teamSwimmer import seaItem as seaItem
-import random
 from src.minigame.timer.timer import timer as timer
-from src.minigame.minigameData import minigameData as minigameData
+
 
 #Daniels code
 def removeObj(objects, object):

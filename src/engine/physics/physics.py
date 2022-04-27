@@ -248,12 +248,40 @@ def touching(obj1, obj2):
 
 def grounded(obj1, onlyStatics = False):
     for obj2 in obj1.objects:
-        if obj1 is obj2:
-            continue
-        if onlyStatics and isinstance(obj2, Dynamic):
+        if (obj1 is obj2) or (onlyStatics and isinstance(obj2, DynamicObject)):
             continue
         if obj1.overlap(obj2, offsetY = 1):
             return obj1.overlap(obj2, offsetY = 1)
+
+
+
+# Gravity created by Andrew Bunn, extracted from
+# playerController.py by Joel Tanig
+def applyGravityPlayer(velY, fallSpeed, terminalV):
+    velY += fallSpeed # Falling here
+    if velY > terminalV: # Terminal Velocity
+        velY = terminalV
+    return velY
+
+
+
+def movementLeftRight(dx, speed):
+    dx += speed
+    return float(dx)
+
+
+def collision():
+    pass
+
+def force(mass, acceleration, obj1, obj2):
+    return float(mass * acceleration)
+
+
+def computeMovementForce(mass):
+    return float(mass * -9.81)
+
+def friction(mass, coefficientOfFriction):
+    return float(coefficientOfFriction * computeMovementForce(mass))
 
 def main():
     print("physics maine\n")

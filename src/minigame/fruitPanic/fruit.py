@@ -1,8 +1,4 @@
 import pygame
-from src.engine.physics.physics import movementLeftRight, applyGravityPlayer
-
-
-
 
 class Fruit():
     def __init__(self, x, y, speed, scale, sprite, fId, badFruit):
