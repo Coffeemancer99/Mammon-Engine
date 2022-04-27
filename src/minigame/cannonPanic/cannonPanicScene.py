@@ -1,9 +1,8 @@
 import math
-import src.minigame.physicsTest.ball as ball
 import src.minigame.cannonPanic.cannonPanicController as cannonPlayer
 import pygame
 from src.engine.physics.physics import Object, DynamicObject, RectObject, DynamicRect
-import src.engine.physics.spritegen as spritegen
+import src.engine.graphics.spritegen as spritegen
 import src.engine.physics.physics as physics
 import src.minigame.cannonPanic.playerController as player
 import src.minigame.cannonPanic.cannonball as cannonball

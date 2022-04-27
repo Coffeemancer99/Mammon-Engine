@@ -7,7 +7,7 @@ import src.minigame.physicsTest.physicstest as physicstest
 import src.minigame.exampleGame.myLevel as myLevel
 import src.engine.andrewMenus.mapSelectionMenu as boardMenu
 import src.engine.andrewMenus.minigameTypeMenu as minigameTypeMenu
-from src.engine.physics.spritegen import *
+from src.engine.graphics.spritegen import *
 
 def launch(width, height, framerate, scale):
     clock = pygame.time.Clock()  # Clock used for frame rate
@@ -48,5 +48,6 @@ def launch(width, height, framerate, scale):
                     print("MINIGAMES")
                     return minigameTypeMenu.launchMinigameMenu(mainWindow, framerate, scale)
                     # return physicstest.startGame(mainWindow, scale, framerate)
+                    # return myLevel.startGame(mainWindow, scale, framerate)
                     # return handGame.startGame(mainWindow, scale, framerate)
 

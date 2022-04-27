@@ -1,11 +1,11 @@
 import src.minigame.physicsTest.ball as ball
-import pygame
 import math
 import sys
 import src.minigame.cannonPanic.cannonball as cannonball
 from src.minigame.timer.timer import timer as timer
 
-from src.engine.physics import spritegen
+from src.engine.graphics import spritegen
+
 scaleFancy = 0.05
 defMaxPow = 80
 class CannonPlayer(ball.Ball):
