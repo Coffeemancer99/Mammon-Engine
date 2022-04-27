@@ -2,7 +2,7 @@ import src.engine.physics.physics as physics
 import src.engine.physics.normal as normal
 import functools
 from functools import partial
-from src.engine.physics.spritegen import *
+from src.engine.graphics.spritegen import *
 import math
 
 class Terrain(physics.Object):
