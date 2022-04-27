@@ -1,7 +1,7 @@
 import unittest
 import src.minigame.timer.timer as timer
 import src.minigame.fruitPanic.handGame as fruitPanic
-import src.minigame.cannonPanic.cannonPanic as cannonPanic
+# import src.minigame.cannonPanic.cannonPanic as cannonPanic
 import src.engine.scenecreator.tile as tile
 import src.minigame.fruitPanic.handController as player
 import pygame
@@ -158,54 +158,54 @@ class fruitTests(unittest.TestCase):
     Cool Cam in a nutshell: Cannon Panic, 2v2 minigame where players fire a cannon at each other. 
     Black Box Tests
 """
-class cannonPanicTests(unittest.TestCase):
-    """
-    This tests proves if a cannon has been successfully shot. The fire cannon method will return true if the cannon
-    was successfully fired, or false if not
-
-    ->Acceptance test/Black Box Test: Testing the utility of the cannon and ensuring that it cannot fire when it is not loaded.
-    """
-    def test_checkCannonFireEmpty(self):
-        myCannon = cannonPanic.cannon()
-        self.assertFalse(myCannon.fireCannon(), "The cannon should not be able to fire (False)")
-    """
-    ->Acceptance test/Black Box Test: Testing the utility of the cannon and ensuring that it cannot fire when it is not loaded.
-    """
-    def test_checkCannonFireLoaded(self):
-        myCannon = cannonPanic.cannon()
-        myCannon.addAmmo()
-        self.assertTrue(myCannon.fireCannon(), "The cannon should be able to fire (True)")
-    """
-    ->Acceptance test/Black Box Test: Testing to see if a player is carrying a ball
-    """
-    def test_checkPlayerLoadsCannonBall(self):
-        cannonLoader = cannonPanic.cannonLoader()
-        cannonBall = cannonPanic.cannonBall(5,5)
-        self.assertFalse(cannonLoader.carryingBall) #Check to see that they have no ball
-        cannonLoader.pickUpBall(cannonBall) #Pick up the ball
-        self.assertTrue(cannonLoader.carryingBall, "Player should be holding ball (True)") #Check to see that the ball is in their hands
-    """
-    ->Acceptance test/Black Box Test: Testing to see if a player unloading a ball works
-    """
-    def test_checkPlayerUnloadsCannonBall(self):
-        cannonLoader = cannonPanic.cannonLoader()
-        cannonBall = cannonPanic.cannonBall(5, 5)
-        self.assertFalse(cannonLoader.carryingBall) #Check before they pick up the ball
-        cannonLoader.pickUpBall(cannonBall) #Pick up the ball
-        self.assertTrue(cannonLoader.carryingBall) #Check to see if they are carrying a ball
-        cannonLoader.placeBall(cannonLoader) #Insert the ball
-        self.assertFalse(cannonLoader.carryingBall, "Player should not be holding ball(False)") #Check to see if the ball is no longer in their hands
-
-    """
-    ->Acceptance test/Black box test: Testing to see that the cannon's ammo is empty after fire
-    """
-    def test_checkCannonFiredEmptied(self):
-        myCannon = cannonPanic.cannon()
-        myCannon.addAmmo()
-        myCannon.fireCannon()
-        self.assertFalse(myCannon.loaded, "Cannon should be empty (False)")
-
-
+# class cannonPanicTests(unittest.TestCase):
+#     """
+#     This tests proves if a cannon has been successfully shot. The fire cannon method will return true if the cannon
+#     was successfully fired, or false if not
+#
+#     ->Acceptance test/Black Box Test: Testing the utility of the cannon and ensuring that it cannot fire when it is not loaded.
+#     """
+#     def test_checkCannonFireEmpty(self):
+#         myCannon = cannonPanic.cannon()
+#         self.assertFalse(myCannon.fireCannon(), "The cannon should not be able to fire (False)")
+#     """
+#     ->Acceptance test/Black Box Test: Testing the utility of the cannon and ensuring that it cannot fire when it is not loaded.
+#     """
+#     def test_checkCannonFireLoaded(self):
+#         myCannon = cannonPanic.cannon()
+#         myCannon.addAmmo()
+#         self.assertTrue(myCannon.fireCannon(), "The cannon should be able to fire (True)")
+#     """
+#     ->Acceptance test/Black Box Test: Testing to see if a player is carrying a ball
+#     """
+#     def test_checkPlayerLoadsCannonBall(self):
+#         cannonLoader = cannonPanic.cannonLoader()
+#         cannonBall = cannonPanic.cannonBall(5,5)
+#         self.assertFalse(cannonLoader.carryingBall) #Check to see that they have no ball
+#         cannonLoader.pickUpBall(cannonBall) #Pick up the ball
+#         self.assertTrue(cannonLoader.carryingBall, "Player should be holding ball (True)") #Check to see that the ball is in their hands
+#     """
+#     ->Acceptance test/Black Box Test: Testing to see if a player unloading a ball works
+#     """
+#     def test_checkPlayerUnloadsCannonBall(self):
+#         cannonLoader = cannonPanic.cannonLoader()
+#         cannonBall = cannonPanic.cannonBall(5, 5)
+#         self.assertFalse(cannonLoader.carryingBall) #Check before they pick up the ball
+#         cannonLoader.pickUpBall(cannonBall) #Pick up the ball
+#         self.assertTrue(cannonLoader.carryingBall) #Check to see if they are carrying a ball
+#         cannonLoader.placeBall(cannonLoader) #Insert the ball
+#         self.assertFalse(cannonLoader.carryingBall, "Player should not be holding ball(False)") #Check to see if the ball is no longer in their hands
+#
+#     """
+#     ->Acceptance test/Black box test: Testing to see that the cannon's ammo is empty after fire
+#     """
+#     def test_checkCannonFiredEmptied(self):
+#         myCannon = cannonPanic.cannon()
+#         myCannon.addAmmo()
+#         myCannon.fireCannon()
+#         self.assertFalse(myCannon.loaded, "Cannon should be empty (False)")
+#
+#
 
 
 
