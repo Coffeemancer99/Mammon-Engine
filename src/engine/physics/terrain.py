@@ -1,15 +1,26 @@
 import src.engine.physics.physics as physics
+from src.engine.physics.physics import Object
 import src.engine.physics.normal as normal
 import functools
 from functools import partial
 from src.engine.graphics.spritegen import *
+from src.minigame.physicsTest.physicstest import *
 import math
 
-class Terrain(physics.Object):
+class Terrain(Object):
     def __init__(self, sprite, scale, x, y, objects, name = "undefinedTerrain", frict = 0.7, edges = None, normalFuns = None):
-        physics.Object.__init__(self, sprite, scale, x, y, objects, name, frict)
+        Object.__init__(self, sprite, scale, x, y, objects, name, frict)
         self.edges = edges
         self.normalFuns = normalFuns
+
+    def impact(self, obj2):
+        print("\n##############################################################################################################")
+        print("IMPACT")
+        print("\t",self)
+        print("\t",obj2)
+        overlapPos = physics.touching(self, obj2)
+        print("overlapPos =", overlapPos)
+        print("##############################################################################################################\n")
 
 def is_between(point1, point2, testPoint):
     if testPoint in [point1, point2]:
@@ -36,7 +47,13 @@ def is_between(point1, point2, testPoint):
 
     return((floor == y3) or (floor +1 == y3) or (floor - 1 == y3))
 
-def from_polygon(points, scale, objects, color = (0,255,0,255), name = "undefinedPolygon", frict = 0.7):
+def from_rectangle(position, dimensions, scale, objects, color = (110,110,110), name = "RectTerr", frict = physics.frictS):
+    (x, y) = position
+    (width, height) = dimensions
+    points = [[x,y],[x+width, y], [x+width, y+height],[x, y+height]]
+    return from_polygon(points, scale, objects, color, name, frict)
+
+def from_polygon(points, scale, objects, color = (0,255,0,255), name = "PolyTerr", frict = physics.frictS):
     xValues = [point[0] for point in points]
     yValues = [point[1] for point in points]
     minX = min(xValues); maxX = max(xValues)
@@ -51,12 +68,12 @@ def from_polygon(points, scale, objects, color = (0,255,0,255), name = "undefine
         if point not in outline:
             outline.append(point)
 
-    # print("outline = {}".format(outline))
-    # for i in range(len(points)):
-    #     edges.append(list(filter((partial(is_between, points[i], points[(i+1)%len(points)])), outline)))
-    #     normalFuns.append(partial(normal.from_straight,points[i], points[(i+1)%len(points)]))
-    #     print("for {} and {}, points_between = {}".format(points[i], points[(i+1)%len(points)], list(filter((partial(is_between, points[i], points[(i+1)%len(points)])), outline))))
-    # print("")
+    print("outline = {}".format(outline))
+    for i in range(len(points)):
+        edges.append(list(filter((partial(is_between, points[i], points[(i+1)%len(points)])), outline)))
+        normalFuns.append(partial(normal.from_straight,points[i], points[(i+1)%len(points)]))
+        print("for {} and {}, points_between = {}".format(points[i], points[(i+1)%len(points)], list(filter((partial(is_between, points[i], points[(i+1)%len(points)])), outline))))
+    print("")
 
     return Terrain(sprite, scale, minX, minY, objects, name, frict, edges)
 

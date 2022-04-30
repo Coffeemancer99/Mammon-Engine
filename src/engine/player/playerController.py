@@ -13,6 +13,7 @@ class Player(DynamicObject):
         self.controls = controls
         self.xSpeed = xSpeed
         self.ySpeed = ySpeed
+        self.cooldown = {"action": 0, "space": 0, "special": 0}
 
 
     def update(self, airRes=physics.airRes, minMom=physics.minMom, maxMom=None): # retrieves default values from physics module
@@ -20,6 +21,10 @@ class Player(DynamicObject):
         DynamicObject.update(self, airRes, minMom, maxMom)
 
     def takeInputs(self):
+        for item in self.cooldown:
+            if self.cooldown[item]:
+                self.cooldown[item] -= 1
+            if self.cooldown[item] < 1: self.cooldown[item] = 0
         try: key = pygame.key.get_pressed()
         except: return # pygame not initialized, so do nothing
         if key[self.controls['up']]:
@@ -30,11 +35,11 @@ class Player(DynamicObject):
             self.left()
         if key[self.controls['right']]:
             self.right()
-        if key[self.controls['space']]:
+        if key[self.controls['space']] and not self.cooldown['space']:
             self.space()
-        if key[self.controls['action']]:
+        if key[self.controls['action']] and not self.cooldown['action']:
             self.action()
-        if key[self.controls['special']]:
+        if key[self.controls['special']] and not self.cooldown['special']:
             self.special()
 
     def up(self):

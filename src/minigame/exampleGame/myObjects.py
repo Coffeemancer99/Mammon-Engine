@@ -19,7 +19,7 @@ class Pirate(Platformer):
     The Platformer subclass jumps if grounded when space() is called, can move left and right.
     The TopDown subclass can move in all 4 directions.
     """
-    def __init__(self, sprite, scale, x, y, objects, xSpeed, ySpeed, name="undefinedPirate", mass=10, controls = None):
+    def __init__(self, sprite, scale, x, y, objects, xSpeed, ySpeed, name="Pirate", mass=10, controls = None):
         Platformer.__init__(self, sprite, scale, x, y, objects, xSpeed, ySpeed, name, mass, controls)
         self.points = 0
 
@@ -27,7 +27,7 @@ class Pirate(Platformer):
         print(self.name + " points = " + str(self.points))
 
 class Crate(RectObject):
-    def __init__(self,sprite, scale, x, y, objects, value, name = "undefinedCrate"):
+    def __init__(self,sprite, scale, x, y, objects, value, name = "Crate"):
         RectObject.__init__(self, sprite, scale, x, y, objects, name)
         self.value = value
 

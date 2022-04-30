@@ -74,7 +74,7 @@ def startGame(mainWindow, scale, framerate):
         takeInputs(pygame.key.get_pressed()) # inputs not associated with an object
 
         for object in objects: # Physics, movement
-            if isinstance(object, DynamicObject):
+            if isinstance(object, physics.Dynamic):
                 object.momY += gravity
                 object.update(maxMom = 150)
                 if ((abs(object.dX) >= 1) or (abs(object.dY) >= 1)):

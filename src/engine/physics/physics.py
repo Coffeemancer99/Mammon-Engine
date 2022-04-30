@@ -1,8 +1,9 @@
 from src.engine.graphics.spritegen import *
 import logging
+from src.minigame.physicsTest.testing import setKill
 
 #default values for objects, to be imported into subclass creators
-airRes = 0.985
+airRes = 0.015
 frictS = 0.75
 frictD = 0.85
 minMom = 0.05
@@ -31,6 +32,7 @@ class Object:
 
     def overlap(self, obj2, offsetX = 0, offsetY = 0):
         offsetX = int(offsetX); offsetY = int(offsetY)
+        # print("x, y = ({}, {}), overlap = {}".format(offsetX, offsetY, self.mask.overlap(obj2.mask, (obj2.x - (self.x + offsetX), obj2.y - (self.y + offsetY)))))
         return (self.mask.overlap(obj2.mask, (obj2.x - (self.x + offsetX), obj2.y - (self.y + offsetY))))
 
     def impact(self, obj2):
@@ -48,6 +50,16 @@ class RectObject(Object):
     def __repr__(self):
         return f'RectObject "{self.name}", (x,y) = ("{self.x}","{self.y}"), (width, height) = "{self.sprite.get_size()}"'
 
+    def impact(self, obj2):
+        # print("\n##############################################################################################################")
+        # print("IMPACT")
+        # print("\t",self)
+        # print("\t",obj2)
+        # overlapPos = touching(self, obj2)
+        # print("overlapPos =", overlapPos)
+        # print("##############################################################################################################\n")
+        # setKill(31)
+        pass
 class Dynamic():
     def __init__(self, mass, name):
         self.mass = mass; assert not(mass < 0)
@@ -66,9 +78,9 @@ class Dynamic():
         if(abs(self.momX) > maxMom): self.momX = sign[0]*maxMom
         if(abs(self.momY) > maxMom): self.momY = sign[1]*maxMom
 
-        self.momX = self.momX*airRes
+        self.momX = self.momX*(1-airRes)
         if abs(self.momX/self.mass) < minMom: self.momX = 0
-        self.momY = self.momY*airRes
+        self.momY = self.momY*(1-airRes)
         if abs(self.momY/self.mass) < minMom: self.momY = 0
 
         # fractional dXY values will accumulate allowing i.e. moving 1px every other frame
@@ -244,7 +256,11 @@ def velChecker2(obj1, obj2): # Optimized collision checking for two RectObjects
 
 
 def touching(obj1, obj2):
-    return obj1.overlap(obj2, 1, 1) or obj1.overlap(obj2, -1, -1)
+    for (x1,x2) in [(0,1),(0, -1),(1,0),(-1,0)]:
+        if obj1.overlap(obj2, x1, x2): return True
+    if obj1.overlap(obj2, 1, 1): return obj1.overlap(obj2, 1, 1)
+    if obj1.overlap(obj2, -1, -1): return obj1.overlap(obj2, 1, 1)
+    return False
 
 def grounded(obj1, onlyStatics = False):
     for obj2 in obj1.objects:
@@ -284,32 +300,7 @@ def friction(mass, coefficientOfFriction):
     return float(coefficientOfFriction * computeMovementForce(mass))
 
 def main():
-    print("physics maine\n")
-    objects = []; scale = 1
-    coco = DynamicObject(generate_rectangle(20,20,1), scale, 0, 0, objects, "coco", 5)
-    coco.momY = 22
-    box = Object(generate_rectangle(20,20,1), scale, 0, 22, objects, "box")
-    coco.update()
-    objects.append(coco); objects.append(box)
-    print("\n\n###############################################################################################################")
-    print("###############################################################################################################")
-    print("###############################################################################################################\n")
-    if(coco.overlap(box)): print("FAILED")
-    else: print("PASSED\n")
-
-    for object in objects: print(object)
-    print("")
-    velHandler(coco,objects)
-
-
-
-    print("")
-    for object in objects: print(object)
-    print("")
-    print("###############################################################################################################\n")
-    if(coco.overlap(box)): print("FAILED")
-    else: print("PASSED")
-
+    pass
 
 if(__name__ == "__main__"):
     main()
